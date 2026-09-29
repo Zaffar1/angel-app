@@ -51,6 +51,13 @@ app.options(/.*/, cors()); // regex that matches all routes safely
 connectDB();
 missionScheduler.start();
 const base = '/angelz';
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Angelz API is running'
+  });
+});
+
 
 // Routes
 // app.use(`${base}/api`, adminRoutes);
