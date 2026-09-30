@@ -7,3 +7,6 @@ build/
 coverage/
 .vscode/
 *.log
+# Environment variables
+.env
+**/.env
