@@ -27,15 +27,16 @@ import {
 } from "../pages";
 import { AuthLayout } from "../component";
 
-// Determine base path based on environment
-const baseURL =
-  import.meta.env.MODE === "production"
-    ? import.meta.env.VITE_BASE_URL_PRODUCTION
-    : import.meta.env.VITE_BASE_URL_LOCAL;
+// // Determine base path based on environment
+// const baseURL =
+//   import.meta.env.MODE === "production"
+//     ? import.meta.env.VITE_BASE_URL_PRODUCTION
+//     : import.meta.env.VITE_BASE_URL_LOCAL;
 
 function BaseRouter() {
   return (
-    <BrowserRouter basename={baseURL}>
+    // <BrowserRouter basename={baseURL}>
+    <BrowserRouter basename={import.meta.env.MODE === "production" ? "/admin" : "/"} >
       <Routes>
         <Route path="/" element={<App />}>
           {/* Redirect to login if accessing root */}
@@ -192,7 +193,7 @@ function BaseRouter() {
               </AuthLayout>
             }
           />
-           <Route
+          <Route
             path="newsletter"
             element={
               <AuthLayout authentication={false}>
