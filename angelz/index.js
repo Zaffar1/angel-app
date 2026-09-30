@@ -23,11 +23,16 @@ const app = express();
 app.use(express.json());
 
 // ✅ Allowed origins for both API & Socket.io
+// const allowedOrigins = [
+//   'http://localhost:5173',
+//   'http://localhost:3000', 'https://splitarts.net', 'https://splitarts.net/angelz', 'https://splitarts.net/angel-website'
+// ];
+
 const allowedOrigins = [
   'http://localhost:5173',
-  'http://localhost:3000','https://splitarts.net','https://splitarts.net/angelz', 'https://splitarts.net/angel-website'
+  'http://localhost:3000',
+  'https://frontend-abc.hostingersite.com'
 ];
-
 // ✅ CORS middleware for Express
 app.use(
   cors({
@@ -50,20 +55,39 @@ app.options(/.*/, cors()); // regex that matches all routes safely
 // ✅ Connect to DB
 connectDB();
 missionScheduler.start();
-const base = '/angelz';
 
-// Routes
-// app.use(`${base}/api`, adminRoutes);
-app.use(`${base}/api/admin`, adminRoutes);
-app.use(`${base}/api/users`, userRoutes);
-app.use(`${base}/api/organization`, organizationRoutes);
-app.use(`${base}/api/posts`, postRoutes);
-app.use(`${base}/api/mission`, missionRoutes);
-app.use(`${base}/api/user-posts`, userPostRoutes);
-app.use(`${base}/api/volunteer`, volunteerRoutes);
-app.use(`${base}/api/notifications`, notificationRoutes);
-app.use(`${base}/uploads`, express.static(path.join(__dirname, 'uploads')));
-app.use(`${base}/api/volunteer-groups`, volunteerGroupRoutes);
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Angelz API is running'
+  });
+});
+
+app.use('/api/admin', adminRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/organization', organizationRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/mission', missionRoutes);
+app.use('/api/user-posts', userPostRoutes);
+app.use('/api/volunteer', volunteerRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/volunteer-groups', volunteerGroupRoutes);
+
+// const base = '/angelz';
+
+// // Routes
+// // app.use(${base}/api, adminRoutes);
+// app.use(${base}/api/admin, adminRoutes);
+// app.use(${base}/api/users, userRoutes);
+// app.use(${base}/api/organization, organizationRoutes);
+// app.use(${base}/api/posts, postRoutes);
+// app.use(${base}/api/mission, missionRoutes);
+// app.use(${base}/api/user-posts, userPostRoutes);
+// app.use(${base}/api/volunteer, volunteerRoutes);
+// app.use(${base}/api/notifications, notificationRoutes);
+// app.use(${base}/uploads, express.static(path.join(__dirname, 'uploads')));
+// app.use(${base}/api/volunteer-groups, volunteerGroupRoutes);
 
 // Error handler middleware
 app.use(errorHandler);
@@ -90,9 +114,12 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
- 
- 
+// server.listen(PORT, () => console.log(🚀 Server running on port ${PORT}));
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
+
 
 
 
@@ -118,13 +145,13 @@ server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 
 // // const base = '/Angelz';
 // // // Routes
-// // app.use(`${base}/api/admin`, adminRoutes);
-// // app.use(`${base}/api/users`, userRoutes);
-// // app.use(`${base}/api/organization`, organizationRoutes);
-// // app.use(`${base}/api/posts`, postRoutes);
-// // app.use(`${base}/api/mission`, missionRoutes);
+// // app.use(${base}/api/admin, adminRoutes);
+// // app.use(${base}/api/users, userRoutes);
+// // app.use(${base}/api/organization, organizationRoutes);
+// // app.use(${base}/api/posts, postRoutes);
+// // app.use(${base}/api/mission, missionRoutes);
 
-// // app.use(`${base}/uploads`, express.static(path.join(__dirname, 'uploads')));
+// // app.use(${base}/uploads, express.static(path.join(__dirname, 'uploads')));
 
 
 // // Routes
@@ -158,4 +185,4 @@ server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 //   });
 // });
 
-// server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// server.listen(PORT, () => console.log(Server running on port ${PORT}));
