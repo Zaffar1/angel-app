@@ -293,6 +293,7 @@ exports.assignVolunteer = async (missionId, volunteerId) => {
     // If the start time is already in the past or equal to the current time, mark as "process".
     const startTimeVal = mission.raw_start_time || mission.start_time;
     const isFuture = isFutureTime(startTimeVal);
+    console.log(`[assignVolunteer Group] missionId=${missionId}, startTimeVal=${startTimeVal}, isFuture=${isFuture}, serverNow=${new Date().toISOString()}`);
 
     if (isFuture) {
       await missionModel.updateStatus(missionId, "scheduled");

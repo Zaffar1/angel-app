@@ -1,43 +1,77 @@
-function toLocalISOString(date) {
-  if (!date) return null;
-  const d = new Date(date);
-  const tzOffset = d.getTimezoneOffset() * 60000;
-  return new Date(d.getTime() - tzOffset).toISOString().slice(0, 19);
-}
+const APP_TIMEZONE = process.env.APP_TIMEZONE || '+05:00';
+const APP_TIMEZONE_OFFSET_MS = 5 * 3600 * 1000; // +05:00 in milliseconds
+
+const pad = (n) => String(n).padStart(2, '0');
 
 /**
- * Accurately parses a datetime value into a Date object in the local timezone,
- * regardless of whether it's a Date object, MySQL "YYYY-MM-DD HH:mm:ss" string,
- * or ISO "YYYY-MM-DDTHH:mm:ss" string produced by toLocalISOString.
+ * Accurately parses any datetime value (Date object, MySQL string, or ISO string)
+ * into a Date object representing the exact moment in time, bound to Pakistan timezone (+05:00).
  */
 function parseLocalDateTime(val) {
   if (!val) return null;
+
   if (val instanceof Date) {
-    return isNaN(val.getTime()) ? null : val;
+    if (isNaN(val.getTime())) return null;
+    // Extract wall-clock components and associate explicitly with APP_TIMEZONE
+    const y = val.getUTCFullYear();
+    const m = pad(val.getUTCMonth() + 1);
+    const d = pad(val.getUTCDate());
+    const hr = pad(val.getUTCHours());
+    const min = pad(val.getUTCMinutes());
+    const sec = pad(val.getUTCSeconds());
+    return new Date(`${y}-${m}-${d}T${hr}:${min}:${sec}${APP_TIMEZONE}`);
   }
+
   if (typeof val === 'string') {
     const trimmed = val.trim();
-    // If it has explicit timezone indicator at the end (e.g. "Z", "+05:00", "-04:00")
-    if (/[Z+-]\d{2}(?::?\d{2})?$/i.test(trimmed.slice(10))) {
+    if (!trimmed) return null;
+
+    // If it already has an explicit timezone offset at the end (e.g. "+05:00", "-04:00")
+    if (/[+-]\d{2}(?::?\d{2})?$/.test(trimmed)) {
       const d = new Date(trimmed);
       return isNaN(d.getTime()) ? null : d;
     }
-    // No timezone indicator: string represents local time components (YYYY-MM-DDTHH:mm:ss or YYYY-MM-DD HH:mm:ss)
-    const [datePart, timePart] = trimmed.split(/[T\s]/);
-    if (!datePart) return null;
-    const [y, m, d] = datePart.split('-').map(Number);
-    if (!y || !m || !d) return null;
-    let hr = 0, min = 0, sec = 0;
-    if (timePart) {
-      const [hStr, mStr, sStr] = timePart.split(':');
-      hr = parseInt(hStr, 10) || 0;
-      min = parseInt(mStr, 10) || 0;
-      sec = parseInt(sStr, 10) || 0;
+
+    // If it ends with "Z" (UTC)
+    if (trimmed.endsWith('Z') || trimmed.endsWith('z')) {
+      const d = new Date(trimmed);
+      return isNaN(d.getTime()) ? null : d;
     }
-    return new Date(y, m - 1, d, hr, min, sec);
+
+    // No timezone indicator: string is in local Pakistan time (YYYY-MM-DDTHH:mm:ss or YYYY-MM-DD HH:mm:ss)
+    const [datePart, timePartRaw] = trimmed.split(/[T\s]/);
+    if (!datePart) return null;
+    let timePart = timePartRaw || "00:00:00";
+    if (timePart.length === 5) timePart += ":00"; // convert HH:mm to HH:mm:ss
+
+    const isoWithTz = `${datePart}T${timePart}${APP_TIMEZONE}`;
+    const d = new Date(isoWithTz);
+    return isNaN(d.getTime()) ? null : d;
   }
+
   const d = new Date(val);
   return isNaN(d.getTime()) ? null : d;
+}
+
+/**
+ * Formats any Date or datetime string into local ISO format: "YYYY-MM-DDTHH:mm:ss"
+ * matching the user's local timezone (+05:00).
+ */
+function toLocalISOString(date) {
+  if (!date) return null;
+  const d = parseLocalDateTime(date);
+  if (!d || isNaN(d.getTime())) return null;
+
+  // Add APP_TIMEZONE offset to get UTC date representing local wall-clock time
+  const localDate = new Date(d.getTime() + APP_TIMEZONE_OFFSET_MS);
+
+  const y = localDate.getUTCFullYear();
+  const m = pad(localDate.getUTCMonth() + 1);
+  const day = pad(localDate.getUTCDate());
+  const hr = pad(localDate.getUTCHours());
+  const min = pad(localDate.getUTCMinutes());
+  const sec = pad(localDate.getUTCSeconds());
+  return `${y}-${m}-${day}T${hr}:${min}:${sec}`;
 }
 
 /**
@@ -50,5 +84,5 @@ function isFutureTime(timeVal) {
   return startDate.getTime() > Date.now();
 }
 
-module.exports = { toLocalISOString, parseLocalDateTime, isFutureTime };
+module.exports = { APP_TIMEZONE, toLocalISOString, parseLocalDateTime, isFutureTime };
 
