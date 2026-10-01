@@ -96,7 +96,7 @@ exports.missions = async (user, page, limit, sortBy, sortOrder) => {
 // };
 
 // exports.createMission = async (missionData, files) => {
-  
+
 //   const lat = missionData.lat ? parseFloat(missionData.lat) : null;
 //   const lng = missionData.lng ? parseFloat(missionData.lng) : null;
 
@@ -202,7 +202,7 @@ exports.toggleLike = async (missionId, userId) => {
 
 exports.rejectedMissions = async (params) => {
   try {
-    
+
   } catch (error) {
     console.log(error);
     throw error;
@@ -233,7 +233,7 @@ exports.assignVolunteer = async (missionId, volunteerId) => {
   if (user.type === 'volunteer_group') {
     const groupUserId = volunteerId;
     const groupName = user.name;
-    
+
     // Accept group application
     await pool.query(
       "UPDATE volunteer_group_applications SET status = 'accepted' WHERE group_id = ? AND mission_id = ?",
@@ -410,7 +410,7 @@ exports.assignVolunteer = async (missionId, volunteerId) => {
 //   if (user.type === 'volunteer_group') {
 //     const groupUserId = volunteerId;
 //     const groupName = user.name;
-    
+
 //     // Accept group application
 //     await pool.query(
 //       "UPDATE volunteer_group_applications SET status = 'accepted' WHERE group_id = ? AND mission_id = ?",
@@ -582,7 +582,7 @@ exports.assignVolunteer = async (missionId, volunteerId) => {
 //   if (user.type === 'volunteer_group') {
 //     const groupUserId = volunteerId;
 //     const groupName = user.name;
-    
+
 //     // Accept group application
 //     await pool.query(
 //       "UPDATE volunteer_group_applications SET status = 'accepted' WHERE group_id = ? AND mission_id = ?",
@@ -1021,9 +1021,9 @@ exports.getAllFeeds = async (page, limit, currentUserId) => {
 //   if (!volunteer) {
 //     throw { type: "not_found", message: "Volunteer does not exist" };
 //   }
-  
+
 //   await missionModel.updateStatus(missionId, "inprogress");
-  
+
 //   await missionModel.assignVolunteer(missionId, volunteerId);
 //   const organizationUser = await missionRequestModel.findMissionCreatorUser(missionId);
 //   const notification = await notificationModel.sendNotification({
@@ -1148,7 +1148,7 @@ exports.startMission = async (missionId, volunteerId) => {
 
   // Mission should start now or already started
   if (mission.status !== 'completion_requested') {
-    await missionModel.updateStatus(missionId, "process");
+    await missionModel.updateStatus(missionId, "inprogress");
   }
   await missionModel.assignVolunteer(missionId, volunteerId, null, 'in_progress');
 
@@ -1195,7 +1195,7 @@ exports.startMission = async (missionId, volunteerId) => {
       missionName: mission.name,
       volunteerName: volunteer.name,
       startTime: startTime,
-      status: mission.status === 'completion_requested' ? 'completion_requested' : 'process',
+      status: mission.status === 'completion_requested' ? 'completion_requested' : 'inprogress',
     },
   };
 };
@@ -2280,7 +2280,7 @@ exports.rejectMissionRequest = async (missionId, volunteerId) => {
 //     if (!deleted) {
 //       throw new AppError("No pending mission request found", 404);
 //     }
-    
+
 //     await missionModel.updateStatus(missionId, "open");
 //     // await missionModel.updateStatus(missionId, "pending");
 
@@ -2692,8 +2692,8 @@ exports.completeMission = async (missionId, volunteerId) => {
 // };
 
 //////// Previous 17 july
-exports.canPost = async (missionId,userId) => {
-  return await missionModel.updateCanPost(missionId,userId);
+exports.canPost = async (missionId, userId) => {
+  return await missionModel.updateCanPost(missionId, userId);
 };
 
 
@@ -2712,7 +2712,7 @@ exports.canPost = async (missionId,userId) => {
 //     await missionModel.addPoints(missionId, volunteerId, conn);
 //     // await volunteerModel.updatePreviousRanks();
 //     await missionModel.deletePendingRequest(missionId, volunteerId, conn);
-    
+
 
 //     await conn.commit();
 
@@ -2967,7 +2967,7 @@ exports.deleteComment = async (commentId, userId) => {
 //   const pool = await connectDB();
 
 //   // const [alreayPosted] = await pool.query('SELECT * FROM missions WHERE id = ? AND can_post = ?'[])
-  
+
 //   await pool.query("UPDATE missions SET can_post = 'yes' WHERE id = ? ", [mission_id]);
 
 //   const [rows] = await pool.query('SELECT id, can_post FROM missions WHERE id = ? ',[mission_id]);
@@ -2975,7 +2975,7 @@ exports.deleteComment = async (commentId, userId) => {
 //   return rows.length > 0 ? rows[0]: null;
 // }
 
-exports.rejectedMissions = async (req,res) => {
+exports.rejectedMissions = async (req, res) => {
   try {
     const pool = await connectDB();
 

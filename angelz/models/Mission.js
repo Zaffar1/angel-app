@@ -1,5 +1,5 @@
 const connectDB = require('../config/db');
-const {toLocalISOString} = require("../utils/datetime");
+const { toLocalISOString } = require("../utils/datetime");
 
 exports.findByNameAndOrg = async (name, organizationId) => {
   const pool = await connectDB();
@@ -91,7 +91,6 @@ exports.findById = async (missionId) => {
     // Format date/time fields safely
     mission.start_time = mission.start_time ? toLocalISOString(mission.start_time) : null;
     mission.end_time = mission.end_time ? toLocalISOString(mission.end_time) : null;
-    mission.created_at = mission.created_at ? toLocalISOString(mission.created_at) : null;
 
     // Fetch assigned volunteers
     const [assignedVolunteers] = await pool.query(
@@ -312,14 +311,14 @@ exports.fetchAllFeeds = async (limit, offset, currentUserId) => {
   //   comments: commentsMap[f.id] || []
   // }));
 
-// Attach comments to each mission AND format latest_comment_at
-const feedsWithComments = feeds.map(f => ({
-  ...f,
-  comments: commentsMap[f.id] || [],
-  latest_comment_at: f.latest_comment_at
-    ? toLocalISOString(f.latest_comment_at)
-    : null
-}));
+  // Attach comments to each mission AND format latest_comment_at
+  const feedsWithComments = feeds.map(f => ({
+    ...f,
+    comments: commentsMap[f.id] || [],
+    latest_comment_at: f.latest_comment_at
+      ? toLocalISOString(f.latest_comment_at)
+      : null
+  }));
 
 
   return { feeds: feedsWithComments, total };
@@ -763,7 +762,7 @@ exports.missionCompleted = async (missionId) => {
     "SELECT * FROM missions WHERE id = ? AND status = 'completed' ",
     [missionId]
   );
-  
+
   return mission;
 };
 
@@ -816,7 +815,7 @@ exports.assignVolunteer = async (missionId, volunteerId, assignedBy = null, stat
 
 exports.addComment = async (missionId, userId, comment) => {
   const pool = await connectDB();
-  const [result] = await pool.query('INSERT INTO mission_comments (mission_id, user_id, comment) VALUES (?, ?, ?) ',[missionId, userId, comment]);
+  const [result] = await pool.query('INSERT INTO mission_comments (mission_id, user_id, comment) VALUES (?, ?, ?) ', [missionId, userId, comment]);
   return result.insertId;
 }
 
@@ -985,9 +984,8 @@ exports.getMissionsByUser = async (
           id: mission.id,
           name: mission.name,
           description: mission.description,
-          start_time: mission.start_time ? toLocalISOString(mission.start_time) : null,
-          end_time: mission.end_time ? toLocalISOString(mission.end_time) : null,
-          created_at: mission.created_at ? toLocalISOString(mission.created_at) : null,
+          start_time: toLocalISOString(mission.start_time),
+          end_time: toLocalISOString(mission.end_time),
           file: mission.file,
           mission_type: mission.mission_type,
           volunteer_required: mission.volunteer_required,
@@ -1655,9 +1653,8 @@ exports.getAllMissions = async (
 
         return {
           ...mission,
-          start_time: mission.start_time ? toLocalISOString(mission.start_time) : null,
-          end_time: mission.end_time ? toLocalISOString(mission.end_time) : null,
-          created_at: mission.created_at ? toLocalISOString(mission.created_at) : null,
+          start_time: toLocalISOString(mission.start_time),
+          end_time: toLocalISOString(mission.end_time),
           assigned_count: mission.assigned_count || 0,
           applied_count: mission.applied_count || 0,
           assigned_volunteers: assignedVolunteers,
@@ -1786,7 +1783,7 @@ exports.getAllMissions = async (
 exports.findNearbyMissions = async (userId, radiusMiles = 50) => {
   const pool = await connectDB();
 
-    await pool.query(`
+  await pool.query(`
       UPDATE missions
       SET status = 'expired'
       WHERE end_time <= NOW()
@@ -1896,7 +1893,7 @@ exports.deleteAssignedRequest = async (missionId, volunteerId) => {
   return result.affectedRows > 0;
 };
 
-exports.updateCanPost = async (missionId,userId) => {
+exports.updateCanPost = async (missionId, userId) => {
   const pool = await connectDB();
 
   const [rows] = await pool.query(
@@ -1914,10 +1911,10 @@ exports.updateCanPost = async (missionId,userId) => {
     return { message: "Already posted", mission };
   }
 
-await pool.query(
-  "UPDATE missions SET can_post = true, posted_by = ? WHERE id = ?",
-  [userId, missionId]
-);
+  await pool.query(
+    "UPDATE missions SET can_post = true, posted_by = ? WHERE id = ?",
+    [userId, missionId]
+  );
 
 
   mission.can_post = true;
@@ -1939,7 +1936,7 @@ await pool.query(
 
 exports.findPendingRequest = async (missionId, volunteerId) => {
   const pool = await connectDB();
-  const [[pending]] = await pool.query("SELECT * FROM mission_pending_requests WHERE mission_id = ? AND volunteer_id = ? ",[missionId, volunteerId]);
+  const [[pending]] = await pool.query("SELECT * FROM mission_pending_requests WHERE mission_id = ? AND volunteer_id = ? ", [missionId, volunteerId]);
   return pending;
 };
 
@@ -1955,7 +1952,7 @@ exports.findAssignedVolunteer = async (missionId, volunteerId) => {
 
 exports.addComment = async (missionId, userId, comment) => {
   const pool = await connectDB();
-  const [result] = await pool.query('INSERT INTO mission_comments (mission_id, user_id, comment) VALUES (?, ?, ?) ',[missionId, userId, comment]);
+  const [result] = await pool.query('INSERT INTO mission_comments (mission_id, user_id, comment) VALUES (?, ?, ?) ', [missionId, userId, comment]);
   return result.insertId;
 }
 
