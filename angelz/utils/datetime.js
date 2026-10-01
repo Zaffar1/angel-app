@@ -52,29 +52,3 @@ function isFutureTime(timeVal) {
 
 module.exports = { toLocalISOString, parseLocalDateTime, isFutureTime };
 
-// Shift UTC time by APP_TIMEZONE offset to extract exact wall-clock components
-const offsetMs = parseTimezoneOffsetMs(APP_TIMEZONE);
-const targetTime = new Date(d.getTime() + offsetMs);
-
-const pad = (n) => String(n).padStart(2, '0');
-const year = targetTime.getUTCFullYear();
-const month = pad(targetTime.getUTCMonth() + 1);
-const day = pad(targetTime.getUTCDate());
-const hours = pad(targetTime.getUTCHours());
-const minutes = pad(targetTime.getUTCMinutes());
-const seconds = pad(targetTime.getUTCSeconds());
-return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-}
-
-/**
- * Returns true ONLY if the given start time is strictly in the future compared to the current time.
- * Returns false if start time is in the past, equal to now, or invalid/empty.
- */
-function isFutureTime(timeVal) {
-  const startDate = parseLocalDateTime(timeVal);
-  if (!startDate) return false;
-  return startDate.getTime() > Date.now();
-}
-
-module.exports = { APP_TIMEZONE, toLocalISOString, parseLocalDateTime, isFutureTime };
-
