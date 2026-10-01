@@ -37,7 +37,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (Postman, server-to-server, etc.)
+      // Allow requests with no origin
       if (!origin) {
         return callback(null, true);
       }
@@ -106,7 +106,6 @@ app.use(errorHandler);
 // ==========================================
 
 const PORT = process.env.PORT || 5000;
-
 const server = http.createServer(app);
 
 // ==========================================
