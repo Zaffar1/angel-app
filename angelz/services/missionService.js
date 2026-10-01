@@ -1148,7 +1148,7 @@ exports.startMission = async (missionId, volunteerId) => {
 
   // Mission should start now or already started
   if (mission.status !== 'completion_requested') {
-    await missionModel.updateStatus(missionId, "inprogress");
+    await missionModel.updateStatus(missionId, "process");
   }
   await missionModel.assignVolunteer(missionId, volunteerId, null, 'in_progress');
 
@@ -1195,7 +1195,7 @@ exports.startMission = async (missionId, volunteerId) => {
       missionName: mission.name,
       volunteerName: volunteer.name,
       startTime: startTime,
-      status: mission.status === 'completion_requested' ? 'completion_requested' : 'inprogress',
+      status: mission.status === 'completion_requested' ? 'completion_requested' : 'process',
     },
   };
 };

@@ -176,6 +176,7 @@ const findByUserId = async (userId) => {
       ...mission,
       start_time: mission.start_time ? toLocalISOString(mission.start_time) : null,
       end_time: mission.end_time ? toLocalISOString(mission.end_time) : null,
+      created_at: mission.created_at ? toLocalISOString(mission.created_at) : null,
       pending_volunteers: pendingVolunteers,
       assigned_volunteers: assignedVolunteers,
       completed_volunteers: completedVolunteers,

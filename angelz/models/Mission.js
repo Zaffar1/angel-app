@@ -91,6 +91,7 @@ exports.findById = async (missionId) => {
     // Format date/time fields safely
     mission.start_time = mission.start_time ? toLocalISOString(mission.start_time) : null;
     mission.end_time = mission.end_time ? toLocalISOString(mission.end_time) : null;
+    mission.created_at = mission.created_at ? toLocalISOString(mission.created_at) : null;
 
     // Fetch assigned volunteers
     const [assignedVolunteers] = await pool.query(
@@ -984,8 +985,9 @@ exports.getMissionsByUser = async (
           id: mission.id,
           name: mission.name,
           description: mission.description,
-          start_time: toLocalISOString(mission.start_time),
-          end_time: toLocalISOString(mission.end_time),
+          start_time: mission.start_time ? toLocalISOString(mission.start_time) : null,
+          end_time: mission.end_time ? toLocalISOString(mission.end_time) : null,
+          created_at: mission.created_at ? toLocalISOString(mission.created_at) : null,
           file: mission.file,
           mission_type: mission.mission_type,
           volunteer_required: mission.volunteer_required,
@@ -1653,8 +1655,9 @@ exports.getAllMissions = async (
 
         return {
           ...mission,
-          start_time: toLocalISOString(mission.start_time),
-          end_time: toLocalISOString(mission.end_time),
+          start_time: mission.start_time ? toLocalISOString(mission.start_time) : null,
+          end_time: mission.end_time ? toLocalISOString(mission.end_time) : null,
+          created_at: mission.created_at ? toLocalISOString(mission.created_at) : null,
           assigned_count: mission.assigned_count || 0,
           applied_count: mission.applied_count || 0,
           assigned_volunteers: assignedVolunteers,
