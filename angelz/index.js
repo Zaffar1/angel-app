@@ -20,23 +20,18 @@ const missionScheduler = require("./cron/missionScheduler");
 const volunteerGroupRoutes = require('./routes/volunteerGroupRoutes');
 
 const app = express();
+ 
 app.use(express.json());
-
-// ✅ Allowed origins for both API & Socket.io
-// const allowedOrigins = [
-//   'http://localhost:5173',
-//   'http://localhost:3000', 'https://splitarts.net', 'https://splitarts.net/angelz', 'https://splitarts.net/angel-website'
-// ];
-
+ 
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://frontend-abc.hostingersite.com'
+  'https://mistyrose-ape-611541.hostingersite.com'
 ];
-// ✅ CORS middleware for Express
+ 
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -44,13 +39,45 @@ app.use(
       }
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
+ 
+app.options('*', cors());
 
-// ✅ Handle preflight for all routes
-app.options(/.*/, cors()); // regex that matches all routes safely
+// const app = express();
+// app.use(express.json());
+
+// // ✅ Allowed origins for both API & Socket.io
+// // const allowedOrigins = [
+// //   'http://localhost:5173',
+// //   'http://localhost:3000', 'https://splitarts.net', 'https://splitarts.net/angelz', 'https://splitarts.net/angel-website'
+// // ];
+
+// const allowedOrigins = [
+//   'http://localhost:5173',
+//   'http://localhost:3000',
+//   'https://frontend-abc.hostingersite.com'
+// ];
+// // ✅ CORS middleware for Express
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error('Not allowed by CORS'));
+//       }
+//     },
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
+
+// // ✅ Handle preflight for all routes
+// app.options(/.*/, cors()); // regex that matches all routes safely
 
 // ✅ Connect to DB
 connectDB();
