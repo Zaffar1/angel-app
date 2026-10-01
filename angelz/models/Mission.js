@@ -58,6 +58,7 @@ exports.findById = async (missionId) => {
       `
       SELECT 
         m.*,
+        (m.start_time > NOW()) AS is_future,
         o.company_name AS company_name,
         o.type AS company_type,
         o.services AS services,
@@ -83,6 +84,10 @@ exports.findById = async (missionId) => {
     );
 
     if (!mission) return null;
+
+    // Preserve raw database date/time values for accurate comparisons
+    mission.raw_start_time = mission.start_time;
+    mission.raw_end_time = mission.end_time;
 
     // Format date/time fields safely
     mission.start_time = mission.start_time ? toLocalISOString(mission.start_time) : null;

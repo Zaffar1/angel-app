@@ -288,9 +288,13 @@ exports.assignVolunteer = async (missionId, volunteerId) => {
     );
 
     // Update overall mission status
-    const now = new Date();
-    const startTime = new Date(mission.start_time);
-    if (startTime > now) {
+    // Only mark as "scheduled" when the start time is strictly in the future.
+    // If the start time is already in the past or equal to the current time, mark as "process".
+    const isFuture = mission.is_future !== undefined
+      ? mission.is_future === 1
+      : (mission.raw_start_time ? new Date(mission.raw_start_time) > new Date() : false);
+
+    if (isFuture) {
       await missionModel.updateStatus(missionId, "scheduled");
       await missionModel.updateNotify(missionId, 1);
     } else {
@@ -304,7 +308,9 @@ exports.assignVolunteer = async (missionId, volunteerId) => {
           sender_id: groupUserId,
           receiver_id: row.volunteer_id,
           type: 'mission_accepted',
-          message: `You have been successfully assigned to the mission "${mission.name}" by ${groupName}. Your participation has been confirmed and the mission is now underway.`,
+          message: isFuture
+            ? `You have been successfully assigned to the mission "${mission.name}" by ${groupName}. Your participation has been confirmed and the mission is scheduled.`
+            : `You have been successfully assigned to the mission "${mission.name}" by ${groupName}. Your participation has been confirmed and the mission is now underway.`,
           meta: { missionId },
         });
         notifyUser(row.volunteer_id, volNotif);
@@ -350,9 +356,13 @@ exports.assignVolunteer = async (missionId, volunteerId) => {
   await missionModel.assignVolunteer(missionId, volunteerId);
 
   // Check start_time and update status accordingly
-  const now = new Date();
-  const startTime = new Date(mission.start_time);
-  if (startTime > now) {
+  // Only mark as "scheduled" when the start time is strictly in the future.
+  // If the start time is already in the past or equal to the current time, mark as "process".
+  const isFuture = mission.is_future !== undefined
+    ? mission.is_future === 1
+    : (mission.raw_start_time ? new Date(mission.raw_start_time) > new Date() : false);
+
+  if (isFuture) {
     await missionModel.updateStatus(missionId, "scheduled");
     await missionModel.updateNotify(missionId, 1);
   } else {
@@ -1107,11 +1117,13 @@ exports.startMission = async (missionId, volunteerId) => {
   const organizationUser = await missionRequestModel.findMissionCreatorUser(missionId);
   const organizationUserId = organizationUser?.id || null;
 
-  const currentTime = new Date();
-  const startTime = new Date(mission.start_time);
+  const isFuture = mission.is_future !== undefined
+    ? mission.is_future === 1
+    : (mission.raw_start_time ? new Date(mission.raw_start_time) > new Date() : false);
+  const startTime = mission.raw_start_time ? new Date(mission.raw_start_time) : new Date(mission.start_time);
 
   // Mission start time is in the future — schedule it
-  if (currentTime < startTime) {
+  if (isFuture) {
     if (mission.status !== 'completion_requested') {
       await missionModel.updateStatus(missionId, "scheduled");
     }
