@@ -58,7 +58,6 @@ exports.findById = async (missionId) => {
       `
       SELECT 
         m.*,
-        (m.start_time > NOW()) AS is_future,
         o.company_name AS company_name,
         o.type AS company_type,
         o.services AS services,

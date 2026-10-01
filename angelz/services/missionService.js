@@ -9,6 +9,7 @@ const { notifyUser } = require("../services/socket");
 const missionRequestModel = require("../models/Mission");
 const notificationModel = require("../models/notificationModel");
 const model = require('../models/VolunteerInviteModel');
+const { isFutureTime, parseLocalDateTime } = require('../utils/datetime');
 
 exports.createMission = async (missionData, files, organizationId) => {
   const lat = missionData.lat ? parseFloat(missionData.lat) : null;
@@ -290,9 +291,8 @@ exports.assignVolunteer = async (missionId, volunteerId) => {
     // Update overall mission status
     // Only mark as "scheduled" when the start time is strictly in the future.
     // If the start time is already in the past or equal to the current time, mark as "process".
-    const isFuture = mission.is_future !== undefined
-      ? mission.is_future === 1
-      : (mission.raw_start_time ? new Date(mission.raw_start_time) > new Date() : false);
+    const startTimeVal = mission.raw_start_time || mission.start_time;
+    const isFuture = isFutureTime(startTimeVal);
 
     if (isFuture) {
       await missionModel.updateStatus(missionId, "scheduled");
@@ -358,11 +358,10 @@ exports.assignVolunteer = async (missionId, volunteerId) => {
   // Check start_time and update status accordingly
   // Only mark as "scheduled" when the start time is strictly in the future.
   // If the start time is already in the past or equal to the current time, mark as "process".
-  const isFuture = mission.is_future !== undefined
-    ? mission.is_future === 1
-    : (mission.raw_start_time ? new Date(mission.raw_start_time) > new Date() : false);
+  const volStartTimeVal = mission.raw_start_time || mission.start_time;
+  const isVolFuture = isFutureTime(volStartTimeVal);
 
-  if (isFuture) {
+  if (isVolFuture) {
     await missionModel.updateStatus(missionId, "scheduled");
     await missionModel.updateNotify(missionId, 1);
   } else {
@@ -1117,10 +1116,9 @@ exports.startMission = async (missionId, volunteerId) => {
   const organizationUser = await missionRequestModel.findMissionCreatorUser(missionId);
   const organizationUserId = organizationUser?.id || null;
 
-  const isFuture = mission.is_future !== undefined
-    ? mission.is_future === 1
-    : (mission.raw_start_time ? new Date(mission.raw_start_time) > new Date() : false);
-  const startTime = mission.raw_start_time ? new Date(mission.raw_start_time) : new Date(mission.start_time);
+  const startTimeVal = mission.raw_start_time || mission.start_time;
+  const isFuture = isFutureTime(startTimeVal);
+  const startTime = parseLocalDateTime(startTimeVal) || new Date();
 
   // Mission start time is in the future — schedule it
   if (isFuture) {
