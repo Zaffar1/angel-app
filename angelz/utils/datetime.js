@@ -84,11 +84,28 @@ function isFutureTime(timeVal) {
   return startStr > currentStr;
 }
 
+/**
+ * Parses any date representation into a JavaScript Date object
+ */
+function parseLocalDateTime(val) {
+  if (!val) return null;
+  if (val instanceof Date) {
+    return isNaN(val.getTime()) ? null : val;
+  }
+  const sqlStr = formatForMySQL(val);
+  if (!sqlStr) return null;
+  const [datePart, timePart] = sqlStr.split(' ');
+  const [y, m, d] = datePart.split('-').map(Number);
+  const [hr, min, sec] = timePart.split(':').map(Number);
+  return new Date(y, m - 1, d, hr, min, sec);
+}
+
 module.exports = {
   APP_TIMEZONE,
   getCurrentLocalTimeString,
   formatForMySQL,
   toLocalISOString,
+  parseLocalDateTime,
   isFutureTime
 };
 
