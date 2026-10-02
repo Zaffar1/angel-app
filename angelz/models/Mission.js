@@ -1,5 +1,5 @@
 const connectDB = require('../config/db');
-const { toLocalISOString } = require("../utils/datetime");
+const { toLocalISOString, isFutureTime, getCurrentLocalTimeString } = require("../utils/datetime");
 
 exports.findByNameAndOrg = async (name, organizationId) => {
   const pool = await connectDB();
@@ -91,6 +91,18 @@ exports.findById = async (missionId) => {
     // Format date/time fields safely
     mission.start_time = mission.start_time ? toLocalISOString(mission.start_time) : null;
     mission.end_time = mission.end_time ? toLocalISOString(mission.end_time) : null;
+
+    // Auto-transition scheduled mission to 'process' if scheduled start time has arrived
+    if (mission.status === 'scheduled' && !isFutureTime(mission.start_time || mission.raw_start_time)) {
+      mission.status = 'process';
+      await pool.query("UPDATE missions SET status = 'process', notify = 1, notify_status = 1 WHERE id = ?", [mission.id]);
+    }
+
+    // Auto-expire mission if end time has passed
+    if (['open', 'scheduled', 'process'].includes(mission.status) && mission.end_time && !isFutureTime(mission.end_time || mission.raw_end_time)) {
+      mission.status = 'expired';
+      await pool.query("UPDATE missions SET status = 'expired' WHERE id = ?", [mission.id]);
+    }
 
     // Fetch assigned volunteers
     const [assignedVolunteers] = await pool.query(
@@ -870,13 +882,23 @@ exports.getMissionsByUser = async (
 ) => {
   const pool = await connectDB();
 
+  const currentLocalTime = getCurrentLocalTimeString();
+
+  // ✅ Auto-start scheduled missions whose start time has arrived
+  await pool.query(`
+    UPDATE missions
+    SET status = 'process', notify = 1, notify_status = 1
+    WHERE status = 'scheduled'
+      AND start_time <= ?
+  `, [currentLocalTime]);
+
   // ✅ Expire old missions
   await pool.query(`
     UPDATE missions
     SET status = 'expired'
-    WHERE end_time <= NOW()
-      AND status = 'open'
-  `);
+    WHERE end_time <= ?
+      AND status IN ('open', 'scheduled', 'process')
+  `, [currentLocalTime]);
 
   // ✅ SAFE user type handling
   const userType = user?.type || null;
@@ -1584,13 +1606,23 @@ exports.getAllMissions = async (
     const sortColumn = SORTABLE_COLUMNS[sortBy] || "m.id";
     const order = sortOrder.toUpperCase() === "ASC" ? "ASC" : "DESC";
 
+    const currentLocalTime = getCurrentLocalTimeString();
+
+    // Auto-start scheduled missions whose start time has arrived
+    await pool.query(`
+      UPDATE missions
+      SET status = 'process', notify = 1, notify_status = 1
+      WHERE status = 'scheduled'
+        AND start_time <= ?
+    `, [currentLocalTime]);
+
     // Expire old missions
     await pool.query(`
       UPDATE missions
       SET status = 'expired'
-      WHERE end_time <= NOW()
-        AND status = 'open'
-    `);
+      WHERE end_time <= ?
+        AND status IN ('open', 'scheduled', 'process')
+    `, [currentLocalTime]);
 
     // Total count
     const [[{ total }]] = await pool.query(`

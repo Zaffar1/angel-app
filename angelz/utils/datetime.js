@@ -4,6 +4,21 @@ const APP_TIMEZONE_OFFSET_MS = 5 * 3600 * 1000; // +05:00 in milliseconds
 const pad = (n) => String(n).padStart(2, '0');
 
 /**
+ * Returns the current local time in Pakistan (APP_TIMEZONE, +05:00)
+ * formatted as "YYYY-MM-DD HH:mm:ss" for accurate SQL comparisons.
+ */
+function getCurrentLocalTimeString() {
+  const localDate = new Date(Date.now() + APP_TIMEZONE_OFFSET_MS);
+  const y = localDate.getUTCFullYear();
+  const m = pad(localDate.getUTCMonth() + 1);
+  const day = pad(localDate.getUTCDate());
+  const hr = pad(localDate.getUTCHours());
+  const min = pad(localDate.getUTCMinutes());
+  const sec = pad(localDate.getUTCSeconds());
+  return `${y}-${m}-${day} ${hr}:${min}:${sec}`;
+}
+
+/**
  * Accurately parses any datetime value (Date object, MySQL string, or ISO string)
  * into a Date object representing the exact moment in time, bound to Pakistan timezone (+05:00).
  */
@@ -12,14 +27,7 @@ function parseLocalDateTime(val) {
 
   if (val instanceof Date) {
     if (isNaN(val.getTime())) return null;
-    // Extract wall-clock components and associate explicitly with APP_TIMEZONE
-    const y = val.getUTCFullYear();
-    const m = pad(val.getUTCMonth() + 1);
-    const d = pad(val.getUTCDate());
-    const hr = pad(val.getUTCHours());
-    const min = pad(val.getUTCMinutes());
-    const sec = pad(val.getUTCSeconds());
-    return new Date(`${y}-${m}-${d}T${hr}:${min}:${sec}${APP_TIMEZONE}`);
+    return val;
   }
 
   if (typeof val === 'string') {
@@ -44,9 +52,20 @@ function parseLocalDateTime(val) {
     let timePart = timePartRaw || "00:00:00";
     if (timePart.length === 5) timePart += ":00"; // convert HH:mm to HH:mm:ss
 
-    const isoWithTz = `${datePart}T${timePart}${APP_TIMEZONE}`;
-    const d = new Date(isoWithTz);
-    return isNaN(d.getTime()) ? null : d;
+    const [yStr, mStr, dStr] = datePart.split('-');
+    const [hStr, minStr, sStr] = timePart.split(':');
+    const y = parseInt(yStr, 10);
+    const m = parseInt(mStr, 10);
+    const d = parseInt(dStr, 10);
+    const hr = parseInt(hStr, 10) || 0;
+    const min = parseInt(minStr, 10) || 0;
+    const sec = parseInt(sStr, 10) || 0;
+
+    if (!y || !m || !d) return null;
+
+    // Compute exact UTC timestamp from local Pakistan components (UTC+5)
+    const utcEpochMs = Date.UTC(y, m - 1, d, hr, min, sec) - APP_TIMEZONE_OFFSET_MS;
+    return new Date(utcEpochMs);
   }
 
   const d = new Date(val);
@@ -84,5 +103,5 @@ function isFutureTime(timeVal) {
   return startDate.getTime() > Date.now();
 }
 
-module.exports = { APP_TIMEZONE, toLocalISOString, parseLocalDateTime, isFutureTime };
+module.exports = { APP_TIMEZONE, toLocalISOString, parseLocalDateTime, isFutureTime, getCurrentLocalTimeString };
 

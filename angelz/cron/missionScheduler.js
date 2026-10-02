@@ -2,25 +2,24 @@ const cron = require("node-cron");
 const connectDB = require("../config/db");
 const notificationModel = require("../models/notificationModel");
 const { notifyUser } = require("../services/socket");
+const { getCurrentLocalTimeString } = require("../utils/datetime");
 
 module.exports.start = () => {
   console.log("Mission scheduler started...");
 
   // Run every minute
   cron.schedule("* * * * *", async () => {
-    console.log("Checking for missions to start...");
-
     try {
       const pool = await connectDB();
+      const currentLocalTime = getCurrentLocalTimeString();
 
-      // Find missions that should start now
+      // Find missions that should start now (scheduled start_time has arrived)
       const [missions] = await pool.query(`
         SELECT id, name 
         FROM missions 
         WHERE status = 'scheduled' 
-          AND notify_status != 1 
-          AND start_time <= NOW()
-      `);
+          AND start_time <= ?
+      `, [currentLocalTime]);
 
       if (!missions.length) {
         console.log("No missions ready to start.");
