@@ -19,89 +19,76 @@ function getCurrentLocalTimeString() {
 }
 
 /**
- * Accurately parses any datetime value (Date object, MySQL string, or ISO string)
- * into a Date object representing the exact moment in time, bound to Pakistan timezone (+05:00).
+ * Converts any date representation (string or Date object) into MySQL "YYYY-MM-DD HH:mm:ss",
+ * preserving the exact wall-clock year, month, day, hour, and minute selected by the user.
+ * Never applies an unintended timezone shift.
  */
-function parseLocalDateTime(val) {
+function formatForMySQL(val) {
   if (!val) return null;
-
-  if (val instanceof Date) {
-    if (isNaN(val.getTime())) return null;
-    return val;
-  }
 
   if (typeof val === 'string') {
     const trimmed = val.trim();
     if (!trimmed) return null;
 
-    // If it already has an explicit timezone offset at the end (e.g. "+05:00", "-04:00")
-    if (/[+-]\d{2}(?::?\d{2})?$/.test(trimmed)) {
-      const d = new Date(trimmed);
-      return isNaN(d.getTime()) ? null : d;
+    // Direct match for ISO or SQL datetime strings (e.g. "2026-10-02T17:59", "2026-10-02 17:59:00")
+    const match = trimmed.match(/^(\d{4}-\d{2}-\d{2})[T\s](\d{2}:\d{2}(?::\d{2})?)/);
+    if (match) {
+      let timePart = match[2];
+      if (timePart.length === 5) timePart += ':00';
+      return `${match[1]} ${timePart.slice(0, 8)}`;
     }
+  }
 
-    // If it ends with "Z" (UTC)
-    if (trimmed.endsWith('Z') || trimmed.endsWith('z')) {
-      const d = new Date(trimmed);
-      return isNaN(d.getTime()) ? null : d;
-    }
-
-    // No timezone indicator: string is in local Pakistan time (YYYY-MM-DDTHH:mm:ss or YYYY-MM-DD HH:mm:ss)
-    const [datePart, timePartRaw] = trimmed.split(/[T\s]/);
-    if (!datePart) return null;
-    let timePart = timePartRaw || "00:00:00";
-    if (timePart.length === 5) timePart += ":00"; // convert HH:mm to HH:mm:ss
-
-    const [yStr, mStr, dStr] = datePart.split('-');
-    const [hStr, minStr, sStr] = timePart.split(':');
-    const y = parseInt(yStr, 10);
-    const m = parseInt(mStr, 10);
-    const d = parseInt(dStr, 10);
-    const hr = parseInt(hStr, 10) || 0;
-    const min = parseInt(minStr, 10) || 0;
-    const sec = parseInt(sStr, 10) || 0;
-
-    if (!y || !m || !d) return null;
-
-    // Compute exact UTC timestamp from local Pakistan components (UTC+5)
-    const utcEpochMs = Date.UTC(y, m - 1, d, hr, min, sec) - APP_TIMEZONE_OFFSET_MS;
-    return new Date(utcEpochMs);
+  if (val instanceof Date) {
+    if (isNaN(val.getTime())) return null;
+    const y = val.getUTCFullYear();
+    const m = pad(val.getUTCMonth() + 1);
+    const d = pad(val.getUTCDate());
+    const hr = pad(val.getUTCHours());
+    const min = pad(val.getUTCMinutes());
+    const sec = pad(val.getUTCSeconds());
+    return `${y}-${m}-${d} ${hr}:${min}:${sec}`;
   }
 
   const d = new Date(val);
-  return isNaN(d.getTime()) ? null : d;
+  if (isNaN(d.getTime())) return null;
+  const y = d.getUTCFullYear();
+  const m = pad(d.getUTCMonth() + 1);
+  const day = pad(d.getUTCDate());
+  const hr = pad(d.getUTCHours());
+  const min = pad(d.getUTCMinutes());
+  const sec = pad(d.getUTCSeconds());
+  return `${y}-${m}-${day} ${hr}:${min}:${sec}`;
 }
 
 /**
- * Formats any Date or datetime string into local ISO format: "YYYY-MM-DDTHH:mm:ss"
- * matching the user's local timezone (+05:00).
+ * Formats a database date value into "YYYY-MM-DDTHH:mm:ss" for APIs and UI inputs,
+ * preserving the exact user-selected date and time without adding or subtracting any offset.
  */
-function toLocalISOString(date) {
-  if (!date) return null;
-  const d = parseLocalDateTime(date);
-  if (!d || isNaN(d.getTime())) return null;
-
-  // Add APP_TIMEZONE offset to get UTC date representing local wall-clock time
-  const localDate = new Date(d.getTime() + APP_TIMEZONE_OFFSET_MS);
-
-  const y = localDate.getUTCFullYear();
-  const m = pad(localDate.getUTCMonth() + 1);
-  const day = pad(localDate.getUTCDate());
-  const hr = pad(localDate.getUTCHours());
-  const min = pad(localDate.getUTCMinutes());
-  const sec = pad(localDate.getUTCSeconds());
-  return `${y}-${m}-${day}T${hr}:${min}:${sec}`;
+function toLocalISOString(val) {
+  if (!val) return null;
+  const sqlStr = formatForMySQL(val);
+  if (!sqlStr) return null;
+  return sqlStr.replace(' ', 'T');
 }
 
 /**
- * Returns true ONLY if the given start time is strictly in the future compared to now.
+ * Returns true ONLY if the given start time is strictly in the future compared to current local time.
  * Returns false if start time is in the past, equal to now, or invalid/empty.
  */
 function isFutureTime(timeVal) {
-  const startDate = parseLocalDateTime(timeVal);
-  if (!startDate) return false;
-  return startDate.getTime() > Date.now();
+  if (!timeVal) return false;
+  const startStr = formatForMySQL(timeVal);
+  if (!startStr) return false;
+  const currentStr = getCurrentLocalTimeString();
+  return startStr > currentStr;
 }
 
-module.exports = { APP_TIMEZONE, toLocalISOString, parseLocalDateTime, isFutureTime, getCurrentLocalTimeString };
+module.exports = {
+  APP_TIMEZONE,
+  getCurrentLocalTimeString,
+  formatForMySQL,
+  toLocalISOString,
+  isFutureTime
+};
 

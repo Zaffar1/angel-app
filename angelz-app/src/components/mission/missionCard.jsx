@@ -4,7 +4,7 @@ import { FaCalendar, FaClock, FaMedal } from "react-icons/fa";
 import { formatDateTime, formatDateTimeWithLocalTime } from "../../utils/dateUtils";
 import { getImageUrl } from "../../utils/getImageUrl";
 import useUserProfile from "../../hooks/useUserProfile";
-import { formatStatus } from "../../utils/missionStatusUtils";
+import { formatStatus, getEffectiveMissionStatus } from "../../utils/missionStatusUtils";
 
 export default function MissionCard({
     id,
@@ -27,15 +27,17 @@ export default function MissionCard({
         if (!user?.type) return;
         navigate(`/${user.type}/mission/${id}`);
     }
+    const effectiveStatus = getEffectiveMissionStatus(status, start_time);
     const statusColor = {
         open: "bg-blue-500",
         pending: "bg-yellow-500",
         process: "bg-yellow-500",
+        scheduled: "bg-amber-500",
         inprogress: "bg-purple-500",
         completed: "bg-green-500",
-    }[status?.toLowerCase()] || "bg-gray-400";
+    }[effectiveStatus?.toLowerCase()] || "bg-gray-400";
 
-    const displayStatus = formatStatus(status?.toLowerCase() === "process" ? "pending" : status);
+    const displayStatus = formatStatus(effectiveStatus?.toLowerCase() === "process" ? "pending" : effectiveStatus);
 
     return (
         <div

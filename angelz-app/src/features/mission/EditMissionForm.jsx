@@ -9,7 +9,7 @@ import MapComponent from "../../components/MapComponent";
 import { DateTimePicker } from "../../components/DateTimePicker";
 import { editMissionSchema } from "../../schema/mission";
 import { useUpdateMission, useMissionDetail } from "../../api/mission";
-import { formatForDateTimePicker, toLocalISOString } from "../../utils/dateUtils";
+import { formatForDateTimePicker, toLocalISOString, getTodayLocalDateString } from "../../utils/dateUtils";
 import { safeParseJson } from "../../utils/safeParseJson";
 import Loader from "../../components/Loader";
 import {
@@ -75,11 +75,6 @@ export default function EditMissionForm() {
     useEffect(() => {
         if (mission) {
             const timer = setTimeout(() => {
-                const formatForDateTimePicker = (dateString) => {
-                    if (!dateString) return '';
-                    const date = new Date(dateString);
-                    return date.toISOString();
-                };
                 setValue("start_time", formatForDateTimePicker(mission?.start_time));
                 setValue("end_time", formatForDateTimePicker(mission?.end_time));
             }, 50);
@@ -212,7 +207,7 @@ export default function EditMissionForm() {
                             value={field.value}
                             onChange={field.onChange}
                             error={errors.start_time?.message}
-                            minDate={new Date().toISOString().split('T')[0]}
+                            minDate={getTodayLocalDateString()}
                             required
                         />
                     )}
@@ -226,7 +221,7 @@ export default function EditMissionForm() {
                             value={field.value}
                             onChange={field.onChange}
                             error={errors.end_time?.message}
-                            minDate={startTime ? startTime.split('T')[0] : new Date().toISOString().split('T')[0]}
+                            minDate={startTime ? startTime.split('T')[0] : getTodayLocalDateString()}
                             required
                         />
                     )}

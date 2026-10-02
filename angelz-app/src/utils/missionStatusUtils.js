@@ -11,6 +11,7 @@ export const MISSION_STATUS_STYLES = {
     [MISSION_STATUS.INPROGRESS]: "bg-purple-100 text-purple-700",
     [MISSION_STATUS.COMPLETION_REQUESTED]: "bg-orange-100 text-orange-700",
     [MISSION_STATUS.REJECTED]: "bg-red-100 text-red-700",
+    [MISSION_STATUS.SCHEDULED]: "bg-amber-100 text-amber-700",
 };
 
 export const DISABLED_STATUSES = [
@@ -38,4 +39,21 @@ export const formatStatus = (status) => {
         .split(" ")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(" ");
+};
+
+/**
+ * Resolves the real-time status of a mission.
+ * If a mission has status 'scheduled' but its start time is in the past or now,
+ * it is effectively active ('process') and ready for progress.
+ */
+export const getEffectiveMissionStatus = (status, startTime) => {
+    if (!status) return "";
+    const s = status.toLowerCase();
+    if (s === MISSION_STATUS.SCHEDULED && startTime) {
+        const start = new Date(startTime);
+        if (!isNaN(start.getTime()) && start.getTime() <= Date.now()) {
+            return MISSION_STATUS.PROCESS;
+        }
+    }
+    return s;
 };

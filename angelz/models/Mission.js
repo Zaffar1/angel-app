@@ -1,5 +1,5 @@
 const connectDB = require('../config/db');
-const { toLocalISOString, isFutureTime, getCurrentLocalTimeString } = require("../utils/datetime");
+const { toLocalISOString, isFutureTime, getCurrentLocalTimeString, formatForMySQL } = require("../utils/datetime");
 
 exports.findByNameAndOrg = async (name, organizationId) => {
   const pool = await connectDB();
@@ -12,18 +12,22 @@ exports.findByNameAndOrg = async (name, organizationId) => {
 
 exports.insertMission = async (missionData) => {
   const pool = await connectDB();
+  const startTime = formatForMySQL(missionData.start_time);
+  const endTime = formatForMySQL(missionData.end_time);
+  const currentLocalTime = getCurrentLocalTimeString();
+
   const [result] = await pool.query(
     `INSERT INTO missions 
      (name, description, lat, lng, start_time, end_time, file, relevant_distance, work_type, organization_id, status,
-     mission_type, volunteer_required, prefered_volunteer, points, allow_interaction) 
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+     mission_type, volunteer_required, prefered_volunteer, points, allow_interaction, created_at) 
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       missionData.name,
       missionData.description || null,
       missionData.lat,
       missionData.lng,
-      missionData.start_time,
-      missionData.end_time,
+      startTime,
+      endTime,
       missionData.file || null,
       missionData.relevant_distance || null,
       missionData.work_type || null,
@@ -34,7 +38,7 @@ exports.insertMission = async (missionData) => {
       JSON.stringify(missionData.prefered_volunteer || []),
       missionData.points || 0,
       JSON.stringify(missionData.allow_interaction || { comments: false, likes: false, share: false }),
-      // JSON.stringify(missionData.images || [])
+      currentLocalTime
     ]
   );
   return result.insertId;
@@ -2072,6 +2076,8 @@ exports.addPoints = async (missionId, volunteerId, conn) => {
 
 exports.updateMission = async (missionId, missionData) => {
   const pool = await connectDB();
+  const startTime = formatForMySQL(missionData.start_time);
+  const endTime = formatForMySQL(missionData.end_time);
 
   const [result] = await pool.query(
     `UPDATE missions SET 
@@ -2094,8 +2100,8 @@ exports.updateMission = async (missionId, missionData) => {
       missionData.description || null,
       missionData.lat,
       missionData.lng,
-      missionData.start_time,
-      missionData.end_time,
+      startTime,
+      endTime,
       missionData.file || null,
       missionData.relevant_distance || null,
       missionData.work_type || null,

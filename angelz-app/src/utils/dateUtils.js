@@ -43,13 +43,15 @@ export function parseTime(value) {
  */
 export function formatDate(dateStr) {
   if (!dateStr) return "";
-  const date = new Date(dateStr);
+  const date = typeof dateStr === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
+    ? new Date(`${dateStr}T00:00:00`)
+    : new Date(dateStr);
+  if (isNaN(date.getTime())) return "";
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
-    // }).toLowerCase();
-  })
+  });
 }
 
 /* Format time and date together */
@@ -57,6 +59,7 @@ export function formatDateTime(dateStr) {
   if (!dateStr) return { date: "", time: "" };
 
   const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return { date: "", time: "" };
 
   const formattedDate = date.toLocaleDateString("en-US", {
     month: "short",
@@ -69,8 +72,7 @@ export function formatDateTime(dateStr) {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
-    })
-  // .toLowerCase();
+    });
 
   return { date: formattedDate, time: formattedTime };
 }
@@ -78,13 +80,14 @@ export function formatDateTime(dateStr) {
 export function formatDateTimeWithLocalTime(dateStr) {
   if (!dateStr) return { date: "", time: "" };
 
-  const [datePart, timePart] = dateStr.split("T");
-  const [year, month, day] = datePart.split("-");
-  const [hour, minute] = timePart.split(":");
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return { date: "", time: "" };
 
-  const date = new Date(year, month - 1, day, hour, minute);
-
-  const formattedDate = date.toLocaleDateString();
+  const formattedDate = date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
   const formattedTime = date.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -117,17 +120,28 @@ export function isStartBeforeEnd(start, end) {
   return true;
 }
 
-// convert time zone utc
+// Convert local date/time string to standard UTC ISO string for backend
 export function toLocalISOString(dateStr) {
-  const date = new Date(dateStr);
-  return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString();
+  if (!dateStr) return "";
+  if (dateStr instanceof Date) {
+    return isNaN(dateStr.getTime()) ? "" : dateStr.toISOString();
+  }
+  let safeStr = String(dateStr).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(safeStr)) {
+    safeStr += "T00:00:00";
+  }
+  const date = new Date(safeStr);
+  if (isNaN(date.getTime())) return "";
+  return date.toISOString();
 }
 
-// convert time date to local system
+// Convert date string to local system datetime string (YYYY-MM-DDTHH:mm)
 export const toDateTimeLocal = (dateString) => {
   if (!dateString) return "";
 
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "";
+
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -139,9 +153,23 @@ export const toDateTimeLocal = (dateString) => {
 
 export const formatForDateTimePicker = (dateString) => {
   if (!dateString) return '';
-  if (dateString.includes('T') && dateString.endsWith('Z')) {
-    return dateString;
-  }
   const date = new Date(dateString);
-  return date.toISOString();
+  return isNaN(date.getTime()) ? '' : date.toISOString();
+};
+
+// Get today's date in local YYYY-MM-DD format (safe for minDate pickers)
+export const getTodayLocalDateString = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+// Check if a date/time is past or current
+export const isPastOrCurrent = (dateStr) => {
+  if (!dateStr) return false;
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return false;
+  return d.getTime() <= Date.now();
 };

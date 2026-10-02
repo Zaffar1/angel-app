@@ -8,7 +8,7 @@ import { useCreateMission } from "../../api/mission";
 import { useNavigate } from "react-router-dom";
 import MapComponent from "../../components/MapComponent";
 import { DateTimePicker } from "../../components/DateTimePicker";
-import { toLocalISOString } from "../../utils/dateUtils";
+import { toLocalISOString, getTodayLocalDateString } from "../../utils/dateUtils";
 
 import {
   FaHeart, FaRegHeart, FaPaperPlane, FaComment, FaRegComment
@@ -146,7 +146,7 @@ export default function AddMissionForm() {
               value={field.value}
               onChange={field.onChange}
               error={errors.start_time?.message}
-              minDate={new Date().toISOString().split("T")[0]}
+              minDate={getTodayLocalDateString()}
               required
             />
           )}
@@ -161,7 +161,7 @@ export default function AddMissionForm() {
               value={field.value}
               onChange={field.onChange}
               error={errors.end_time?.message}
-              minDate={startTime ? startTime.split("T")[0] : new Date().toISOString().split("T")[0]}
+              minDate={startTime ? startTime.split("T")[0] : getTodayLocalDateString()}
               required
             />
           )}

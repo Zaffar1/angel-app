@@ -7,7 +7,7 @@ import { useGetGroupVolunteers, useAssignGroupVolunteersToMission, useUpdateGrou
 import { getImageUrl } from "../../utils/getImageUrl";
 import { safeParseJson } from "../../utils/safeParseJson";
 import useUserProfile from "../../hooks/useUserProfile";
-import { getStatusClass, isMissionDisabled, formatStatus } from "../../utils/missionStatusUtils";
+import { getStatusClass, isMissionDisabled, formatStatus, getEffectiveMissionStatus } from "../../utils/missionStatusUtils";
 import { showError } from "../../utils/toast";
 import MapComponent from "../../components/MapComponent";
 import ApplicantsTable from "../../components/applicants/ApplicantsTable";
@@ -230,8 +230,9 @@ export default function MissionDetails() {
         postFeed(mission.id, { onSuccess: refetch });
     }
 
-    const disabled = isMissionDisabled(mission.status);
-    const statusColor = getStatusClass(mission.status);
+    const effectiveStatus = getEffectiveMissionStatus(mission.status, mission.start_time);
+    const disabled = isMissionDisabled(effectiveStatus);
+    const statusColor = getStatusClass(effectiveStatus);
     const applicants = mission?.applied_volunteers;
 
     const {
@@ -285,7 +286,7 @@ export default function MissionDetails() {
                         <span
                             className={`capitalize px-3 py-1 rounded-full text-sm font-medium ${statusColor}`}
                         >
-                            {formatStatus(mission.status === "process" ? "pending" : mission.status)}
+                            {formatStatus(effectiveStatus === "process" ? "pending" : effectiveStatus)}
                         </span>
                         <h2 className="text-xl font-semibold text-gray-700 mt-2">
                             {mission.name}
