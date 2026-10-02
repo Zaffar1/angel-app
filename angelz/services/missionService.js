@@ -144,8 +144,8 @@ exports.toggleLike = async (missionId, userId) => {
   );
 
   // Fetch mission creator once
-  const organizationUser = await missionRequestModel.findMissionCreatorUser(missionId);
-  const ownerId = organizationUser?.id || null;
+  const organizationUser = await missionModel.findMissionCreatorUser(missionId);
+  const ownerId = organizationUser?.id || mission.posted_by || null;
 
   if (existing.length > 0) {
     // Unlike
@@ -2795,30 +2795,43 @@ exports.addComment = async (missionId, userId, comment) => {
   const saved = await missionModel.addComment(missionId, userId, comment);
 
   const owner = await missionModel.findMissionCreatorUser(missionId);
-  const ownerId = owner?.id;
-
   const mission = await missionModel.findById(missionId);
   if (!mission) throw { type: "not_found", message: "Mission does not exist" };
 
+  const ownerId = owner?.id || mission.posted_by || null;
+
   if (ownerId && ownerId !== userId) {
-    const pool = await connectDB();
-    const [[user]] = await pool.query(
-      `SELECT name FROM users WHERE id = ?`,
-      [userId]
-    );
+    try {
+      const pool = await connectDB();
+      const [[user]] = await pool.query(
+        `SELECT name FROM users WHERE id = ?`,
+        [userId]
+      );
 
-    const notif = await notificationModel.sendNotification({
-      sender_id: userId,
-      receiver_id: mission.posted_by,
-      type: "mission_comment",
-      message: `${user?.name} commented on your feed "${mission.name}".`,
-      meta: { mission_id: missionId }
-    });
+      const commenterName = user?.name || "Someone";
+      const missionName = mission?.name || "mission";
 
-    notifyUser(ownerId, notif);
+      const notif = await notificationModel.sendNotification({
+        sender_id: userId,
+        receiver_id: ownerId,
+        type: "mission_comment",
+        message: `${commenterName} commented on your mission "${missionName}".`,
+        meta: { 
+          mission_id: Number(missionId), 
+          missionId: Number(missionId), 
+          mission_name: missionName, 
+          comment_id: typeof saved === 'object' ? saved?.id : saved, 
+          comment_by: userId 
+        }
+      });
+
+      notifyUser(ownerId, notif);
+    } catch (notifErr) {
+      console.error("Failed to send mission comment notification:", notifErr);
+    }
   }
 
-  return saved;
+  return typeof saved === 'object' ? saved : { id: saved, ownerId };
 };
 
 

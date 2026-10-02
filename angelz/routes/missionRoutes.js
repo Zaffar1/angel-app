@@ -76,9 +76,15 @@ router.post(
 );
 
 router.post("/like", auth, missionController.likeMission);
+router.post("/:missionId/like", auth, missionController.likeMission);
 
 router.post(
   "/:missionId/comment",
+  auth,
+  missionController.addComment
+);
+router.post(
+  "/comment",
   auth,
   missionController.addComment
 );

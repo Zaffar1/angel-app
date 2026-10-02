@@ -135,25 +135,36 @@ exports.likeMission = asyncHandler(async (req, res) => {
   const result = await missionService.toggleLike(targetId, userId);
 
   // Only send notification if liked and not own mission
-  if (result.liked && result.mission && result.mission.posted_by && result.mission.posted_by !== userId) {
-    const pool = await connectDB();
+  const ownerId = result.ownerId || result.mission?.posted_by;
+  if (result.liked && ownerId && ownerId !== userId) {
+    try {
+      const pool = await connectDB();
 
-    const [rows] = await pool.query(
-      "SELECT id, name FROM users WHERE id = ?",
-      [userId]
-    );
+      const [rows] = await pool.query(
+        "SELECT id, name FROM users WHERE id = ?",
+        [userId]
+      );
 
-    const volunteerName = rows[0]?.name || "Someone";
+      const volunteerName = rows[0]?.name || "Someone";
+      const missionName = result.mission?.name || "mission";
 
-    const notif = await notificationModel.sendNotification({
-      sender_id: userId,
-      receiver_id: result.mission.posted_by,
-      type: "mission_like",
-      message: `${volunteerName} liked your feed "${result.mission.name}".`,
-      meta: { mission_id: targetId, liked_by: userId },
-    });
+      const notif = await notificationModel.sendNotification({
+        sender_id: userId,
+        receiver_id: ownerId,
+        type: "mission_like",
+        message: `${volunteerName} liked your mission "${missionName}".`,
+        meta: { 
+          mission_id: Number(targetId), 
+          missionId: Number(targetId), 
+          mission_name: missionName, 
+          liked_by: userId 
+        },
+      });
 
-    notifyUser(result.ownerId, notif);
+      notifyUser(ownerId, notif);
+    } catch (notifErr) {
+      console.error("Failed to send mission like notification:", notifErr);
+    }
   }
 
   return res.json({
@@ -583,7 +594,7 @@ exports.addComment = asyncHandler(async (req, res) => {
   res.status(201).json({
     success: true,
     message: "Commented on mission",
-    commentId: result.id
+    commentId: result?.id || result
   });
 });
 

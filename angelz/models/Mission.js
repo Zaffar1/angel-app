@@ -2000,9 +2000,10 @@ exports.findMissionCreatorUser = async (missionId) => {
     `
     SELECT u.id, u.name, u.email
     FROM missions m
-    JOIN organizations o ON m.organization_id = o.id
-    JOIN users u ON o.user_id = u.id
+    LEFT JOIN organizations o ON (m.organization_id = o.id OR m.organization_id = o.user_id)
+    LEFT JOIN users u ON (u.id = o.user_id OR (o.user_id IS NULL AND u.id = m.posted_by))
     WHERE m.id = ?
+    LIMIT 1
     `,
     [missionId]
   );
