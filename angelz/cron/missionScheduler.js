@@ -1,7 +1,7 @@
 const cron = require("node-cron");
 const connectDB = require("../config/db");
 const notificationModel = require("../models/notificationModel");
-const { notifyUser } = require("../services/socket");
+const { notifyUser, emitCrudEvent } = require("../services/socket");
 const { getCurrentLocalTimeString } = require("../utils/datetime");
 
 module.exports.start = () => {
@@ -36,6 +36,15 @@ module.exports.start = () => {
         //   `UPDATE missions SET status = 'inprogress' WHERE id = ?`,
         //   [mission.id]
         // );
+
+        emitCrudEvent({
+          resource: 'mission',
+          action: 'updated',
+          id: mission.id,
+          data: { id: mission.id, name: mission.name, status: 'process' },
+          room: 'public',
+          meta: { scheduledTrigger: true }
+        });
 
         // Get assigned volunteer
         const [[volunteer]] = await pool.query(

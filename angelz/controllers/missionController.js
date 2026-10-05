@@ -2,16 +2,27 @@ const asyncHandler = require('../middleware/asyncHandler');
 const missionService = require('../services/missionService');
 const { missionValidation } = require('../validations/missionValidation');
 const notificationModel = require("../models/notificationModel");
-const { notifyUser } = require("../services/socket");
+const { notifyUser, emitCrudEvent } = require("../services/socket");
 const connectDB = require('../config/db');
 const userPostService = require('../services/userPostService');
 
 exports.createMission = async (req, res) => {
   try {
-    const result = await missionService.createMission(req.body, req.files,req.user.organization_id);
+    const result = await missionService.createMission(req.body, req.files, req.user.organization_id);
+    const missionId = result?.missionId;
+    const fullMission = missionId ? await missionService.getMissionById(missionId).catch(() => null) : null;
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'created',
+      id: missionId,
+      data: fullMission || { id: missionId, ...req.body },
+      actorId: req.user?.id,
+      room: 'public'
+    });
+
     res.status(201).json({
       message: "Mission created successfully",
-      // ...result,
     });
   } catch (err) {
     console.error("Mission creation failed:", err);
@@ -109,6 +120,16 @@ exports.likeMission = asyncHandler(async (req, res) => {
   if (type === 'post') {
     const result = await userPostService.toggleLike(targetId, userId);
 
+    emitCrudEvent({
+      resource: 'user_post',
+      action: 'updated',
+      id: Number(targetId),
+      data: { id: Number(targetId), liked: result.liked, userId },
+      actorId: userId,
+      room: 'public',
+      meta: { type: 'like', liked: result.liked }
+    });
+
     // Add notification similar to mission if posts have an owner field (optional)
     if (result.liked && result.post && result.post.user_id && result.post.user_id !== userId) {
       const pool = await connectDB();
@@ -133,6 +154,16 @@ exports.likeMission = asyncHandler(async (req, res) => {
   }
 
   const result = await missionService.toggleLike(targetId, userId);
+
+  emitCrudEvent({
+    resource: 'mission',
+    action: 'updated',
+    id: Number(targetId),
+    data: { id: Number(targetId), liked: result.liked, userId },
+    actorId: userId,
+    room: 'public',
+    meta: { type: 'like', liked: result.liked }
+  });
 
   // Only send notification if liked and not own mission
   const ownerId = result.ownerId || result.mission?.posted_by;
@@ -228,6 +259,17 @@ exports.assignVolunteer = async (req, res) => {
       req.body.missionId,
       req.body.volunteerId
     );
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'updated',
+      id: req.body.missionId,
+      data: result,
+      actorId: req.user?.id,
+      room: ['public', `user:${req.body.volunteerId}`, 'role:admin'],
+      meta: { type: 'assign_volunteer', volunteerId: req.body.volunteerId }
+    });
+
     res.json(result);
   } catch (err) {
     console.error("Error assigning volunteer:", err);
@@ -260,6 +302,16 @@ exports.startMission = async (req, res) => {
     }
 
     const result = await missionService.startMission(mission_id, volunteer_id);
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'updated',
+      id: mission_id,
+      data: result,
+      actorId: req.user?.id,
+      room: ['public', `user:${volunteer_id}`, 'role:admin'],
+      meta: { type: 'start_mission', status: 'started' }
+    });
 
     res.json({
       message: result.message,
@@ -373,6 +425,17 @@ const postResult = await userPostService.getAllPosts(currentUserId, page, limit)
 exports.addPendingRequests = async (req, res) => {
   try {
     await missionService.addPendingRequests(req.params.missionId, req.body.volunteers);
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'updated',
+      id: req.params.missionId,
+      data: { missionId: req.params.missionId, volunteers: req.body.volunteers },
+      actorId: req.user?.id,
+      room: ['public', 'role:admin'],
+      meta: { type: 'pending_requests' }
+    });
+
     res.json({ message: "Pending requests added" });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
@@ -392,6 +455,17 @@ exports.rejectMissionRequest = async (req, res) => {
       missionId,
       volunteerId
     );
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'updated',
+      id: missionId,
+      data: result,
+      actorId: req.user?.id,
+      room: ['public', `user:${volunteerId}`, 'role:admin'],
+      meta: { type: 'reject_request', volunteerId }
+    });
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
@@ -404,6 +478,17 @@ exports.canPost = async (req, res) => {
     if (!result) {
       return res.status(404).json({ message: "Mission not found" });
     }
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'updated',
+      id: req.params.id,
+      data: result,
+      actorId: req.user?.id,
+      room: 'public',
+      meta: { type: 'can_post' }
+    });
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
@@ -458,6 +543,17 @@ exports.completeMission = async (req, res, next) => {
 
   try {
     const result = await missionService.completeMission(missionId, volunteerId);
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'updated',
+      id: missionId,
+      data: result,
+      actorId: req.user?.id,
+      room: ['public', `user:${volunteerId}`, 'role:admin'],
+      meta: { type: 'complete_mission', status: 'completed' }
+    });
+
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -470,6 +566,17 @@ exports.rejectMissionCompletion = async (req, res, next) => {
 
   try {
     const result = await missionService.rejectMissionCompletion(missionId, volunteerId);
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'updated',
+      id: missionId,
+      data: result,
+      actorId: req.user?.id,
+      room: ['public', `user:${volunteerId}`, 'role:admin'],
+      meta: { type: 'reject_completion' }
+    });
+
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -491,6 +598,17 @@ exports.updateMission = async (req, res) => {
       return res.status(404).json({ message: "Mission not found" });
     }
 
+    const fullMission = await missionService.getMissionById(missionId).catch(() => null);
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'updated',
+      id: missionId,
+      data: fullMission || { id: missionId, ...req.body },
+      actorId: req.user?.id,
+      room: 'public'
+    });
+
     res.json({ message: "Mission updated successfully" });
   } catch (err) {
     console.error("Mission update failed:", err);
@@ -510,6 +628,14 @@ exports.deleteMission = async (req, res) => {
     const organizationId = req.user.organization_id;
 
     await missionService.deleteMission(missionId, organizationId);
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'deleted',
+      id: missionId,
+      actorId: req.user?.id,
+      room: 'public'
+    });
 
     res.json({ message: "Mission deleted successfully" });
   } catch (err) {
@@ -562,6 +688,16 @@ exports.addComment = asyncHandler(async (req, res) => {
   if (type === 'post') {
     const result = await userPostService.addComment(targetId, userId, comment);
 
+    emitCrudEvent({
+      resource: 'post_comment',
+      action: 'created',
+      id: result.id,
+      data: { id: result.id, post_id: Number(targetId), user_id: userId, comment, created_at: new Date().toISOString() },
+      actorId: userId,
+      room: 'public',
+      meta: { postId: Number(targetId) }
+    });
+
     // Notify post owner
     if (result.ownerId && result.ownerId !== userId) {
       try {
@@ -590,11 +726,22 @@ exports.addComment = asyncHandler(async (req, res) => {
   }
 
   const result = await missionService.addComment(targetId, userId, comment);
+  const commentId = result?.id || result;
+
+  emitCrudEvent({
+    resource: 'mission_comment',
+    action: 'created',
+    id: commentId,
+    data: { id: commentId, mission_id: Number(targetId), user_id: userId, comment, created_at: new Date().toISOString() },
+    actorId: userId,
+    room: 'public',
+    meta: { missionId: Number(targetId) }
+  });
 
   res.status(201).json({
     success: true,
     message: "Commented on mission",
-    commentId: result?.id || result
+    commentId
   });
 });
 
@@ -642,6 +789,16 @@ exports.updateComment = asyncHandler(async (req, res) => {
   if (type === 'post') {
     const updated = await userPostService.updateComment(commentId, userId, comment);
     if (!updated) return res.status(403).json({ success: false, message: "Not authorized to edit this comment" });
+
+    emitCrudEvent({
+      resource: 'post_comment',
+      action: 'updated',
+      id: Number(commentId),
+      data: { id: Number(commentId), comment },
+      actorId: userId,
+      room: 'public'
+    });
+
     return res.json({ success: true, message: "Comment updated" });
   }
 
@@ -649,30 +806,49 @@ exports.updateComment = asyncHandler(async (req, res) => {
   if (type === 'mission') {
     const updated = await missionService.updateComment(commentId, userId, comment);
     if (!updated) return res.status(403).json({ success: false, message: "Not authorized to edit this comment" });
+
+    emitCrudEvent({
+      resource: 'mission_comment',
+      action: 'updated',
+      id: Number(commentId),
+      data: { id: Number(commentId), comment },
+      actorId: userId,
+      room: 'public'
+    });
+
     return res.json({ success: true, message: "Comment updated" });
   }
 
   // If type is missing, try both (fallback)
   let updated = await userPostService.updateComment(commentId, userId, comment);
-  if (updated) return res.json({ success: true, message: "Comment updated" });
+  if (updated) {
+    emitCrudEvent({
+      resource: 'post_comment',
+      action: 'updated',
+      id: Number(commentId),
+      data: { id: Number(commentId), comment },
+      actorId: userId,
+      room: 'public'
+    });
+    return res.json({ success: true, message: "Comment updated" });
+  }
 
   updated = await missionService.updateComment(commentId, userId, comment);
-  if (updated) return res.json({ success: true, message: "Comment updated" });
+  if (updated) {
+    emitCrudEvent({
+      resource: 'mission_comment',
+      action: 'updated',
+      id: Number(commentId),
+      data: { id: Number(commentId), comment },
+      actorId: userId,
+      room: 'public'
+    });
+    return res.json({ success: true, message: "Comment updated" });
+  }
 
   // Default error if neither worked
   res.status(403).json({ success: false, message: "Not authorized to edit this comment or comment not found" });
 });
-
-// exports.updateComment = asyncHandler(async (req, res) => {
-//   const { commentId } = req.params;
-//   const { comment } = req.body;
-//   const userId = req.user.id;
-
-//   const updated = await missionService.updateComment(commentId, userId, comment);
-//   if (!updated) return res.status(403).json({ success: false, message: "Not authorized to edit this comment" });
-
-//   res.json({ success: true, message: "Comment updated" });
-// });
 
 exports.toggleComment = asyncHandler(async (req, res) => {
   const { commentId } = req.params;
@@ -686,6 +862,16 @@ exports.toggleComment = asyncHandler(async (req, res) => {
       message: result.message
     });
   }
+
+  emitCrudEvent({
+    resource: 'mission_comment',
+    action: 'updated',
+    id: Number(commentId),
+    data: { id: Number(commentId), isDisabled: result.isDisabled },
+    actorId: userId,
+    room: 'public',
+    meta: { type: 'toggle', isDisabled: result.isDisabled }
+  });
 
   res.json({
     success: true,
@@ -704,42 +890,77 @@ exports.deleteComment = asyncHandler(async (req, res) => {
   // If type is explicitly 'post', use post service
   if (type === 'post') {
     const deleted = await userPostService.deleteComment(commentId, userId);
-    if (deleted) return res.json({ success: true, message: "Comment deleted" });
+    if (deleted) {
+      emitCrudEvent({
+        resource: 'post_comment',
+        action: 'deleted',
+        id: Number(commentId),
+        actorId: userId,
+        room: 'public'
+      });
+      return res.json({ success: true, message: "Comment deleted" });
+    }
     return res.status(403).json({ success: false, message: "Not authorized to delete this comment or comment not found" });
   }
 
   // If type is explicitly 'mission', use mission service
   if (type === 'mission') {
     const deleted = await missionService.deleteComment(commentId, userId);
-    if (deleted) return res.json({ success: true, message: "Comment deleted" });
+    if (deleted) {
+      emitCrudEvent({
+        resource: 'mission_comment',
+        action: 'deleted',
+        id: Number(commentId),
+        actorId: userId,
+        room: 'public'
+      });
+      return res.json({ success: true, message: "Comment deleted" });
+    }
     return res.status(403).json({ success: false, message: "Not authorized to delete this comment or comment not found" });
   }
 
   // If no type is provided, try searching in both tables as a fallback
   let deleted = await userPostService.deleteComment(commentId, userId);
-  if (deleted) return res.json({ success: true, message: "Comment deleted" });
+  if (deleted) {
+    emitCrudEvent({
+      resource: 'post_comment',
+      action: 'deleted',
+      id: Number(commentId),
+      actorId: userId,
+      room: 'public'
+    });
+    return res.json({ success: true, message: "Comment deleted" });
+  }
 
   deleted = await missionService.deleteComment(commentId, userId);
-  if (deleted) return res.json({ success: true, message: "Comment deleted" });
+  if (deleted) {
+    emitCrudEvent({
+      resource: 'mission_comment',
+      action: 'deleted',
+      id: Number(commentId),
+      actorId: userId,
+      room: 'public'
+    });
+    return res.json({ success: true, message: "Comment deleted" });
+  }
 
   res.status(403).json({ success: false, message: "Not authorized to delete this comment or comment not found" });
 });
-
-// exports.deleteComment = asyncHandler(async (req, res) => {
-//   const { commentId } = req.params;
-//   const userId = req.user.id;
-
-//   const deleted = await missionService.deleteComment(commentId, userId);
-//   if (!deleted) return res.status(403).json({ success: false, message: "Not authorized to delete this comment" });
-
-//   res.json({ success: true, message: "Comment deleted" });
-// });
 
 // Add Check-In
 exports.addCheckIn = async (req, res) => {
   try {
     const { missionId, volunteerId, checkInTime, checkOutTime, pointsEarned } = req.body;
     const result = await missionService.addCheckIn(missionId, volunteerId, checkInTime, checkOutTime, pointsEarned);
+
+    emitCrudEvent({
+      resource: 'mission_checkin',
+      action: 'created',
+      id: result.checkInId,
+      data: { checkInId: result.checkInId, missionId, volunteerId, checkInTime, checkOutTime, pointsEarned },
+      actorId: req.user?.id,
+      room: ['public', `user:${volunteerId}`, 'role:admin']
+    });
 
     res.status(201).json({
       success: true,
@@ -756,6 +977,15 @@ exports.updateCheckOut = async (req, res) => {
   try {
     const { checkInId, checkOutTime, pointsEarned } = req.body;
     await missionService.updateCheckOut(checkInId, checkOutTime, pointsEarned);
+
+    emitCrudEvent({
+      resource: 'mission_checkin',
+      action: 'updated',
+      id: checkInId,
+      data: { checkInId, checkOutTime, pointsEarned },
+      actorId: req.user?.id,
+      room: ['public', 'role:admin']
+    });
 
     res.status(200).json({
       success: true,

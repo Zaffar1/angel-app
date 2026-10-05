@@ -1,4 +1,5 @@
 const notificationService = require("../services/notificationService");
+const { emitCrudEvent } = require("../services/socket");
 
 exports.getMyNotifications = async (req, res) => {
   try {
@@ -61,6 +62,16 @@ exports.markNotificationsAsRead = async (req, res) => {
   try {
     const user_id = req.user.id;
     const result = await notificationService.markNotificationsAsRead(user_id);
+
+    emitCrudEvent({
+      resource: 'notification',
+      action: 'updated',
+      id: user_id,
+      data: { readAll: true, count: 0, userId: user_id },
+      actorId: user_id,
+      room: `user:${user_id}`,
+      meta: { type: 'mark_all_read' }
+    });
 
     res.status(200).json(result);
   } catch (err) {

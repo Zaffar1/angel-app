@@ -1,6 +1,7 @@
 const OrganizationMedia = require('../models/OrganizationMedia');
 const path = require('path');
 const connectDB = require('../config/db');
+const { emitCrudEvent } = require('../services/socket');
 
 exports.uploadMedia = async (req, res) => {
   try {
@@ -26,6 +27,16 @@ exports.uploadMedia = async (req, res) => {
       results.push({ id: result.insertId, organization_id: organizationId, type, url });
     }
 
+    emitCrudEvent({
+      resource: 'organization_media',
+      action: 'created',
+      id: organizationId,
+      data: results,
+      actorId: req.user?.id,
+      room: ['role:admin', 'public'],
+      meta: { organizationId }
+    });
+
     res.status(200).json({ uploaded_media: results });
 
   } catch (error) {
@@ -33,3 +44,4 @@ exports.uploadMedia = async (req, res) => {
     res.status(500).json({ message: 'Local upload failed', error: error.message });
   }
 };
+

@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const connectDB = require('../config/db');
 const userService = require('../services/userService');
 const { registerValidation, loginValidation, editValidation, changePasswordValidation } = require('../validations/userValidation');
+const { emitCrudEvent } = require('../services/socket');
 
 exports.registerUser = async (req, res) => {
   try {
@@ -14,6 +15,15 @@ exports.registerUser = async (req, res) => {
     }
 
     const result = await userService.registerUser(req.body);
+
+    emitCrudEvent({
+      resource: 'user',
+      action: 'created',
+      id: result.user.id,
+      data: result.user,
+      actorId: result.user.id,
+      room: 'role:admin'
+    });
 
     res.status(200).json({
       message: "User registered successfully",
@@ -181,6 +191,17 @@ exports.editProfile = async (req, res) => {
 
     //  Pass parsed body to service
     const result = await userService.editProfile(req.user.id, body);
+    const updatedProfile = await userService.getUserProfile(req.user.id).catch(() => null);
+
+    emitCrudEvent({
+      resource: 'user',
+      action: 'updated',
+      id: req.user.id,
+      data: updatedProfile || { id: req.user.id, ...body },
+      actorId: req.user.id,
+      room: [`user:${req.user.id}`, 'role:admin', 'public']
+    });
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -236,6 +257,15 @@ exports.userProfile = async (req, res) => {
 exports.userDelete = async (req, res) => {
   try {
     const result = await userService.deleteUser(req.user.id);
+
+    emitCrudEvent({
+      resource: 'user',
+      action: 'deleted',
+      id: req.user.id,
+      actorId: req.user.id,
+      room: [`user:${req.user.id}`, 'role:admin', 'public']
+    });
+
     res.json(result);
   } catch (err) {
     res.status(404).json({ message: err.message });

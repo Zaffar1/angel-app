@@ -4,7 +4,7 @@ require('dotenv').config();
 const cors = require('cors');
 const path = require('path');
 const http = require('http');
-const { Server } = require('socket.io');
+
 
 // Import routes
 const userRoutes = require('./routes/userRoutes');
@@ -112,22 +112,9 @@ const server = http.createServer(app);
 // SOCKET.IO
 // ==========================================
 
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-  }
-});
+const { initSocket } = require('./services/socket');
+const io = initSocket(server, allowedOrigins);
 
-io.on('connection', (socket) => {
-  console.log('✅ A user connected');
-
-  socket.on('disconnect', () => {
-    console.log('❌ User disconnected');
-  });
-});
 
 // ==========================================
 // START SERVER

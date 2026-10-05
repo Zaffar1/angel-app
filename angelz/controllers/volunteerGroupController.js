@@ -7,6 +7,7 @@ const {
     assignToMissionValidation,
   assignToOrganizationValidation,
 } = require('../validations/volunteerGroupValidation');
+const { emitCrudEvent } = require('../services/socket');
 
 // ─── Register Volunteer Group ─────────────────────────────────────────────────
 
@@ -24,6 +25,15 @@ exports.registerGroup = async (req, res) => {
     }
 
     const result = await volunteerGroupService.registerGroup(value);
+
+    emitCrudEvent({
+      resource: 'volunteer_group',
+      action: 'created',
+      id: result?.id || result?.group?.id,
+      data: result,
+      actorId: result?.id || result?.group?.id,
+      room: ['role:admin', 'public']
+    });
 
     return res.status(201).json({
       success: true,
@@ -81,6 +91,15 @@ exports.inviteVolunteer = async (req, res) => {
 
     const groupUserId = req.user.id;
     const result = await volunteerGroupService.inviteVolunteer(groupUserId, value);
+
+    emitCrudEvent({
+      resource: 'volunteer_group_member',
+      action: 'created',
+      id: result?.id,
+      data: result,
+      actorId: groupUserId,
+      room: [`user:${groupUserId}`, 'role:admin']
+    });
 
     return res.status(201).json({
       success: true,
@@ -158,6 +177,15 @@ exports.updateVolunteer = async (req, res) => {
       value
     );
 
+    emitCrudEvent({
+      resource: 'volunteer_group_member',
+      action: 'updated',
+      id: parseInt(id),
+      data: { id: parseInt(id), ...value },
+      actorId: req.user.id,
+      room: [`user:${req.user.id}`, 'role:admin', 'public']
+    });
+
     return res.status(200).json({
       success: true,
       message: result.message,
@@ -178,6 +206,14 @@ exports.deleteVolunteer = async (req, res) => {
       req.user.id,
       req.user.type
     );
+
+    emitCrudEvent({
+      resource: 'volunteer_group_member',
+      action: 'deleted',
+      id: parseInt(id),
+      actorId: req.user.id,
+      room: [`user:${req.user.id}`, 'role:admin', 'public']
+    });
 
     return res.status(200).json({
       success: true,
@@ -209,6 +245,22 @@ exports.assignToMission = async (req, res) => {
     );
 
     const { assigned, skipped, mission_name } = result;
+
+    // Rule 11: Bulk event emitted!
+    emitCrudEvent({
+      resource: 'mission_volunteers',
+      action: 'bulk_assigned',
+      id: value.mission_id,
+      data: result,
+      actorId: req.user.id,
+      room: ['public', 'role:admin'],
+      meta: {
+        mission_id: value.mission_id,
+        volunteer_ids: value.volunteer_ids,
+        assigned_count: assigned?.length || 0
+      }
+    });
+
     let message;
     if (assigned.length > 0 && skipped.length === 0) {
       message = `Successfully assigned ${assigned.length} volunteer${assigned.length > 1 ? 's' : ''} to mission "${mission_name}".`;
@@ -251,6 +303,22 @@ exports.assignToOrganization = async (req, res) => {
     );
 
     const { assigned, skipped, organization_name } = result;
+
+    // Rule 11: Bulk event emitted!
+    emitCrudEvent({
+      resource: 'organization_volunteers',
+      action: 'bulk_assigned',
+      id: value.organization_id,
+      data: result,
+      actorId: req.user.id,
+      room: ['public', 'role:admin'],
+      meta: {
+        organization_id: value.organization_id,
+        volunteer_ids: value.volunteer_ids,
+        assigned_count: assigned?.length || 0
+      }
+    });
+
     let message;
     if (assigned.length > 0 && skipped.length === 0) {
       message = `Successfully added ${assigned.length} volunteer${assigned.length > 1 ? 's' : ''} to "${organization_name}".`;
@@ -288,6 +356,16 @@ exports.updateMissionStatus = async (req, res) => {
       req.user.id,
       { mission_id, volunteer_id, status: status || 'completed' }
     );
+
+    emitCrudEvent({
+      resource: 'mission',
+      action: 'updated',
+      id: mission_id,
+      data: result,
+      actorId: req.user.id,
+      room: ['public', 'role:admin'],
+      meta: { status: status || 'completed', volunteer_id }
+    });
 
     return res.status(200).json({
       success: true,
