@@ -2,7 +2,6 @@ const { requestMissionValidation } = require('../validations/missionValidation')
 const volunteerService  = require('../services/volunteerService');
 const Leaderboard = require('../models/volunteerModel');
 const AppError = require('../utils/AppError');
-const { emitCrudEvent } = require('../services/socket');
 
 exports.allVolunteers = async (req, res, next) => {
   try {
@@ -34,16 +33,6 @@ exports.requestMission = async (req, res) => {
     const result = await volunteerService.requestMission({
       mission_id: req.body.mission_id,
       volunteer_id: req.user.id,
-    });
-
-    emitCrudEvent({
-      resource: 'mission_request',
-      action: 'created',
-      id: result?.id || req.body.mission_id,
-      data: result,
-      actorId: req.user.id,
-      room: ['role:admin', 'public'],
-      meta: { mission_id: req.body.mission_id, volunteer_id: req.user.id }
     });
 
     res.status(201).json(result);
@@ -193,16 +182,6 @@ exports.requestMissionCompletion = async (req, res) => {
       volunteer_id: req.user.id,
     });
 
-    emitCrudEvent({
-      resource: 'mission_completion_request',
-      action: 'created',
-      id: result?.id || req.body.mission_id,
-      data: result,
-      actorId: req.user.id,
-      room: ['role:admin', 'public'],
-      meta: { mission_id: req.body.mission_id, volunteer_id: req.user.id }
-    });
-
     res.status(201).json({
       success: true,
       message: "Mission completion request sent to organization.",
@@ -229,16 +208,6 @@ exports.getVolunteerData = async (req, res) => {
 exports.inviteVolunteer = async (req, res) => {
   try {
     await volunteerService.inviteVolunteer(req.user.id, req.body.userId);
-
-    emitCrudEvent({
-      resource: 'volunteer_invite',
-      action: 'created',
-      id: req.body.userId,
-      data: { inviterId: req.user.id, inviteeId: req.body.userId },
-      actorId: req.user.id,
-      room: [`user:${req.body.userId}`, `user:${req.user.id}`]
-    });
-
     res.json({ success: true, message: 'Invite sent successfully' });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
@@ -253,16 +222,6 @@ exports.acceptInvite = async (req, res) => {
     if (!userId || !orgId) throw new Error("Missing userId or orgId");
 
     await volunteerService.acceptInvite({ orgId, userId });
-
-    emitCrudEvent({
-      resource: 'volunteer_invite',
-      action: 'updated',
-      id: orgId,
-      data: { status: 'accepted', orgId, userId },
-      actorId: userId,
-      room: ['role:admin', 'public', `user:${userId}`]
-    });
-
     res.json({ success: true, message: 'Joined organization successfully' });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
@@ -277,15 +236,6 @@ exports.rejectOrganizationInvite = async (req, res) => {
     if (!userId || !orgId) throw new Error("Missing userId or orgId");
 
     await volunteerService.rejectInvite({ orgId, userId });
-
-    emitCrudEvent({
-      resource: 'volunteer_invite',
-      action: 'updated',
-      id: orgId,
-      data: { status: 'rejected', orgId, userId },
-      actorId: userId,
-      room: ['role:admin', `user:${userId}`]
-    });
 
     res.json({ success: true, message: 'Invitation rejected successfully' });
   } catch (err) {

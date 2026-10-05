@@ -4,7 +4,6 @@ const User = require('../models/User');
 const OrganizationMedia = require('../models/OrganizationMedia');
 const organizationService = require('../services/organizationService');
 const { getPendingMissionRequests,createOrganization } = require('../services/organizationService');
-const { emitCrudEvent } = require('../services/socket');
 
 
 
@@ -18,15 +17,6 @@ exports.createOrganizationController = async (req, res) => {
         const files = req.files;
 
         const result = await createOrganization(payload, files, userId);
-
-        emitCrudEvent({
-            resource: 'organization',
-            action: 'created',
-            id: result?.organizationId,
-            data: result,
-            actorId: userId,
-            room: ['role:admin', `user:${userId}`]
-        });
 
         res.status(201).json({ message: 'Organization created successfully' });
 
@@ -107,14 +97,6 @@ exports.deleteOrg = async (req, res) => {
         if (deleted === 0) {
             return res.status(404).json({ message: "Organization not found" });
         }
-
-        emitCrudEvent({
-            resource: 'organization',
-            action: 'deleted',
-            id: organization_id,
-            actorId: req.user?.id,
-            room: ['role:admin', 'public']
-        });
 
         res.status(200).json({ message: "Organization deleted successfully" });
 

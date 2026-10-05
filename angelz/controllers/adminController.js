@@ -6,7 +6,6 @@ const { orgDetail, rejectOrg, approveOrg } = require('../services/Admin/organiza
 const AppError = require('../utils/AppError');
 const badgeService = require('../services/Admin/badgeService');
 const asyncHandler = require('../middleware/asyncHandler');
-const { emitCrudEvent } = require('../services/socket');
 
 exports.getDashboardSummary = async (req, res, next) => {
   try {
@@ -112,16 +111,6 @@ exports.approveUser = async (req, res, next) => {
   const apprUser = await approveUser(userId);
   if (!apprUser) return next(new AppError("User not found", 404));
 
-  emitCrudEvent({
-    resource: 'user',
-    action: 'updated',
-    id: userId,
-    data: apprUser,
-    actorId: req.user?.id,
-    room: ['role:admin', `user:${userId}`],
-    meta: { status: 'approved' }
-  });
-
   res.json({ success: true, message: "User approved successfully", user: apprUser });
 };
 
@@ -134,16 +123,6 @@ exports.rejectUser = async (req, res, next) => {
   
   if (!rejUser) return next(new AppError("User not found",404));
   
-  emitCrudEvent({
-    resource: 'user',
-    action: 'updated',
-    id: userId,
-    data: rejUser,
-    actorId: req.user?.id,
-    room: ['role:admin', `user:${userId}`],
-    meta: { status: 'rejected' }
-  });
-
   res.json({ success: true, message:"User rejected successfully", user: rejUser });
 };
 
@@ -194,16 +173,6 @@ exports.approveOrganization = async (req, res, next) => {
   const apprOrg = await approveOrg(orgId);
   if (!apprOrg) return next(new AppError("Organization not found", 404));
 
-  emitCrudEvent({
-    resource: 'organization',
-    action: 'updated',
-    id: orgId,
-    data: apprOrg,
-    actorId: req.user?.id,
-    room: ['role:admin', 'public'],
-    meta: { status: 'active' }
-  });
-
   res.json({ success: true, message: "Organization approved successfully", organization: apprOrg });
 };
 
@@ -216,16 +185,6 @@ exports.rejectOrganization = async (req, res, next) => {
   
   if (!rejOrg) return next(new AppError("Organization not found",404));
   
-  emitCrudEvent({
-    resource: 'organization',
-    action: 'updated',
-    id: orgId,
-    data: rejOrg,
-    actorId: req.user?.id,
-    room: ['role:admin', 'public'],
-    meta: { status: 'inactive' }
-  });
-
   res.json({ success: true, message:"Organization rejected successfully", organization: rejOrg });
 };
 
@@ -252,16 +211,6 @@ exports.allBadges = async (req, res, next) => {
 exports.createBadge = async (req, res, next) => {
   try {
     const badge = await badgeService.createBadge(req.body);
-
-    emitCrudEvent({
-      resource: 'badge',
-      action: 'created',
-      id: badge?.id,
-      data: badge,
-      actorId: req.user?.id,
-      room: 'public'
-    });
-
     res.status(201).json({
       success: true,
       message: "Badge created successfully",
@@ -281,16 +230,6 @@ exports.getBadge = asyncHandler(async (req, res, next) => {
 exports.updateBadge = async (req, res, next) => {
   try {
     const badge = await badgeService.updateBadge(req.params.id, req.body);
-
-    emitCrudEvent({
-      resource: 'badge',
-      action: 'updated',
-      id: req.params.id,
-      data: badge,
-      actorId: req.user?.id,
-      room: 'public'
-    });
-
     res.json({
       success: true,
       message: "Badge updated successfully",
@@ -305,15 +244,6 @@ exports.updateBadge = async (req, res, next) => {
 exports.deleteBadge = async (req, res, next) => {
   try {
     await badgeService.deleteBadge(req.params.id);
-
-    emitCrudEvent({
-      resource: 'badge',
-      action: 'deleted',
-      id: req.params.id,
-      actorId: req.user?.id,
-      room: 'public'
-    });
-
     res.json({
       success: true,
       message: "Badge deleted successfully"

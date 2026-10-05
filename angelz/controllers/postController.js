@@ -1,20 +1,8 @@
 const asyncHandler = require("../middleware/asyncHandler")
 const postService = require("../services/postService");
-const { emitCrudEvent } = require('../services/socket');
 
 exports.createPost = asyncHandler(async (req,res) => {
-    const actorId = req.user._id || req.user.id;
-    const post = await postService.createPost(req.body,req.files,actorId);
-
-    emitCrudEvent({
-        resource: 'post',
-        action: 'created',
-        id: post?._id,
-        data: post,
-        actorId,
-        room: 'public'
-    });
-
+    const post = await postService.createPost(req.body,req.files,req.user._id);
     res.status(201).json({ message: 'Post created successfully', post });
 });
 
@@ -70,19 +58,8 @@ exports.getPostDetail = asyncHandler(async (req, res) => {
 
 exports.likePost = asyncHandler(async (req,res) => {
     const postId = req.params.id;
-    const userId = req.user._id || req.user.id;
+    const userId = req.user._id;
 
     const result = await postService.toggleLike(postId,userId);
-
-    emitCrudEvent({
-        resource: 'post',
-        action: 'updated',
-        id: postId,
-        data: { id: postId, liked: result.liked, total_likes: result.totalLikes },
-        actorId: userId,
-        room: 'public',
-        meta: { type: 'like', liked: result.liked }
-    });
-
     res.status(200).json({ message: result.liked ? 'Post Liked': 'Post unLiked',total_likes: result.totalLikes});
 })
