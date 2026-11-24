@@ -108,9 +108,9 @@ module.exports.start = () => {
 
 //       // Find missions that should start now
 //       const [missions] = await pool.query(`
-//         SELECT id, name 
-//         FROM missions 
-//         WHERE status = 'scheduled' 
+//         SELECT id, name
+//         FROM missions
+//         WHERE status = 'scheduled'
 //         AND start_time <= NOW()
 //       `);
 

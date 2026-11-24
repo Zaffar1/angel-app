@@ -18,7 +18,7 @@ export default function Header({ navItems = [], showSearch = true }) {
   const location = useLocation();
   const isLoggedIn = !!token;
 
-  const { unreadCount, markAllAsRead } = useNotifications();
+  const { unreadCount, markAllAsRead, refetch } = useNotifications();
 
   useEffect(() => {
     const close = (e) => !ref.current?.contains(e.target) && setDropOpen(false);

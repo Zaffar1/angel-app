@@ -27,9 +27,8 @@ export default function CommentItem({ comment, currentUserId, posted_by }) {
     const isDeleting = deleteMutation.isPending;
     const isUpdating = updateMutation.isPending;
 
-    console.log(comment?.created_at, 'comment?.created_at');
-
-    const { date, time } = formatDateTimeWithLocalTime(comment?.created_at);
+    const commentTimestamp = comment?.created_at || comment?.createdAt || comment?.updated_at || comment?.timestamp;
+    const { date, time } = formatDateTimeWithLocalTime(commentTimestamp);
 
     const handleChange = (e) => {
         const input = e.target.value;

@@ -1,9 +1,14 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useLikeToggleOnFeedMutation } from "../api/mission";
 
 export default function LikeToggleButton({ missionId, initialLiked = false, type }) {
   const [liked, setLiked] = useState(initialLiked);
+
+  useEffect(() => {
+    setLiked(initialLiked);
+  }, [initialLiked]);
+
   const { mutate, isPending } = useLikeToggleOnFeedMutation({
     onError: () => {
       setLiked((prev) => !prev);

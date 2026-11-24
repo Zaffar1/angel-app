@@ -205,14 +205,51 @@ export default function AddMissionForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <InputField
           label="Points"
+          type="number"
+          min="0"
+          step="1"
           {...register("points")}
+          onKeyDown={(e) => {
+            if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+              e.preventDefault();
+            }
+          }}
+          onPaste={(e) => {
+            const paste = e.clipboardData?.getData("text") || "";
+            if (paste.includes("-") || isNaN(Number(paste)) || Number(paste) < 0) {
+              e.preventDefault();
+            }
+          }}
+          onInput={(e) => {
+            if (e.target.value !== "" && Number(e.target.value) < 0) {
+              e.target.value = "0";
+            }
+          }}
           error={errors.points?.message}
           placeholder="Enter points"
         />
         <InputField
           label="Volunteers Required"
           type="number"
+          min="1"
+          step="1"
           {...register("volunteer_required")}
+          onKeyDown={(e) => {
+            if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+              e.preventDefault();
+            }
+          }}
+          onPaste={(e) => {
+            const paste = e.clipboardData?.getData("text") || "";
+            if (paste.includes("-") || isNaN(Number(paste)) || Number(paste) < 0) {
+              e.preventDefault();
+            }
+          }}
+          onInput={(e) => {
+            if (e.target.value !== "" && Number(e.target.value) < 0) {
+              e.target.value = "0";
+            }
+          }}
           error={errors.volunteer_required?.message}
           placeholder="Enter number"
         />

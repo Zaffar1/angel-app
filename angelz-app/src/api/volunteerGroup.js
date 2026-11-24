@@ -2,13 +2,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "./client";
 import { showSuccess, showError } from "../utils/toast";
 
-export function useGetGroupVolunteers() {
+export function useGetGroupVolunteers(options = {}) {
   return useQuery({
     queryKey: ["groupVolunteers"],
     queryFn: async () => {
       const { data } = await api.get("/volunteer-groups/volunteers");
       return data?.data || [];
     },
+    ...options,
   });
 }
 
@@ -90,7 +91,7 @@ export function useUpdateGroupVolunteerMissionStatus(options = {}) {
   });
 }
 
-export function useGetGroupVolunteerById(id) {
+export function useGetGroupVolunteerById(id, options = {}) {
   return useQuery({
     queryKey: ["groupVolunteer", id],
     queryFn: async () => {
@@ -99,6 +100,7 @@ export function useGetGroupVolunteerById(id) {
       return data?.data || null;
     },
     enabled: !!id,
+    ...options,
   });
 }
 

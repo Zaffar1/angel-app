@@ -35,14 +35,12 @@ const VolunteerDetail = () => {
     if (!volunteer) return null;
 
     return (
-        <div className="min-h-screen">
-            <div className="max-w-7xl mx-auto space-y-6">
-                <div className="bg-white shadow-md rounded-lg p-6">
-                    <VolunteerProfileHeader volunteer={volunteer} />
-                    <VolunteerProfileInfo volunteer={volunteer} />
-                </div>
-                <VolunteerProfileTabs volunteer={volunteer} />
+        <div className="max-w-7xl mx-auto space-y-6">
+            <div className="glass-card p-4 sm:p-6 flex flex-col relative">
+                <VolunteerProfileHeader volunteer={volunteer} />
+                <VolunteerProfileInfo volunteer={volunteer} />
             </div>
+            <VolunteerProfileTabs volunteer={volunteer} />
         </div>
     );
 };

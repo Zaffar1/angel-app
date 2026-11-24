@@ -30,4 +30,23 @@ api.interceptors.response.use(
   }
 );
 
+// Deduplicate concurrent identical GET requests
+const pendingGetRequests = new Map();
+const originalGet = api.get.bind(api);
+
+api.get = function (url, config = {}) {
+  const key = `${url}?${JSON.stringify(config.params || {})}`;
+  if (pendingGetRequests.has(key)) {
+    return pendingGetRequests.get(key);
+  }
+
+  const promise = originalGet(url, config).finally(() => {
+    pendingGetRequests.delete(key);
+  });
+
+  pendingGetRequests.set(key, promise);
+  return promise;
+};
+
 export default api;
+

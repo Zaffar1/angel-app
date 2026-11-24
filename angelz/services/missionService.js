@@ -2816,12 +2816,12 @@ exports.addComment = async (missionId, userId, comment) => {
         receiver_id: ownerId,
         type: "mission_comment",
         message: `${commenterName} commented on your mission "${missionName}".`,
-        meta: { 
-          mission_id: Number(missionId), 
-          missionId: Number(missionId), 
-          mission_name: missionName, 
-          comment_id: typeof saved === 'object' ? saved?.id : saved, 
-          comment_by: userId 
+        meta: {
+          mission_id: Number(missionId),
+          missionId: Number(missionId),
+          mission_name: missionName,
+          comment_id: typeof saved === 'object' ? saved?.id : saved,
+          comment_by: userId
         }
       });
 

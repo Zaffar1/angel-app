@@ -10,22 +10,14 @@ export default function Feed() {
 
     const { data, isLoading, isError, error, refetch, isFetching } = useAllFeeds({ page, limit });
 
-    const handlePageChange = useCallback(
-        (newPage) => {
-            setPage(newPage);
-            refetch();
-        },
-        [refetch]
-    );
+    const handlePageChange = useCallback((newPage) => {
+        setPage(newPage);
+    }, []);
 
-    const handleLimitChange = useCallback(
-        (newLimit) => {
-            setLimit(newLimit);
-            setPage(1);
-            refetch();
-        },
-        [refetch]
-    );
+    const handleLimitChange = useCallback((newLimit) => {
+        setLimit(newLimit);
+        setPage(1);
+    }, []);
 
     const missionCount = data?.totalMissions || 0;
     const missions = data?.missions || [];

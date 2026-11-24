@@ -21,15 +21,15 @@ const MissionListForAll = () => {
     } = useInfiniteMissions({ limit: PAGE_LIMIT.LIMIT });
 
     const lastElementRef = useCallback(node => {
-        if (isLoading) return;
+        if (isLoading || isFetchingNextPage) return;
         if (observer.current) observer.current.disconnect();
         observer.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && hasNextPage) {
+            if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
                 fetchNextPage();
             }
         });
         if (node) observer.current.observe(node);
-    }, [isLoading, hasNextPage, fetchNextPage]);
+    }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
     const isOrganization = user?.type === "organization";
     const missions = data?.pages.flatMap(page => page.missions) || [];

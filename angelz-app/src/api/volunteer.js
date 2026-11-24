@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import api from './client';
 import { showSuccess, showError } from '../utils/toast';
+import { syncInvalidateQueries } from '../utils/querySync';
 
 export function useVolunteerEditProfile(options = {}) {
   return useMutation({
@@ -106,6 +107,7 @@ export function useInviteVolunteer(options = {}) {
     },
     onSuccess: (data) => {
       showSuccess(data?.message || 'Invitation sent successfully!');
+      syncInvalidateQueries(["notifications"]);
       options?.onSuccess?.(data);
     },
     onError: (err) => {
@@ -138,7 +140,7 @@ export function useGetVolunteerGroupDetail(id) {
   });
 }
 
-export function useGetVolunteerGroupVolunteers(id) {
+export function useGetVolunteerGroupVolunteers(id, options = {}) {
   return useQuery({
     queryKey: ["volunteerGroupVolunteers", id],
     queryFn: async () => {
@@ -147,5 +149,7 @@ export function useGetVolunteerGroupVolunteers(id) {
       return data?.data || [];
     },
     enabled: !!id,
+    ...options,
   });
 }
+

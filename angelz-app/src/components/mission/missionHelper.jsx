@@ -1,7 +1,9 @@
 const Detail = ({ label, value, isTimeDate = false }) => (
     <p>
         <span className="font-semibold">{label}:</span>{" "}
-        <span className={`text-gray-400 ${isTimeDate ? "" : "capitalize"}`}> {value || "N/A"}</span>
+        <span className={`text-gray-400 ${isTimeDate ? "" : "capitalize"}`}>
+            {value !== null && value !== undefined && value !== "" ? value : "N/A"}
+        </span>
     </p>
 );
 

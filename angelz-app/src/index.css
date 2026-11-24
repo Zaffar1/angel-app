@@ -35,3 +35,38 @@ body::before {
 
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
+
+/* Ensure hand pointer cursor everywhere for interactive / functional elements */
+button:not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+[role="button"]:not([aria-disabled="true"]):not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+[role="tab"]:not([aria-disabled="true"]):not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+[role="menuitem"]:not([aria-disabled="true"]):not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+[role="checkbox"]:not([aria-disabled="true"]):not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+[role="radio"]:not([aria-disabled="true"]):not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+[role="switch"]:not([aria-disabled="true"]):not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+[role="option"]:not([aria-disabled="true"]):not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+input[type="button"]:not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+input[type="submit"]:not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+input[type="reset"]:not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+input[type="checkbox"]:not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+input[type="radio"]:not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+input[type="file"]:not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+select:not(:disabled):not(.cursor-default):not(.cursor-not-allowed),
+summary,
+a:not(.cursor-default):not(.cursor-not-allowed),
+label:not(.cursor-default):not(.cursor-not-allowed),
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Ensure disabled elements show not-allowed cursor */
+button:disabled,
+[role="button"]:disabled,
+[role="button"][aria-disabled="true"],
+[role="tab"][aria-disabled="true"],
+input:disabled,
+select:disabled,
+textarea:disabled,
+.cursor-not-allowed {
+    cursor: not-allowed;
+}

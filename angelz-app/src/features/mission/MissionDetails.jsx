@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { FaTimes, FaCheckCircle, FaEye } from "react-icons/fa";
+import { useParams, useNavigate } from "react-router-dom";
+import { FaTimes, FaCheckCircle, FaEye, FaChevronLeft } from "react-icons/fa";
 import { ThemeButton } from "../../components/ThemeButton";
 import { useCanPostMissionMutation, useMissionDetail, useRequestMission, useCompletionRequest } from "../../api/mission";
 import { useGetGroupVolunteers, useAssignGroupVolunteersToMission, useUpdateGroupVolunteerMissionStatus } from "../../api/volunteerGroup";
@@ -22,6 +22,7 @@ import { ErrorText } from "../../components/mission/errorText";
 
 export default function MissionDetails() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { data, isLoading, isError, error, refetch } = useMissionDetail(id);
     const { user } = useUserProfile();
     const { mutate: requestMission, isPending } = useRequestMission();
@@ -53,17 +54,9 @@ export default function MissionDetails() {
         }
     });
 
-    const { mutate: sendCompletionRequest, isPending: isSendingCompletion } = useCompletionRequest({
-        onSuccess: () => {
-            refetch();
-        }
-    });
+    const { mutate: sendCompletionRequest, isPending: isSendingCompletion } = useCompletionRequest();
 
-    const { mutate: updateVolunteerStatus, isPending: isUpdatingVolunteerStatus } = useUpdateGroupVolunteerMissionStatus({
-        onSuccess: () => {
-            refetch();
-        }
-    });
+    const { mutate: updateVolunteerStatus, isPending: isUpdatingVolunteerStatus } = useUpdateGroupVolunteerMissionStatus();
 
     const toggleVolunteer = (volId) => {
         setSelectedVolunteers(prev =>
@@ -84,7 +77,8 @@ export default function MissionDetails() {
     const isOrganization = user?.type === "organization";
 
     const currentAssignedCount = mission?.assigned_volunteers?.length || mission?.assigned_count || 0;
-    const volunteerRequired = Number(mission?.volunteer_required) || 0;
+    const volunteersRequiredVal = mission?.volunteer_required ?? mission?.volunteers_required ?? mission?.volunteerRequired ?? mission?.volunteersRequired;
+    const volunteerRequired = Number(volunteersRequiredVal) || 0;
     const remainingSpots = Math.max(0, volunteerRequired - currentAssignedCount);
 
     // Calculate assignments details for details modal
@@ -124,7 +118,7 @@ export default function MissionDetails() {
 
     const handleGroupCompletionClick = () => {
         if (!mission?.id) return showError("Mission ID missing!");
-        
+
         const completedVol = completedVolunteerInGroup || assignedCompletedVolunteer;
         updateVolunteerStatus({
             mission_id: Number(mission.id),
@@ -160,17 +154,17 @@ export default function MissionDetails() {
 
     const renderAssignStatusBadge = (status) => {
         const displayVal = formatStatus(
-            status === "process" 
-                ? "pending" 
-                : (status === "in_progress" || status === "inprogress") 
-                    ? "started" 
+            status === "process"
+                ? "pending"
+                : (status === "in_progress" || status === "inprogress")
+                    ? "started"
                     : status
         );
-        
+
         // Determine colors/classes based on status
         let colorClass = "bg-gray-100 text-gray-700 border-gray-200";
         let dotClass = "bg-gray-400";
-        
+
         const s = status?.toLowerCase();
         if (s === 'completed') {
             colorClass = "bg-green-50 text-green-700 border border-green-200";
@@ -188,7 +182,7 @@ export default function MissionDetails() {
             colorClass = "bg-red-50 text-red-700 border border-red-200";
             dotClass = "bg-red-500";
         }
-        
+
         return (
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${colorClass}`}>
                 <span className={`w-1.5 h-1.5 rounded-full ${dotClass}`}></span> {displayVal}
@@ -227,7 +221,7 @@ export default function MissionDetails() {
 
     const handlePostFeed = () => {
         if (!mission?.id) return showError("Mission ID missing!");
-        postFeed(mission.id, { onSuccess: refetch });
+        postFeed(mission.id);
     }
 
     const effectiveStatus = getEffectiveMissionStatus(mission.status, mission.start_time);
@@ -263,9 +257,17 @@ export default function MissionDetails() {
                     alt={mission?.name}
                     className="w-full h-full object-cover"
                 />
+                <button
+                    onClick={() => navigate(-1)}
+                    className="absolute top-3 left-3 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors z-20 cursor-pointer"
+                    title="Go Back"
+                    aria-label="Go Back"
+                >
+                    <FaChevronLeft className="w-5 h-5 text-white" />
+                </button>
                 {isOrganization &&
                     <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
-                        <EditMissionButton missionId={mission?.id} />
+                        <EditMissionButton missionId={mission?.id} status={mission?.status} />
                         <DeleteMissionButton missionId={mission?.id} />
                     </div>
                 }
@@ -328,6 +330,10 @@ export default function MissionDetails() {
                         <Detail label="Work Type" value={mission.work_type} />
                         <Detail label="Mission Type" value={mission.mission_type} />
                         <Detail label="Distance" value={mission.relevant_distance} />
+                        <Detail
+                            label="Volunteers Required"
+                            value={volunteersRequiredVal !== null && volunteersRequiredVal !== undefined && volunteersRequiredVal !== "" ? volunteersRequiredVal : "N/A"}
+                        />
                     </div>
                     <div className="space-y-2 flex items-end flex-col">
                         <Detail
@@ -411,15 +417,15 @@ export default function MissionDetails() {
                             </ThemeButton>
                         )}
                         {hasCompletedVolunteerInGroup &&
-                         mission.status !== "completion_requested" &&
-                         mission.status !== "completed" && (
-                            <ThemeButton
-                                onClick={handleGroupCompletionClick}
-                                isLoading={isUpdatingVolunteerStatus}
-                            >
-                                Request Completion
-                            </ThemeButton>
-                        )}
+                            mission.status !== "completion_requested" &&
+                            mission.status !== "completed" && mission.status !== "rejected" && (
+                                <ThemeButton
+                                    onClick={handleGroupCompletionClick}
+                                    isLoading={isUpdatingVolunteerStatus}
+                                >
+                                    Request Completion
+                                </ThemeButton>
+                            )}
                     </div>
                 )}
             </div>
@@ -431,7 +437,7 @@ export default function MissionDetails() {
                     <ApplicantsTable applicants={applicants} />
                 </div>
             )} */}
-
+            {/* changes done now have to check on server */}
             {showAssignModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
                     <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden relative shadow-2xl border border-gray-100 flex flex-col max-h-[85vh]">

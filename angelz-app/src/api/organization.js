@@ -59,4 +59,4 @@ export function useGetOrganizationDetail(id, options = {}) {
     enabled: !!id,
     ...options,
   });
-}
+}

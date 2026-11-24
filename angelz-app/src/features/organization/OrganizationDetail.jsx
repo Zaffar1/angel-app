@@ -167,7 +167,7 @@ const OrganizationDetail = () => {
           <div className="absolute inset-0 bg-black/30 rounded-t-[14px]" />
           <button
             onClick={() => navigate(-1)}
-            className="absolute top-3 left-3 bg-black/40 p-2 rounded-full hover:bg-black/60"
+            className="absolute top-3 left-3 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors cursor-pointer"
           >
             <FaChevronLeft className="w-5 h-5 text-white" />
           </button>

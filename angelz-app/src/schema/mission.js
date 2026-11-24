@@ -31,6 +31,7 @@ export const createMissionSchema = yup.object().shape({
     ),
   relevant_distance: yup
     .string()
+    .transform((val, orig) => (orig === "" || val === "" ? null : val))
     .oneOf(
       ["local", "city wide", "country wide", "global"],
       "Select a valid distance"
@@ -38,17 +39,26 @@ export const createMissionSchema = yup.object().shape({
     .nullable(),
   work_type: yup
     .string()
+    .transform((val, orig) => (orig === "" || val === "" ? null : val))
     .oneOf(["tutor", "staff", "cleaning", "watchman"], "Select a valid work type")
     .nullable(),
   mission_type: yup
     .string()
+    .transform((val, orig) => (orig === "" || val === "" ? null : val))
     .oneOf(["virtual", "on-site"], "Select a valid mission type")
     .nullable(),
   volunteer_required: yup
     .number()
+    .transform((val, orig) => (orig === "" || orig == null || isNaN(val) ? null : Number(val)))
     .typeError("Volunteer count must be a number")
+    .min(0, "Volunteers required cannot be negative")
     .nullable(),
-  points: yup.number().typeError("Points must be a number").nullable(),
+  points: yup
+    .number()
+    .transform((val, orig) => (orig === "" || orig == null || isNaN(val) ? null : Number(val)))
+    .typeError("Points must be a number")
+    .min(0, "Points cannot be negative")
+    .nullable(),
   allow_interaction: yup
     .object()
     .shape({
@@ -100,18 +110,31 @@ export const editMissionSchema = yup.object({
     }),
   relevant_distance: yup
     .string()
-    .oneOf(["local", "city wide", "country wide", "global"])
+    .transform((val, orig) => (orig === "" || val === "" ? null : val))
+    .oneOf(["local", "city wide", "country wide", "global"], "Select a valid distance")
     .nullable(),
   work_type: yup
     .string()
-    .oneOf(["tutor", "staff", "cleaning", "watchman"])
+    .transform((val, orig) => (orig === "" || val === "" ? null : val))
+    .oneOf(["tutor", "staff", "cleaning", "watchman"], "Select a valid work type")
     .nullable(),
-  mission_type: yup.string().oneOf(["virtual", "on-site"]).nullable(),
+  mission_type: yup
+    .string()
+    .transform((val, orig) => (orig === "" || val === "" ? null : val))
+    .oneOf(["virtual", "on-site"], "Select a valid mission type")
+    .nullable(),
   volunteer_required: yup
     .number()
+    .transform((val, orig) => (orig === "" || orig == null || isNaN(val) ? null : Number(val)))
     .typeError("Volunteer count must be a number")
+    .min(0, "Volunteers required cannot be negative")
     .nullable(),
-  points: yup.number().typeError("Points must be a number").nullable(),
+  points: yup
+    .number()
+    .transform((val, orig) => (orig === "" || orig == null || isNaN(val) ? null : Number(val)))
+    .typeError("Points must be a number")
+    .min(0, "Points cannot be negative")
+    .nullable(),
   allow_interaction: yup
     .object({
       comments: yup.boolean(),
@@ -119,7 +142,15 @@ export const editMissionSchema = yup.object({
       share: yup.boolean(),
     })
     .nullable(),
-  lat: yup.number().nullable(),
-  lng: yup.number().nullable(),
+  lat: yup
+    .number()
+    .transform((val, orig) => (orig === "" || orig == null || isNaN(val) ? null : Number(val)))
+    .nullable(),
+  lng: yup
+    .number()
+    .transform((val, orig) => (orig === "" || orig == null || isNaN(val) ? null : Number(val)))
+    .nullable(),
+  file: yup.mixed().nullable(),
+  status: yup.string().nullable(),
   images: yup.mixed().nullable(),
 });

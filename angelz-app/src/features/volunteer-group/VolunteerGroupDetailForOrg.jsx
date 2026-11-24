@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaMapPin, FaPhone, FaEnvelope, FaBuilding, FaUsers, FaTrophy, FaArrowLeft, FaAward } from "react-icons/fa";
+import { FaMapPin, FaPhone, FaEnvelope, FaBuilding, FaUsers, FaTrophy, FaChevronLeft, FaAward } from "react-icons/fa";
 import { useGetVolunteerGroupDetail, useGetVolunteerGroupVolunteers } from "../../api/volunteer";
 import { getImageUrl } from "../../utils/getImageUrl";
 import Loader from "../../components/Loader";
@@ -23,7 +23,7 @@ export default function VolunteerGroupDetailForOrg() {
       <div className="max-w-4xl mx-auto my-12 text-center p-8 bg-red-50 rounded-2xl border border-red-200">
         <h3 className="text-xl font-bold text-red-700">Error Loading Group</h3>
         <p className="text-red-500 mt-2">Could not load the requested volunteer group details.</p>
-        <button onClick={() => navigate(-1)} className="mt-4 px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full">
+        <button onClick={() => navigate(-1)} className="mt-4 px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full cursor-pointer">
           Go Back
         </button>
       </div>
@@ -41,17 +41,17 @@ export default function VolunteerGroupDetailForOrg() {
 
   return (
     <div className="max-w-7xl mx-auto my-6 space-y-8 px-4 sm:px-6">
-      <div>
-        <button
-          onClick={() => navigate("/organization/volunteer-list")}
-          className="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-bold transition-colors"
-        >
-          <FaArrowLeft /> Back to Volunteers
-        </button>
-      </div>
-
       <div className="glass-card overflow-hidden border border-gray-100 shadow-md">
-        <div className="h-56 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 relative"></div>
+        <div className="h-56 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 relative">
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute top-3 left-3 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors z-10 cursor-pointer"
+            title="Go Back"
+            aria-label="Go Back"
+          >
+            <FaChevronLeft className="w-5 h-5 text-white" />
+          </button>
+        </div>
         <div className="px-6 pb-6 relative flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16">
           <img
             src={imageUrl}
@@ -156,48 +156,77 @@ export default function VolunteerGroupDetailForOrg() {
                 <p className="text-gray-500 font-medium">No volunteers are associated with this group yet.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                 {members.map((member) => {
-                  const memberImgUrl = getImageUrl(member.image);
+                  const memberImgUrl = getImageUrl(member.image || member.file);
                   return (
                     <div
                       key={member.id}
                       onClick={() => navigate(`/organization/volunteer/${member.id}`)}
-                      className="group p-5 bg-white rounded-2xl border border-gray-100 hover:border-blue-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between"
+                      className="group glass-card p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex flex-col justify-between border border-gray-100 hover:border-blue-200/60 rounded-2xl"
                     >
-                      <div className="flex items-start gap-4">
-                        {memberImgUrl ? (
-                          <img
-                            src={memberImgUrl}
-                            alt={member.name}
-                            className="w-14 h-14 rounded-full object-cover border border-gray-100"
-                          />
-                        ) : (
-                          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-                            {getInitials(member.name)}
+                      <div>
+                        {/* Header: Avatar, Status & Points */}
+                        <div className="flex items-start justify-between gap-2.5">
+                          <div className="relative">
+                            {memberImgUrl ? (
+                              <img
+                                src={memberImgUrl}
+                                alt={member.name}
+                                className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                              />
+                            ) : (
+                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#4C95FF] to-[#2B61FF] flex items-center justify-center text-white font-bold text-sm shadow-sm flex-shrink-0">
+                                {getInitials(member.name)}
+                              </div>
+                            )}
+                            <span className="absolute -bottom-1 -right-1 bg-blue-50 text-blue-600 border border-blue-200 text-[9px] font-bold px-1.5 py-0.2 rounded-full">
+                              Vol
+                            </span>
                           </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-bold text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+
+                          <span className="bg-yellow-50 text-yellow-700 border border-yellow-200/60 text-[11px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <FaTrophy className="text-yellow-500 text-[10px]" />
+                            {member.points || 0} pts
+                          </span>
+                        </div>
+
+                        {/* Name & Details */}
+                        <div className="mt-3 space-y-1">
+                          <h4 className="font-bold text-gray-900 text-sm leading-tight truncate group-hover:text-blue-600 transition-colors">
                             {member.name}
                           </h4>
-                          <p className="text-xs text-gray-400 truncate mt-0.5">{member.email}</p>
-                          <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
-                            <FaMapPin className="text-blue-400 text-[10px]" />
-                            {member.city ? `${member.city}, ${member.country}` : "Location not set"}
+                          <p className="text-[11px] text-gray-400 truncate flex items-center gap-1.5">
+                            <FaEnvelope className="text-[#4C95FF] text-[10px] flex-shrink-0" />
+                            <span className="truncate">{member.email || "No email"}</span>
                           </p>
+                          <p className="text-[11px] text-gray-500 truncate flex items-center gap-1.5">
+                            <FaMapPin className="text-[#4C95FF] text-[10px] flex-shrink-0" />
+                            <span className="truncate">{member.city ? `${member.city}, ${member.country || ""}` : "Location not set"}</span>
+                          </p>
+                        </div>
+
+                        {/* Missions counter */}
+                        <div className="mt-3 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
+                          <span className="flex items-center gap-1">
+                            <FaAward className="text-indigo-500 text-[11px]" />
+                            Missions:
+                          </span>
+                          <strong className="text-gray-800">{member.missions?.length || 0}</strong>
                         </div>
                       </div>
 
-                      <div className="mt-4 pt-3.5 border-t border-gray-50 flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-1.5 text-gray-500">
-                          <FaAward className="text-indigo-500 w-4 h-4" />
-                          <span>Missions: <strong className="text-gray-700">{member.missions?.length || 0}</strong></span>
-                        </div>
-                        <div className="flex items-center gap-1 bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-full font-bold">
-                          <FaTrophy className="text-yellow-500 w-3.5 h-3.5" />
-                          <span>{member.points || 0} pts</span>
-                        </div>
+                      {/* Action button */}
+                      <div className="mt-3 pt-1">
+                        <button
+                          className="w-full py-1.5 flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#4C95FF] to-[#2B61FF] hover:opacity-90 text-white rounded-full text-xs font-semibold shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/organization/volunteer/${member.id}`);
+                          }}
+                        >
+                          View Volunteer
+                        </button>
                       </div>
                     </div>
                   );

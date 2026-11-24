@@ -148,32 +148,86 @@ export default function GroupVolunteersList() {
       </div>
 
       {showInviteModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-lg w-full relative shadow-2xl">
-            <button
-              onClick={() => setShowInviteModal(false)}
-              className="absolute right-4 top-4 p-2 rounded-full hover:bg-gray-100 text-gray-500 cursor-pointer"
-            >
-              <FaTimes />
-            </button>
-            <h2 className="text-xl font-bold text-gray-800 mb-6">Invite a New Volunteer</h2>
-            <form onSubmit={handleInviteSubmit(handleInvite)} className="space-y-4">
-              <InputField label="Name" placeholder="Volunteer full name" {...registerInvite("name")} error={inviteErrors.name?.message} />
-              <InputField label="Email" type="email" placeholder="Volunteer email address" {...registerInvite("email")} error={inviteErrors.email?.message} />
-              <PhoneInput control={controlInvite} name="contact_no" label="Phone Number" error={inviteErrors.contact_no} />
-              <div>
-                <label className="block text-gray-700 text-sm font-medium mb-1">Description / Notes</label>
-                <textarea {...registerInvite("description")} rows={3} placeholder="Add any details or qualifications..." className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden relative shadow-2xl border border-gray-100 flex flex-col">
+            {/* Modal Header */}
+            <div style={{ backgroundColor: "oklch(54.6% 0.245 262.881)" }} className="text-white p-6 sm:p-8 relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowInviteModal(false);
+                  resetInviteForm();
+                }}
+                className="absolute right-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <FaTimes className="text-lg" />
+              </button>
+              <h2 className="text-2xl font-bold text-white flex items-center gap-2.5">
+                <FaUserPlus className="text-xl" /> Invite a New Volunteer
+              </h2>
+              <p className="text-xs text-white/80 mt-1.5">
+                Add a new volunteer to your group with their contact details.
+              </p>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleInviteSubmit(handleInvite)} className="flex flex-col flex-1">
+              <div className="p-6 sm:p-8 space-y-4 bg-gray-50/50 flex-1 overflow-y-auto max-h-[60vh]">
+                <InputField
+                  label="Name"
+                  placeholder="Volunteer full name"
+                  {...registerInvite("name")}
+                  error={inviteErrors.name?.message}
+                />
+                <InputField
+                  label="Email"
+                  type="email"
+                  placeholder="Volunteer email address"
+                  {...registerInvite("email")}
+                  error={inviteErrors.email?.message}
+                />
+                <PhoneInput
+                  control={controlInvite}
+                  name="contact_no"
+                  label="Phone Number"
+                  error={inviteErrors.contact_no}
+                />
+                <div>
+                  <label className="block text-gray-700 text-sm font-semibold mb-1.5">
+                    Description / Notes
+                  </label>
+                  <textarea
+                    {...registerInvite("description")}
+                    rows={3}
+                    placeholder="Add any details, skills, or qualifications..."
+                    className="w-full p-3.5 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-sm transition-all resize-none"
+                  />
+                  {inviteErrors.description?.message && (
+                    <p className="text-red-500 text-xs mt-1">{inviteErrors.description.message}</p>
+                  )}
+                </div>
               </div>
-              <div className="flex gap-3 justify-end pt-4">
+
+              {/* Modal Footer */}
+              <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 rounded-b-3xl">
                 <button
                   type="button"
-                  onClick={() => setShowInviteModal(false)}
-                  className="px-5 py-2 border rounded-full text-gray-600 hover:bg-gray-50 font-medium cursor-pointer"
+                  onClick={() => {
+                    setShowInviteModal(false);
+                    resetInviteForm();
+                  }}
+                  className="px-5 py-2.5 border border-gray-200 rounded-full text-gray-600 hover:bg-gray-100 font-semibold cursor-pointer bg-white transition-colors text-sm shadow-sm"
                 >
                   Cancel
                 </button>
-                <ThemeButton type="submit" isLoading={inviteMutation.isPending}>Send Invitation</ThemeButton>
+                <ThemeButton
+                  type="submit"
+                  isLoading={inviteMutation.isPending}
+                  className="!rounded-full font-semibold shadow-sm text-sm !px-6"
+                >
+                  Send Invitation
+                </ThemeButton>
               </div>
             </form>
           </div>

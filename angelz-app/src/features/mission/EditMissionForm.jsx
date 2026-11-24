@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,8 +9,10 @@ import MapComponent from "../../components/MapComponent";
 import { DateTimePicker } from "../../components/DateTimePicker";
 import { editMissionSchema } from "../../schema/mission";
 import { useUpdateMission, useMissionDetail } from "../../api/mission";
-import { formatForDateTimePicker, toLocalISOString, getTodayLocalDateString } from "../../utils/dateUtils";
+import { formatForDateTimePicker, toLocalISOString } from "../../utils/dateUtils";
 import { safeParseJson } from "../../utils/safeParseJson";
+import { showError } from "../../utils/toast";
+import { getNonEditableMissionMessage, getNonEditableMissionReason } from "../../utils/missionStatusUtils";
 import Loader from "../../components/Loader";
 import {
     FaHeart, FaRegHeart, FaPaperPlane, FaComment, FaRegComment
@@ -20,9 +22,11 @@ import { IoPaperPlaneSharp } from "react-icons/io5";
 export default function EditMissionForm() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { data, isLoading } = useMissionDetail(id);
+    const { data, isLoading, isError, error } = useMissionDetail(id);
     const mission = data?.data;
     const { mutate, isPending } = useUpdateMission();
+    const isOpen = String(mission?.status || "").toLowerCase() === "open";
+    const [serverError, setServerError] = useState(null);
 
     const {
         register,
@@ -35,11 +39,11 @@ export default function EditMissionForm() {
     } = useForm({
         resolver: yupResolver(editMissionSchema),
         defaultValues: {
-            status: "pending",
+            status: "open",
             allow_interaction: { comments: false, likes: false, share: false },
             images: [],
-            lat: "",
-            lng: "",
+            lat: 40.73061,
+            lng: -73.935242,
         },
     });
 
@@ -60,14 +64,15 @@ export default function EditMissionForm() {
                 relevant_distance: mission.relevant_distance || "",
                 work_type: mission.work_type || "",
                 mission_type: mission.mission_type || "",
-                points: mission.points || 0,
-                volunteer_required: mission.volunteer_required || 0,
+                points: mission.points != null ? mission.points : "",
+                volunteer_required: mission.volunteer_required != null ? mission.volunteer_required : "",
                 start_time: formatForDateTimePicker(mission?.start_time),
                 end_time: formatForDateTimePicker(mission?.end_time),
                 allow_interaction: parsedInteraction,
-                lat: mission?.lat,
-                lng: mission?.lng,
+                lat: !isNaN(parseFloat(mission?.lat)) ? parseFloat(mission.lat) : 40.73061,
+                lng: !isNaN(parseFloat(mission?.lng)) ? parseFloat(mission.lng) : -73.935242,
                 file: mission.file || null,
+                status: mission.status || "open",
             });
         }
     }, [mission, reset]);
@@ -83,7 +88,22 @@ export default function EditMissionForm() {
         }
     }, [mission, setValue]);
 
+    const onFormError = (formErrors) => {
+        const errorKeys = Object.keys(formErrors);
+        if (errorKeys.length > 0) {
+            const firstErrorMsg = formErrors[errorKeys[0]]?.message || "Please fix validation errors.";
+            showError(firstErrorMsg);
+        }
+    };
+
     const onSubmit = (data) => {
+        setServerError(null);
+
+        if (!isOpen) {
+            showError(getNonEditableMissionMessage(mission?.status));
+            return;
+        }
+
         const formData = new FormData();
 
         ["start_time", "end_time"].forEach((key) => {
@@ -93,6 +113,7 @@ export default function EditMissionForm() {
         });
 
         if (!Array.isArray(data.images)) data.images = [];
+        if (!data.status) data.status = mission?.status || "open";
 
         Object.entries(data).forEach(([key, value]) => {
             if (value == null) return;
@@ -115,18 +136,60 @@ export default function EditMissionForm() {
             { id, payload: formData },
             {
                 onSuccess: () => navigate(`/organization/mission/${id}`),
+                onError: (err, errMsg) => {
+                    const message = errMsg || err.response?.data?.message || err.message || "Failed to update mission.";
+                    setServerError(message);
+                },
             }
         );
     };
 
     if (isLoading) return <Loader />;
 
+    if (isError || (!isLoading && !mission)) {
+        return (
+            <div className="glass-card max-w-xl mx-auto p-8 my-12 text-center space-y-4">
+                <div className="text-red-500 text-5xl">⚠️</div>
+                <h2 className="text-2xl font-bold text-gray-800">Error Loading Mission</h2>
+                <p className="text-sm text-gray-600">
+                    {error?.response?.data?.message || error?.message || "Could not retrieve mission details. Please verify your connection and try again."}
+                </p>
+                <div className="pt-4 flex justify-center gap-3">
+                    <ThemeButton onClick={() => navigate(-1)}>Go Back</ThemeButton>
+                    <ThemeButton onClick={() => window.location.reload()} className="bg-gray-200 text-gray-800 hover:bg-gray-300">Retry</ThemeButton>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit, onFormError)}
             className="glass-card max-w-3xl mx-auto p-6 sm:p-8 md:p-10 space-y-8 my-8 transition-all duration-300"
         >
-            <h2 className="text-2xl font-semibold text-center">Edit Mission</h2>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 border-b pb-4">
+                <h2 className="text-2xl font-semibold text-center sm:text-left">Edit Mission</h2>
+                {mission?.status && (
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${isOpen
+                            ? "bg-green-100 text-green-700 border border-green-200"
+                            : "bg-amber-100 text-amber-700 border border-amber-200"
+                        }`}>
+                        Status: {mission.status}
+                    </span>
+                )}
+            </div>
+
+            {!isOpen && (
+                <div className="p-4 bg-amber-50 border border-amber-300 rounded-xl text-amber-800 text-sm flex items-start gap-3">
+                    <span className="text-xl leading-none">⚠️</span>
+                    <div>
+                        <p className="font-semibold text-base">{getNonEditableMissionReason(mission?.status)}</p>
+                        <p className="mt-1 text-amber-700">
+                            {getNonEditableMissionMessage(mission?.status)}
+                        </p>
+                    </div>
+                </div>
+            )}
 
             <div className="flex flex-col items-center w-full">
                 <Controller
@@ -184,14 +247,19 @@ export default function EditMissionForm() {
                 <MapComponent
                     mode="interactive"
                     defaultLocation={{
-                        lat: parseFloat(mission?.lat),
-                        lng: parseFloat(mission?.lng),
+                        lat: !isNaN(parseFloat(mission?.lat)) ? parseFloat(mission.lat) : 40.73061,
+                        lng: !isNaN(parseFloat(mission?.lng)) ? parseFloat(mission.lng) : -73.935242,
                     }}
                     onLocationSelect={({ lat, lng }) => {
-                        setValue("lat", lat);
-                        setValue("lng", lng);
+                        setValue("lat", lat, { shouldValidate: true });
+                        setValue("lng", lng, { shouldValidate: true });
                     }}
                 />
+                {(errors.lat || errors.lng) && (
+                    <p className="text-sm mt-1 text-red-500">
+                        {errors.lat?.message || errors.lng?.message}
+                    </p>
+                )}
                 <p className="text-sm text-gray-500 mt-1">
                     Click on the map to update mission coordinates.
                 </p>
@@ -207,7 +275,6 @@ export default function EditMissionForm() {
                             value={field.value}
                             onChange={field.onChange}
                             error={errors.start_time?.message}
-                            minDate={getTodayLocalDateString()}
                             required
                         />
                     )}
@@ -221,7 +288,7 @@ export default function EditMissionForm() {
                             value={field.value}
                             onChange={field.onChange}
                             error={errors.end_time?.message}
-                            minDate={startTime ? startTime.split('T')[0] : getTodayLocalDateString()}
+                            minDate={startTime ? (startTime.includes('T') ? startTime.split('T')[0] : startTime) : undefined}
                             required
                         />
                     )}
@@ -266,14 +333,51 @@ export default function EditMissionForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
                     label="Points"
+                    type="number"
+                    min="0"
+                    step="1"
                     {...register("points")}
+                    onKeyDown={(e) => {
+                        if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+                            e.preventDefault();
+                        }
+                    }}
+                    onPaste={(e) => {
+                        const paste = e.clipboardData?.getData("text") || "";
+                        if (paste.includes("-") || isNaN(Number(paste)) || Number(paste) < 0) {
+                            e.preventDefault();
+                        }
+                    }}
+                    onInput={(e) => {
+                        if (e.target.value !== "" && Number(e.target.value) < 0) {
+                            e.target.value = "0";
+                        }
+                    }}
                     error={errors.points?.message}
                     placeholder="Enter points"
                 />
                 <InputField
                     label="Volunteers Required"
                     type="number"
+                    min="1"
+                    step="1"
                     {...register("volunteer_required")}
+                    onKeyDown={(e) => {
+                        if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+                            e.preventDefault();
+                        }
+                    }}
+                    onPaste={(e) => {
+                        const paste = e.clipboardData?.getData("text") || "";
+                        if (paste.includes("-") || isNaN(Number(paste)) || Number(paste) < 0) {
+                            e.preventDefault();
+                        }
+                    }}
+                    onInput={(e) => {
+                        if (e.target.value !== "" && Number(e.target.value) < 0) {
+                            e.target.value = "0";
+                        }
+                    }}
                     error={errors.volunteer_required?.message}
                     placeholder="Enter number"
                 />
@@ -341,12 +445,40 @@ export default function EditMissionForm() {
                 </div>
             </div>
 
-            <div className="pt-4">
-                <ThemeButton type="submit" isLoading={isPending} className="w-full">Update Mission</ThemeButton>
+            <div className="pt-4 space-y-3">
+                {serverError && (
+                    <div className="p-4 bg-red-50 border border-red-300 rounded-xl text-red-700 text-sm flex items-start gap-3">
+                        <span className="text-xl leading-none">❌</span>
+                        <div className="flex-1">
+                            <p className="font-semibold text-base">Error Updating Mission</p>
+                            <p className="mt-1 text-sm text-red-600">{serverError}</p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setServerError(null)}
+                            className="text-red-400 hover:text-red-700 font-bold p-1 leading-none text-base"
+                            title="Dismiss error"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                )}
+
+                <ThemeButton
+                    type="submit"
+                    isLoading={isPending}
+                    disabled={!isOpen || isPending}
+                    className={`w-full ${!isOpen ? "opacity-60 cursor-not-allowed" : ""}`}
+                    title={!isOpen ? getNonEditableMissionMessage(mission?.status) : "Update Mission"}
+                >
+                    {isOpen ? "Update Mission" : `Cannot Update (${getNonEditableMissionReason(mission?.status)})`}
+                </ThemeButton>
                 {Object.keys(errors).length > 0 && (
-                    <p className="text-center text-red-500 text-sm font-medium mt-3">
-                        Validation error: please check all required fields.
-                    </p>
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-center">
+                        <p className="text-red-600 text-sm font-medium">
+                            {Object.values(errors).map((e) => e.message).filter(Boolean).join(" • ") || "Validation error: please check all required fields."}
+                        </p>
+                    </div>
                 )}
             </div>
         </form>

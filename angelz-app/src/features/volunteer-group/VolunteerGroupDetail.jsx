@@ -1,5 +1,5 @@
 import React from "react";
-import { FaMapPin, FaPhone, FaEnvelope, FaBuilding } from "react-icons/fa";
+import { FaMapPin, FaPhone, FaEnvelope, FaBuilding, FaChevronLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import useUserProfile from "../../hooks/useUserProfile";
 import { getImageUrl } from "../../utils/getImageUrl";
@@ -21,7 +21,16 @@ export default function VolunteerGroupDetail() {
     <div className="max-w-4xl mx-auto my-8 space-y-6">
       {/* Group Card Header */}
       <div className="glass-card overflow-hidden">
-        <div className="h-48 bg-gradient-to-r from-blue-500 to-indigo-600 relative"></div>
+        <div className="h-48 bg-gradient-to-r from-blue-500 to-indigo-600 relative">
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute top-3 left-3 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors z-10 cursor-pointer"
+            title="Go Back"
+            aria-label="Go Back"
+          >
+            <FaChevronLeft className="w-5 h-5 text-white" />
+          </button>
+        </div>
         <div className="px-6 pb-6 relative flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16">
           <img
             src={imageUrl}

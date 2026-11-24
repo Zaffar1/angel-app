@@ -2,9 +2,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "./client";
 import useUserProfile from "../hooks/useUserProfile";
-import { useSocket } from "../hooks/useSocket";
-
-export function useNotifications() {
+export function useNotifications(options = {}) {
   const { user } = useUserProfile();
   const queryClient = useQueryClient();
 
@@ -15,16 +13,11 @@ export function useNotifications() {
       const { data } = await api.get("/notifications/all");
       return data?.data || [];
     },
+    refetchInterval: 10000,
+    refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
-  });
-
-  useSocket((data) => {
-    if (!user?.id || !data?.id) return;
-
-    queryClient.setQueryData(["notifications", user?.id], (prev = []) => {
-      const exists = prev.some((n) => n.id === data.id);
-      return exists ? prev : [data, ...prev];
-    });
+    staleTime: 5000,
+    ...options,
   });
 
   const markAllAsRead = async () => {
@@ -34,7 +27,7 @@ export function useNotifications() {
 
     try {
       await api.put("/notifications/read");
-      queryClient.invalidateQueries(["notifications", user?.id]);
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     } catch (err) {
       console.log("Mark all read failed silently", err);
     }

@@ -53,7 +53,7 @@ export function useRegister(options = {}) {
     });
 }
 
-export function useUserProfile(enabled = true) {
+export function useUserProfile(enabled = true, options = {}) {
     const dispatch = useDispatch();
     const query = useQuery({
         queryKey: ["userProfile"],
@@ -63,6 +63,8 @@ export function useUserProfile(enabled = true) {
         },
         enabled,
         retry: false,
+        staleTime: 5 * 60 * 1000,
+        ...options,
     });
 
     useEffect(() => {

@@ -3,21 +3,22 @@ import CommentItems from "./CommentItems";
 import CommentBox from "./CommentBox";
 import useUserProfile from "../../hooks/useUserProfile";
 
-export default function CommentsSection({ missionId, comments, posted_by, can_post, type }) {
+export default function CommentsSection({ missionId, comments = [], posted_by, can_post, type }) {
     const { user } = useUserProfile();
     const [showAll, setShowAll] = useState(false);
     const [hasCommented, setHasCommented] = useState(false);
+    const safeComments = Array.isArray(comments) ? comments : [];
 
     useEffect(() => {
         if (!user) return;
         if (typeof can_post !== "undefined") {
             setHasCommented(!can_post);
         } else {
-            setHasCommented(comments.some((c) => c.user_id === user.id));
+            setHasCommented(safeComments.some((c) => c.user_id === user.id));
         }
-    }, [comments, user, can_post]);
+    }, [safeComments, user, can_post]);
 
-    const visibleComments = showAll ? comments : comments.slice(0, 4);
+    const visibleComments = showAll ? safeComments : safeComments.slice(0, 4);
     console.log(visibleComments, 'visibleComments');
 
 
@@ -41,7 +42,7 @@ export default function CommentsSection({ missionId, comments, posted_by, can_po
                     />
                 ))}
             </div>
-            {comments.length > 4 && !showAll && (
+            {safeComments.length > 4 && !showAll && (
                 <button
                     onClick={() => setShowAll(true)}
                     className="text-blue-600 my-2 text-sm font-medium hover:underline"

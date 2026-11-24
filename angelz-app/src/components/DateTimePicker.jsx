@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { formatDate, formatTime } from '../utils/dateUtils';
+import { formatDate, formatTime, toDateTimeLocal, parseDate } from '../utils/dateUtils';
 import { FaCalendarAlt, FaClock, FaCheck, FaTimes } from 'react-icons/fa';
 
 export function DateTimePicker({ value, onChange, label, error, minDate, required }) {
@@ -10,25 +10,44 @@ export function DateTimePicker({ value, onChange, label, error, minDate, require
     const timeInputRef = useRef(null);
 
     useEffect(() => {
-        if (value) {
-            try {
-                const dateObj = new Date(value);
-                if (!isNaN(dateObj.getTime())) {
-                    const year = dateObj.getFullYear();
-                    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-                    const day = String(dateObj.getDate()).padStart(2, "0");
-                    const hours = String(dateObj.getHours()).padStart(2, "0");
-                    const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-
-                    setDate(`${year}-${month}-${day}`);
-                    setTime(`${hours}:${minutes}`);
-                }
-            } catch (error) {
-                console.error("Date parse error:", error);
-            }
-        } else {
+        if (!value) {
             setDate('');
             setTime('');
+            return;
+        }
+
+        try {
+            // Case 1: If value is already in local "YYYY-MM-DDTHH:mm" format (with or without seconds)
+            if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value)) {
+                const [dPart, tPart] = value.split('T');
+                setDate(dPart);
+                setTime(tPart.slice(0, 5));
+                return;
+            }
+
+            // Case 2: Server timestamp (MySQL format, UTC ISO string with Z, etc.)
+            const localStr = toDateTimeLocal(value);
+            if (localStr && localStr.includes('T')) {
+                const [dPart, tPart] = localStr.split('T');
+                setDate(dPart);
+                setTime(tPart.slice(0, 5));
+                return;
+            }
+
+            // Fallback: Date object or standard timestamp parse
+            const dateObj = parseDate(value);
+            if (dateObj && !isNaN(dateObj.getTime())) {
+                const year = dateObj.getFullYear();
+                const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+                const day = String(dateObj.getDate()).padStart(2, "0");
+                const hours = String(dateObj.getHours()).padStart(2, "0");
+                const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+
+                setDate(`${year}-${month}-${day}`);
+                setTime(`${hours}:${minutes}`);
+            }
+        } catch (error) {
+            console.error("DateTime parse error:", error);
         }
     }, [value]);
 
