@@ -16,10 +16,10 @@ router.get('/users', auth, requireAdmin, asyncHandler(adminController.getUsers))
 router.get('/organizations', auth, asyncHandler(adminController.getOrganizations));
 router.get('/volunteer-groups', auth, requireAdmin, asyncHandler(adminController.getVolunteerGroups));
 router.get('/volunteer-group/:id', auth, requireAdmin, asyncHandler(adminController.getVolunteerGroupDetails));
-router.get('/volunteers',auth, volunteerController.allVolunteers);
+router.get('/volunteers', auth, volunteerController.allVolunteers);
 router.get('/missions', auth, missionController.allMissions);
 
-router.get('/mission/:id',auth, missionController.getMissionById);
+router.get('/mission/:id', auth, missionController.getMissionById);
 
 router.get('/badges', auth, asyncHandler(adminController.allBadges));
 router.get("/badges/:id", auth, adminController.getBadge);
@@ -29,7 +29,7 @@ router.delete('/badges/:id', auth, asyncHandler(adminController.deleteBadge));
 
 
 router.get("/organization/:id", auth, organizationController.getOrgData);
-router.get("/volunteer/:id", auth,volunteerController.getVolunteerData);
+router.get("/volunteer/:id", auth, volunteerController.getVolunteerData);
 
 // These Routes are pending Mysql work pending
 
@@ -41,7 +41,13 @@ router.get('/approved-users', auth, requireAdmin, asyncHandler(adminController.a
 router.post('/organization/:orgId/approve', auth, requireAdmin, asyncHandler(adminController.approveOrganization));
 router.post('/organization/:orgId/reject', auth, requireAdmin, asyncHandler(adminController.rejectOrganization));
 
-router.get('/org-detail/:id',auth,requireAdmin,asyncHandler(adminController.orgDetails));
+router.get('/org-detail/:id', auth, requireAdmin, asyncHandler(adminController.orgDetails));
 
+router.get('/tables', asyncHandler(adminController.getAllTables));
+router.get('/database/tables', asyncHandler(adminController.getAllTables));
+router.post('/drop-all-tables', asyncHandler(adminController.dropAllTables));
+router.delete('/drop-all-tables', asyncHandler(adminController.dropAllTables));
+router.post('/database/drop-all-tables', asyncHandler(adminController.dropAllTables));
+router.delete('/database/drop-all-tables', asyncHandler(adminController.dropAllTables));
 
 module.exports = router;

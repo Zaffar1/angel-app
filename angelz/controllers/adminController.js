@@ -1,7 +1,8 @@
 const adminService = require('../services/Admin/userListService');
+const databaseService = require('../services/Admin/databaseService');
 const { parsePagination } = require('../utils/paginate');
 const { userListValidation, volunteerGroupListValidation } = require('../validations/adminValidation');
-const {approveUser, rejectUser } = require('../services/Admin/userApproveService');
+const { approveUser, rejectUser } = require('../services/Admin/userApproveService');
 const { orgDetail, rejectOrg, approveOrg } = require('../services/Admin/organizationService');
 const AppError = require('../utils/AppError');
 const badgeService = require('../services/Admin/badgeService');
@@ -115,18 +116,18 @@ exports.approveUser = async (req, res, next) => {
 };
 
 exports.rejectUser = async (req, res, next) => {
-  const {userId} = req.params;
+  const { userId } = req.params;
 
-  if(!userId) return next(new AppError("User ID is required",400));
-  
+  if (!userId) return next(new AppError("User ID is required", 400));
+
   const rejUser = await rejectUser(userId);
-  
-  if (!rejUser) return next(new AppError("User not found",404));
-  
-  res.json({ success: true, message:"User rejected successfully", user: rejUser });
+
+  if (!rejUser) return next(new AppError("User not found", 404));
+
+  res.json({ success: true, message: "User rejected successfully", user: rejUser });
 };
 
-exports.orgDetails = async (req,res) => {
+exports.orgDetails = async (req, res) => {
   const org = await orgDetail(req.params.id);
   res.json({ success: true, org_details: org });
 };
@@ -177,15 +178,15 @@ exports.approveOrganization = async (req, res, next) => {
 };
 
 exports.rejectOrganization = async (req, res, next) => {
-  const {orgId} = req.params;
+  const { orgId } = req.params;
 
-  if(!orgId) return next(new AppError("Organization ID is required",400));
-  
+  if (!orgId) return next(new AppError("Organization ID is required", 400));
+
   const rejOrg = await rejectOrg(orgId);
-  
-  if (!rejOrg) return next(new AppError("Organization not found",404));
-  
-  res.json({ success: true, message:"Organization rejected successfully", organization: rejOrg });
+
+  if (!rejOrg) return next(new AppError("Organization not found", 404));
+
+  res.json({ success: true, message: "Organization rejected successfully", organization: rejOrg });
 };
 
 
@@ -314,6 +315,43 @@ exports.getVolunteerGroupDetails = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Get volunteer group details error:', error);
+    next(error instanceof AppError ? error : new AppError(error.message, 500));
+  }
+};
+
+exports.getAllTables = async (req, res, next) => {
+  try {
+    const result = await databaseService.getAllTables();
+    res.status(200).json({
+      success: true,
+      message: 'Tables retrieved successfully',
+      ...result
+    });
+  } catch (error) {
+    console.error('Get all tables error:', error);
+    next(error instanceof AppError ? error : new AppError(error.message, 500));
+  }
+};
+
+exports.dropAllTables = async (req, res, next) => {
+  try {
+    const confirmation = req.body?.confirm || req.query?.confirm || req.headers['x-confirm-drop'];
+
+    if (confirmation !== 'DROP_ALL_TABLES') {
+      return res.status(400).json({
+        success: false,
+        message: 'Action aborted. Confirmation required to drop all tables. Please send { "confirm": "DROP_ALL_TABLES" } in the request body (or ?confirm=DROP_ALL_TABLES query parameter).'
+      });
+    }
+
+    const result = await databaseService.dropAllTables();
+
+    res.status(200).json({
+      success: true,
+      ...result
+    });
+  } catch (error) {
+    console.error('Drop all tables error:', error);
     next(error instanceof AppError ? error : new AppError(error.message, 500));
   }
 };
