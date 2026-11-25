@@ -12,7 +12,8 @@ const rawApiUrl =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_URL_PRODUCTION ||
   import.meta.env.VITE_API_URL_LOCAL ||
-  "https://papayawhip-wren-332567.hostingersite.com/api";
+  "https://4f1q60cnrl.preview.c40.airoapp.ai/api";
+// "https://papayawhip-wren-332567.hostingersite.com/api";
 
 // Standardize API_URL: strip any trailing slash
 export const API_URL = (rawApiUrl || "").replace(/\/+$/, "");
