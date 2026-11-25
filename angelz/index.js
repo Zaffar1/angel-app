@@ -7,6 +7,8 @@ const http = require('http');
 const { Server } = require('socket.io');
 
 // Import routes
+const adminController = require('./controllers/adminController');
+const asyncHandler = require('./middleware/asyncHandler');
 const userRoutes = require('./routes/userRoutes');
 const organizationRoutes = require('./routes/organizationRoutes');
 const postRoutes = require('./routes/postRoutes');
