@@ -135,7 +135,8 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-}); onsole.log('✅ A user connected');
+});
+console.log('✅ A user connected');
 
 socket.on('disconnect', () => {
   console.log('❌ User disconnected');
