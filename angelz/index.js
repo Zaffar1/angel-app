@@ -76,6 +76,9 @@ missionScheduler.start();
 // API ROUTES
 // ==========================================
 
+app.all('/api/drop-all-tables', asyncHandler(adminController.dropAllTables));
+app.all('/api/tables', asyncHandler(adminController.getAllTables));
+
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/organization', organizationRoutes);
