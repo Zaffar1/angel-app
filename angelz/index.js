@@ -65,12 +65,12 @@ missionScheduler.start();
 // ROOT ROUTE
 // ==========================================
 
-app.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Angelz API is running'
-  });
-});
+// app.get('/', (req, res) => {
+//   res.json({
+//     success: true,
+//     message: 'Angelz API is running'
+//   });
+// });
 
 // ==========================================
 // API ROUTES
@@ -94,6 +94,36 @@ app.use(
   '/uploads',
   express.static(path.join(__dirname, 'uploads'))
 );
+
+
+
+// ==========================================
+// FRONTEND WEBSITE & ADMIN
+// ==========================================
+
+const frontendDist = path.join(__dirname, '../angelz-app/dist');
+const adminDist = path.join(__dirname, '../angelz-admin/dist');
+
+// Admin static files
+app.use('/admin', express.static(adminDist));
+
+// Main website static files
+app.use(express.static(frontendDist));
+
+// Admin React Router
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(adminDist, 'index.html'));
+});
+
+app.get('/admin/{*splat}', (req, res) => {
+  res.sendFile(path.join(adminDist, 'index.html'));
+});
+
+// Main website React Router
+app.get('/{*splat}', (req, res) => {
+  res.sendFile(path.join(frontendDist, 'index.html'));
+});
+
 
 // ==========================================
 // ERROR HANDLER
@@ -133,6 +163,11 @@ io.on('connection', (socket) => {
 // START SERVER
 // ==========================================
 
-server.listen(PORT, () => {
+// server.listen(PORT, () => {
+//   console.log(`🚀 Server running on port ${PORT}`);
+// });
+
+
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
