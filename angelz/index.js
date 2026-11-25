@@ -31,7 +31,7 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://mistyrose-ape-611541.hostingersite.com', 'https://royalblue-magpie-742227.hostingersite.com'
+  'https://mistyrose-ape-611541.hostingersite.com', 'https://royalblue-magpie-742227.hostingersite.com', 'https://4f1q60cnrl.preview.c40.airoapp.ai', 'https://4f1q60cnrl.preview.c40.airoapp.ai/admin'
 ];
 
 app.use(
