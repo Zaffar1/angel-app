@@ -1,3 +1,4 @@
+import useLocale from "../../hooks/useLocale";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { resetPasswordSchema } from "../../schema/auth";
@@ -7,6 +8,7 @@ import { InputField } from "../../components/InputField";
 import { ThemeButton } from "../../components/ThemeButton";
 
 export default function ResetPassword() {
+    const { t } = useLocale("auth");
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const token = searchParams.get("token");
@@ -22,7 +24,7 @@ export default function ResetPassword() {
 
     const onSubmit = (formData) => {
         if (!token || !email) {
-            alert("Invalid reset link. Please request a new one.");
+            alert(t("resetPassword.invalidLink"));
             return;
         }
         mutation.mutate({ ...formData, token, email });
@@ -30,26 +32,28 @@ export default function ResetPassword() {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-6">
-            <div className="relative glass-card w-[600px] p-10 flex flex-col justify-center">
+            <div className="relative glass-card w-full max-w-[600px] p-10 flex flex-col justify-center">
                 <div className="max-w-md w-full mx-auto">
-                    <h2 className="text-3xl font-bold text-center mb-3">Reset Password</h2>
+                    <h2 className="text-3xl font-bold text-center mb-3">{t("resetPassword.title")}</h2>
                     <p className="text-gray-500 text-center mb-10">
-                        Create a new secure password for your account.
+                        {t("resetPassword.subtitle")}
                     </p>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <InputField
-                            label="New Password"
+                            label={t("resetPassword.newPassword")}
                             type="password"
-                            placeholder="Enter new password"
+                            placeholder={t("resetPassword.newPasswordPlaceholder")}
+                            dir="ltr"
                             {...register("password")}
                             error={errors.password?.message}
                         />
 
                         <InputField
-                            label="Confirm Password"
+                            label={t("resetPassword.confirmPassword")}
                             type="password"
-                            placeholder="Confirm new password"
+                            placeholder={t("resetPassword.confirmPasswordPlaceholder")}
+                            dir="ltr"
                             {...register("confirmPassword")}
                             error={errors.confirmPassword?.message}
                         />
@@ -59,7 +63,7 @@ export default function ResetPassword() {
                                 type="submit"
                                 isLoading={mutation.isPending}
                             >
-                                Reset Password
+                                {t("resetPassword.submit")}
                             </ThemeButton>
                         </div>
                     </form>

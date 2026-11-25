@@ -1,14 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import useLocale from "../../hooks/useLocale";
 import { FaCalendar, FaClock, FaMedal } from "react-icons/fa";
 import { formatDateTime, formatDateTimeWithLocalTime } from "../../utils/dateUtils";
 import { getImageUrl } from "../../utils/getImageUrl";
 import useUserProfile from "../../hooks/useUserProfile";
-import { formatStatus, getEffectiveMissionStatus } from "../../utils/missionStatusUtils";
+import { getEffectiveMissionStatus } from "../../utils/missionStatusUtils";
 
 export default function MissionCard({
     id,
-    name = "Untitled Mission",
+    name,
     description = "",
     start_time,
     points = 0,
@@ -18,7 +19,9 @@ export default function MissionCard({
     company_name,
     organization = {},
 }) {
+    const { t } = useLocale("mission");
     const navigate = useNavigate();
+    name = name || t("card.untitled");
     const { date, time } = formatDateTimeWithLocalTime(start_time);
     const { user } = useUserProfile()
     const isOrganization = user?.type == "organization"
@@ -37,7 +40,8 @@ export default function MissionCard({
         completed: "bg-green-500",
     }[effectiveStatus?.toLowerCase()] || "bg-gray-400";
 
-    const displayStatus = formatStatus(effectiveStatus?.toLowerCase() === "process" ? "pending" : effectiveStatus);
+    const displayStatusKey = (effectiveStatus?.toLowerCase() === "process" ? "pending" : effectiveStatus || "").toLowerCase();
+    const displayStatus = displayStatusKey ? t(`status.${displayStatusKey}`, { defaultValue: displayStatusKey }) : "";
 
     return (
         <div
@@ -50,11 +54,11 @@ export default function MissionCard({
                     alt={name}
                     className="w-full h-44 object-cover transition-transform duration-200 group-hover:scale-105"
                 />
-                <span className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
-                    {organization?.company_name || company_name || "Unknown Org"}
+                <span className="absolute top-3 start-3 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
+                    {organization?.company_name || company_name || t("card.unknownOrg")}
                 </span>
                 <span
-                    className={`absolute top-3 right-3 ${statusColor} text-white text-xs font-semibold px-2 py-1 rounded-full`}
+                    className={`absolute top-3 end-3 ${statusColor} text-white text-xs font-semibold px-2 py-1 rounded-full`}
                 >
                     {displayStatus}
                 </span>
@@ -82,7 +86,7 @@ export default function MissionCard({
                     onClick={handleClick}
                 >
                     <FaMedal className="w-4 h-4" />
-                    {points} Points
+                    {t("card.points", { points })}
                 </button>
             </div>
         </div>

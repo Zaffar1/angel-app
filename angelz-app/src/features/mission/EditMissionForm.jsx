@@ -18,8 +18,10 @@ import {
     FaHeart, FaRegHeart, FaPaperPlane, FaComment, FaRegComment
 } from "react-icons/fa";
 import { IoPaperPlaneSharp } from "react-icons/io5";
+import useLocale from "../../hooks/useLocale";
 
 export default function EditMissionForm() {
+    const { t } = useLocale("mission");
     const { id } = useParams();
     const navigate = useNavigate();
     const { data, isLoading, isError, error } = useMissionDetail(id);
@@ -91,7 +93,7 @@ export default function EditMissionForm() {
     const onFormError = (formErrors) => {
         const errorKeys = Object.keys(formErrors);
         if (errorKeys.length > 0) {
-            const firstErrorMsg = formErrors[errorKeys[0]]?.message || "Please fix validation errors.";
+            const firstErrorMsg = formErrors[errorKeys[0]]?.message || t("form.fixValidation");
             showError(firstErrorMsg);
         }
     };
@@ -137,7 +139,7 @@ export default function EditMissionForm() {
             {
                 onSuccess: () => navigate(`/organization/mission/${id}`),
                 onError: (err, errMsg) => {
-                    const message = errMsg || err.response?.data?.message || err.message || "Failed to update mission.";
+                    const message = errMsg || err.response?.data?.message || err.message || t("form.updateFailed");
                     setServerError(message);
                 },
             }
@@ -150,13 +152,13 @@ export default function EditMissionForm() {
         return (
             <div className="glass-card max-w-xl mx-auto p-8 my-12 text-center space-y-4">
                 <div className="text-red-500 text-5xl">⚠️</div>
-                <h2 className="text-2xl font-bold text-gray-800">Error Loading Mission</h2>
+                <h2 className="text-2xl font-bold text-gray-800">{t("form.errorLoadingTitle")}</h2>
                 <p className="text-sm text-gray-600">
-                    {error?.response?.data?.message || error?.message || "Could not retrieve mission details. Please verify your connection and try again."}
+                    {error?.response?.data?.message || error?.message || t("form.errorLoadingBody")}
                 </p>
                 <div className="pt-4 flex justify-center gap-3">
-                    <ThemeButton onClick={() => navigate(-1)}>Go Back</ThemeButton>
-                    <ThemeButton onClick={() => window.location.reload()} className="bg-gray-200 text-gray-800 hover:bg-gray-300">Retry</ThemeButton>
+                    <ThemeButton onClick={() => navigate(-1)}>{t("form.goBack")}</ThemeButton>
+                    <ThemeButton onClick={() => window.location.reload()} className="bg-gray-200 text-gray-800 hover:bg-gray-300">{t("form.retry")}</ThemeButton>
                 </div>
             </div>
         );
@@ -168,13 +170,13 @@ export default function EditMissionForm() {
             className="glass-card max-w-3xl mx-auto p-6 sm:p-8 md:p-10 space-y-8 my-8 transition-all duration-300"
         >
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 border-b pb-4">
-                <h2 className="text-2xl font-semibold text-center sm:text-left">Edit Mission</h2>
+                <h2 className="text-2xl font-semibold text-center sm:text-start">{t("form.editTitle")}</h2>
                 {mission?.status && (
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${isOpen
                             ? "bg-green-100 text-green-700 border border-green-200"
                             : "bg-amber-100 text-amber-700 border border-amber-200"
                         }`}>
-                        Status: {mission.status}
+                        {t("form.statusBadge", { status: t(`status.${String(mission.status).toLowerCase()}`, { defaultValue: mission.status }) })}
                     </span>
                 )}
             </div>
@@ -212,7 +214,7 @@ export default function EditMissionForm() {
                     <div className="bg-[#4C95FF]/10 p-2 rounded-lg">
                         <IoPaperPlaneSharp className="rotate-45" />
                     </div>
-                    <span className="text-sm">Select image</span>
+                    <span className="text-sm">{t("form.selectImage")}</span>
                 </div>
                 {errors.file && (
                     <p className="text-xs text-red-500 mt-2">{errors.file.message}</p>
@@ -221,18 +223,18 @@ export default function EditMissionForm() {
 
             <div className="space-y-6">
                 <InputField
-                    label="Mission Name"
+                    label={t("form.name")}
                     {...register("name")}
                     error={errors.name?.message}
                 />
 
                 <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">Description</label>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">{t("form.description")}</label>
                     <textarea
                         {...register("description")}
                         rows={3}
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-                        placeholder="Write about Mission....."
+                        placeholder={t("form.descriptionPlaceholder")}
                     />
                     {errors.description && (
                         <p className="text-sm mt-1 text-red-500">{errors.description.message}</p>
@@ -242,7 +244,7 @@ export default function EditMissionForm() {
 
             <div>
                 <label className="block text-gray-700 text-sm font-medium mb-1">
-                    Location
+                    {t("form.location")}
                 </label>
                 <MapComponent
                     mode="interactive"
@@ -261,7 +263,7 @@ export default function EditMissionForm() {
                     </p>
                 )}
                 <p className="text-sm text-gray-500 mt-1">
-                    Click on the map to update mission coordinates.
+                    {t("form.locationHintEdit")}
                 </p>
             </div>
 
@@ -271,7 +273,7 @@ export default function EditMissionForm() {
                     control={control}
                     render={({ field }) => (
                         <DateTimePicker
-                            label="Start Date & Time"
+                            label={t("form.startDateTime")}
                             value={field.value}
                             onChange={field.onChange}
                             error={errors.start_time?.message}
@@ -284,7 +286,7 @@ export default function EditMissionForm() {
                     control={control}
                     render={({ field }) => (
                         <DateTimePicker
-                            label="End Date & Time"
+                            label={t("form.endDateTime")}
                             value={field.value}
                             onChange={field.onChange}
                             error={errors.end_time?.message}
@@ -297,32 +299,32 @@ export default function EditMissionForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">Relevant Distance</label>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">{t("form.relevantDistance")}</label>
                     <select
                         {...register("relevant_distance")}
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
                     >
-                        <option value="">Select Distance</option>
-                        <option value="local">Local</option>
-                        <option value="city wide">City Wide</option>
-                        <option value="country wide">Country Wide</option>
-                        <option value="global">Global</option>
+                        <option value="">{t("form.selectDistance")}</option>
+                        <option value="local">{t("form.distance.local")}</option>
+                        <option value="city wide">{t("form.distance.cityWide")}</option>
+                        <option value="country wide">{t("form.distance.countryWide")}</option>
+                        <option value="global">{t("form.distance.global")}</option>
                     </select>
                     {errors.relevant_distance && (
                         <p className="text-sm mt-1 text-red-500">{errors.relevant_distance.message}</p>
                     )}
                 </div>
                 <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">Work type</label>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">{t("form.workType")}</label>
                     <select
                         {...register("work_type")}
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
                     >
-                        <option value="">Select work type</option>
-                        <option value="tutor">Tutor</option>
-                        <option value="staff">Staff</option>
-                        <option value="cleaning">Cleaning</option>
-                        <option value="watchman">Watchman</option>
+                        <option value="">{t("form.selectWorkTypeEdit")}</option>
+                        <option value="tutor">{t("form.workTypes.tutor")}</option>
+                        <option value="staff">{t("form.workTypes.staff")}</option>
+                        <option value="cleaning">{t("form.workTypes.cleaning")}</option>
+                        <option value="watchman">{t("form.workTypes.watchman")}</option>
                     </select>
                     {errors.work_type && (
                         <p className="text-sm mt-1 text-red-500">{errors.work_type.message}</p>
@@ -332,7 +334,7 @@ export default function EditMissionForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
-                    label="Points"
+                    label={t("form.points")}
                     type="number"
                     min="0"
                     step="1"
@@ -354,10 +356,10 @@ export default function EditMissionForm() {
                         }
                     }}
                     error={errors.points?.message}
-                    placeholder="Enter points"
+                    placeholder={t("form.pointsPlaceholder")}
                 />
                 <InputField
-                    label="Volunteers Required"
+                    label={t("form.volunteersRequired")}
                     type="number"
                     min="1"
                     step="1"
@@ -379,19 +381,19 @@ export default function EditMissionForm() {
                         }
                     }}
                     error={errors.volunteer_required?.message}
-                    placeholder="Enter number"
+                    placeholder={t("form.volunteersPlaceholder")}
                 />
             </div>
 
             <div>
-                <label className="block text-gray-700 text-sm font-medium mb-1">Mission type</label>
+                <label className="block text-gray-700 text-sm font-medium mb-1">{t("form.missionType")}</label>
                 <select
                     {...register("mission_type")}
                     className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
                 >
-                    <option value="">Select Mission type</option>
-                    <option value="virtual">Virtual</option>
-                    <option value="on-site">On-site</option>
+                    <option value="">{t("form.selectMissionType")}</option>
+                    <option value="virtual">{t("form.missionTypes.virtual")}</option>
+                    <option value="on-site">{t("form.missionTypes.onSite")}</option>
                 </select>
                 {errors.mission_type && (
                     <p className="text-sm mt-1 text-red-500">{errors.mission_type.message}</p>
@@ -399,7 +401,7 @@ export default function EditMissionForm() {
             </div>
 
             <div className="space-y-1">
-                <label className="block text-gray-700 text-sm font-medium mb-1">Allow Interaction</label>
+                <label className="block text-gray-700 text-sm font-medium mb-1">{t("form.allowInteraction")}</label>
                 <div className="flex flex-wrap gap-10 items-center px-1 py-1">
                     <label className="flex items-center gap-3 cursor-pointer group select-none">
                         <input
@@ -411,7 +413,7 @@ export default function EditMissionForm() {
                             {allowInteraction?.likes ? <FaHeart size={26} /> : <FaRegHeart size={26} />}
                         </div>
                         <span className={`text-sm font-bold transition-colors ${allowInteraction?.likes ? "text-red-500" : "text-gray-500"}`}>
-                            {allowInteraction?.likes ? "Liked" : "Like"}
+                            {allowInteraction?.likes ? t("form.liked") : t("form.like")}
                         </span>
                     </label>
 
@@ -425,7 +427,7 @@ export default function EditMissionForm() {
                             <FaPaperPlane size={22} className={allowInteraction?.share ? "rotate-12" : ""} />
                         </div>
                         <span className={`text-sm font-bold transition-colors ${allowInteraction?.share ? "text-purple-500" : "text-gray-500"}`}>
-                            Share
+                            {t("form.share")}
                         </span>
                     </label>
 
@@ -439,7 +441,7 @@ export default function EditMissionForm() {
                             {allowInteraction?.comments ? <FaComment size={24} /> : <FaRegComment size={24} />}
                         </div>
                         <span className={`text-sm font-bold transition-colors ${allowInteraction?.comments ? "text-[#4C95FF]" : "text-gray-500"}`}>
-                            Comment
+                            {t("form.comment")}
                         </span>
                     </label>
                 </div>
@@ -450,14 +452,14 @@ export default function EditMissionForm() {
                     <div className="p-4 bg-red-50 border border-red-300 rounded-xl text-red-700 text-sm flex items-start gap-3">
                         <span className="text-xl leading-none">❌</span>
                         <div className="flex-1">
-                            <p className="font-semibold text-base">Error Updating Mission</p>
+                            <p className="font-semibold text-base">{t("form.errorUpdatingTitle")}</p>
                             <p className="mt-1 text-sm text-red-600">{serverError}</p>
                         </div>
                         <button
                             type="button"
                             onClick={() => setServerError(null)}
                             className="text-red-400 hover:text-red-700 font-bold p-1 leading-none text-base"
-                            title="Dismiss error"
+                            title={t("form.dismissError")}
                         >
                             ✕
                         </button>
@@ -469,14 +471,14 @@ export default function EditMissionForm() {
                     isLoading={isPending}
                     disabled={!isOpen || isPending}
                     className={`w-full ${!isOpen ? "opacity-60 cursor-not-allowed" : ""}`}
-                    title={!isOpen ? getNonEditableMissionMessage(mission?.status) : "Update Mission"}
+                    title={!isOpen ? getNonEditableMissionMessage(mission?.status) : t("form.updateSubmit")}
                 >
-                    {isOpen ? "Update Mission" : `Cannot Update (${getNonEditableMissionReason(mission?.status)})`}
+                    {isOpen ? t("form.updateSubmit") : t("form.cannotUpdate", { reason: getNonEditableMissionReason(mission?.status) })}
                 </ThemeButton>
                 {Object.keys(errors).length > 0 && (
                     <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-center">
                         <p className="text-red-600 text-sm font-medium">
-                            {Object.values(errors).map((e) => e.message).filter(Boolean).join(" • ") || "Validation error: please check all required fields."}
+                            {Object.values(errors).map((e) => e.message).filter(Boolean).join(" • ") || t("form.validationFallback")}
                         </p>
                     </div>
                 )}

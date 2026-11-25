@@ -1,4 +1,5 @@
 import { MISSION_STATUS } from "../constant/MISSION_STATUS";
+import i18n from "../i18n";
 
 export const MISSION_STATUS_STYLES = {
     [MISSION_STATUS.OPEN]: "bg-blue-100 text-blue-700",
@@ -65,27 +66,30 @@ export const getNonEditableMissionMessage = (status) => {
     const s = String(status || "").toLowerCase().trim();
     switch (s) {
         case MISSION_STATUS.COMPLETED:
-            return "You cannot update this mission because it has already been completed. Only missions with 'Open' status can be edited.";
+            return i18n.t("missionDetails:nonEditable.message.completed");
         case MISSION_STATUS.INPROGRESS:
         case MISSION_STATUS.PROCESS:
-            return "You cannot update this mission because it is currently in process. Only missions with 'Open' status can be edited.";
+            return i18n.t("missionDetails:nonEditable.message.inprogress");
         case MISSION_STATUS.COMPLETION_REQUESTED:
-            return "You cannot update this mission because a completion review has been requested. Only missions with 'Open' status can be edited.";
+            return i18n.t("missionDetails:nonEditable.message.completionRequested");
         case MISSION_STATUS.SCHEDULED:
-            return "You cannot update this mission because it has already been scheduled. Only missions with 'Open' status can be edited.";
+            return i18n.t("missionDetails:nonEditable.message.scheduled");
         case MISSION_STATUS.ACCEPTED:
-            return "You cannot update this mission because volunteer assignments have already been accepted. Only missions with 'Open' status can be edited.";
+            return i18n.t("missionDetails:nonEditable.message.accepted");
         case MISSION_STATUS.REQUESTED:
-            return "You cannot update this mission while volunteer requests are pending. Only missions with 'Open' status can be edited.";
+            return i18n.t("missionDetails:nonEditable.message.requested");
         case MISSION_STATUS.PENDING:
-            return "You cannot update this mission while it is pending review. Only missions with 'Open' status can be edited.";
+            return i18n.t("missionDetails:nonEditable.message.pending");
         case MISSION_STATUS.REJECTED:
-            return "You cannot update this mission because it was rejected. Only missions with 'Open' status can be edited.";
+            return i18n.t("missionDetails:nonEditable.message.rejected");
         case MISSION_STATUS.EXPIRED:
-            return "You cannot update this mission because it has expired. Only missions with 'Open' status can be edited.";
+            return i18n.t("missionDetails:nonEditable.message.expired");
         default: {
             const formatted = formatStatus(status);
-            return `You cannot update this mission because it is currently ${formatted ? formatted.toLowerCase() : "closed"}. Only missions with 'Open' status can be edited.`;
+            const label = formatted
+                ? i18n.t(`mission:status.${s}`, { defaultValue: formatted }).toLowerCase()
+                : i18n.t("missionDetails:nonEditable.closed");
+            return i18n.t("missionDetails:nonEditable.message.default", { status: label });
         }
     }
 };
@@ -97,25 +101,29 @@ export const getNonEditableMissionReason = (status) => {
     const s = String(status || "").toLowerCase().trim();
     switch (s) {
         case MISSION_STATUS.COMPLETED:
-            return "Mission has already been completed";
+            return i18n.t("missionDetails:nonEditable.reason.completed");
         case MISSION_STATUS.INPROGRESS:
         case MISSION_STATUS.PROCESS:
-            return "Mission is currently in process";
+            return i18n.t("missionDetails:nonEditable.reason.inprogress");
         case MISSION_STATUS.COMPLETION_REQUESTED:
-            return "Mission completion review requested";
+            return i18n.t("missionDetails:nonEditable.reason.completionRequested");
         case MISSION_STATUS.SCHEDULED:
-            return "Mission has been scheduled";
+            return i18n.t("missionDetails:nonEditable.reason.scheduled");
         case MISSION_STATUS.ACCEPTED:
-            return "Volunteer assignments accepted";
+            return i18n.t("missionDetails:nonEditable.reason.accepted");
         case MISSION_STATUS.REQUESTED:
-            return "Volunteer requests pending";
+            return i18n.t("missionDetails:nonEditable.reason.requested");
         case MISSION_STATUS.PENDING:
-            return "Mission is pending review";
+            return i18n.t("missionDetails:nonEditable.reason.pending");
         case MISSION_STATUS.REJECTED:
-            return "Mission was rejected";
+            return i18n.t("missionDetails:nonEditable.reason.rejected");
         case MISSION_STATUS.EXPIRED:
-            return "Mission has expired";
+            return i18n.t("missionDetails:nonEditable.reason.expired");
         default:
-            return `Mission is ${formatStatus(status) || "closed"}`;
+            return i18n.t("missionDetails:nonEditable.reason.default", {
+                status: formatStatus(status)
+                    ? i18n.t(`mission:status.${s}`, { defaultValue: formatStatus(status) })
+                    : i18n.t("missionDetails:nonEditable.closed"),
+            });
     }
 };

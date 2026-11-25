@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import useLocale from "../../hooks/useLocale";
 import { useInfiniteOrganizations } from '../../api/organization'
 import OrganizationCard from '../../components/OrganizationCard';
 import Loader from '../../components/Loader';
@@ -6,6 +7,7 @@ import { InfiniteScroll } from '../../components/InfiniteScroll';
 import { PAGE_LIMIT } from '../../constant/PAGE_LIMIT';
 
 const OrganizationList = () => {
+    const { t } = useLocale('organization');
     const {
         data,
         fetchNextPage,
@@ -30,7 +32,7 @@ const OrganizationList = () => {
     if (isError)
         return (
             <p className="text-center py-10 text-red-500">
-                Failed to load organizations: {error?.response?.data?.message || error.message}
+                {t('list.loadFailed', { message: error?.response?.data?.message || error.message })}
             </p>
         );
 
@@ -38,8 +40,8 @@ const OrganizationList = () => {
         <div className="max-w-7xl mx-auto pb-10">
             <div className="flex justify-between items-center mb-10">
                 <div className="">
-                    <h2 className="text-2xl font-semibold capitalize">All Organizations</h2>
-                    <p className="font-medium text-lg capitalize text-gray-600">Total: {organizationCount}</p>
+                    <h2 className="text-2xl font-semibold capitalize">{t('list.title')}</h2>
+                    <p className="font-medium text-lg capitalize text-gray-600">{t('list.total', { count: organizationCount })}</p>
                 </div>
             </div>
 
@@ -50,7 +52,7 @@ const OrganizationList = () => {
                 loader={<div className="py-10"><Loader fullPage={false} /></div>}
                 endMessage={
                     <div className="text-center py-10 text-gray-500 font-medium">
-                        No more organizations to load.
+                        {t('list.noMore')}
                     </div>
                 }
             >

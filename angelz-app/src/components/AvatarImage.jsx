@@ -1,7 +1,9 @@
 import { useState } from "react";
+import useLocale from "../hooks/useLocale";
 import { getImageUrl } from "../utils/getImageUrl";
 
-export function AvatarImage({ src, alt = "User", size = "40px", fallback }) {
+export function AvatarImage({ src, alt, size = "40px", fallback }) {
+  const { t } = useLocale("shared");
   const [imgError, setImgError] = useState(false);
   const imageSrc = getImageUrl(src);
 
@@ -27,7 +29,7 @@ export function AvatarImage({ src, alt = "User", size = "40px", fallback }) {
       {imageSrc && !imgError ? (
         <img
           src={imageSrc}
-          alt={alt}
+          alt={alt ?? t("image.user")}
           onError={() => setImgError(true)}
           style={{ width: "100%", height: "100%" }}
           className="object-cover"
@@ -35,7 +37,7 @@ export function AvatarImage({ src, alt = "User", size = "40px", fallback }) {
       ) : (
         <div className="w-full h-full bg-gradient-to-br from-[#4C95FF] to-[#2B61FF] flex items-center justify-center text-white font-bold text-[calc(var(--size)*0.4)]"
              style={{ fontSize: `calc(${size} * 0.4)` }}>
-          {getInitials(alt)}
+          {getInitials(alt ?? "User")}
         </div>
       )}
     </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import useLocale from "../hooks/useLocale";
 import { googleMapsLoader } from "../utils/googleMapsLoader";
 
 export default function MapComponent({
@@ -7,6 +8,7 @@ export default function MapComponent({
   onLocationSelect = () => { },
   mode = "interactive",
 }) {
+  const { t } = useLocale("shared");
   const mapRef = useRef(null);
   const inputRef = useRef(null);
   const [currentAddress, setCurrentAddress] = useState(address);
@@ -48,7 +50,7 @@ export default function MapComponent({
       if (!address && defaultLocation.lat && defaultLocation.lng) {
         try {
           const { results } = await geocoderInstance.current.geocode({
-            location: defaultLocation
+            location: defaultLocation,
           });
           if (results?.[0]) {
             setCurrentAddress(results[0].formatted_address);
@@ -166,7 +168,7 @@ export default function MapComponent({
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search Location....."
+          placeholder={t("map.searchPlaceholder")}
           className="w-full border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white border-gray-300 rounded-lg"
           onKeyDown={handleKeyDown}
           value={currentAddress}

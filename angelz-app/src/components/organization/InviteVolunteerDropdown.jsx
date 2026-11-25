@@ -1,10 +1,12 @@
 import { useState } from "react";
+import useLocale from "../../hooks/useLocale";
 
 export default function InviteVolunteerDropdown({
   volunteers = [],
   inviteMutation,
   isLoading
 }) {
+  const { t } = useLocale("organization");
   const [selectedVolunteer, setSelectedVolunteer] = useState("");
 
   const handleInvite = () => {
@@ -12,14 +14,14 @@ export default function InviteVolunteerDropdown({
   };
 
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex flex-wrap gap-4 items-center">
       <select
         value={selectedVolunteer}
         onChange={(e) => setSelectedVolunteer(e.target.value)}
         disabled={isLoading}
-        className="border rounded-lg px-4 py-2 w-80 disabled:opacity-60"
+        className="border rounded-lg px-4 py-2 w-full max-w-80 sm:w-80 disabled:opacity-60"
       >
-        <option value="">Select a volunteer</option>
+        <option value="">{t("invite.selectVolunteer")}</option>
 
         {volunteers.map((vol) => (
           <option key={vol.id} value={vol.id}>
@@ -36,10 +38,10 @@ export default function InviteVolunteerDropdown({
         {isLoading ? (
           <>
             <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            Inviting
+            {t("invite.inviting")}
           </>
         ) : (
-          "Invite"
+          t("invite.invite")
         )}
       </button>
     </div>

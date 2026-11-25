@@ -1,4 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import useLocale from "../../hooks/useLocale";
 import { FaTrophy } from 'react-icons/fa';
 import { UserRow } from '../../components/leaderboard/UserRow';
 import { LoadingSkeleton } from '../../components/leaderboard/Loading';
@@ -12,6 +14,17 @@ import { PAGE_LIMIT } from '../../constant/PAGE_LIMIT';
  * Served at /leaderboard/embed so it can be safely iframed on any website.
  */
 const LeaderboardEmbedPage = () => {
+  const { t, i18n } = useLocale('volunteer');
+  const [searchParams] = useSearchParams();
+  const langParam = searchParams.get('lang');
+
+  // Optional ?lang=he|en override (the iframe has no header / language switcher)
+  useEffect(() => {
+    if (langParam === 'he' || langParam === 'en') {
+      i18n.changeLanguage(langParam);
+    }
+  }, [langParam, i18n]);
+
   const [page, setPage] = useState(1);
   const [allUsers, setAllUsers] = useState([]);
 
@@ -66,20 +79,20 @@ const LeaderboardEmbedPage = () => {
                     </div>
                     <div>
                       <h1 className="text-xl sm:text-2xl font-bold text-white">
-                        Global Leaderboard
+                        {t('embed.title')}
                       </h1>
                       <p className="text-blue-100 text-xs sm:text-sm">
-                        Top volunteers worldwide
+                        {t('leaderboard.subtitles.worldwide')}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="sticky top-0 z-10 grid grid-cols-12 gap-2 sm:gap-4 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-white border-b-3 border-blue-200 text-xs sm:text-sm font-semibold text-gray-700">
-                <div className="col-span-2 md:col-span-2">Rank</div>
-                <div className="col-span-4 md:col-span-4">Volunteer</div>
-                <div className="col-span-3">Location</div>
-                <div className="col-span-3 text-right">Points</div>
+                <div className="col-span-2 md:col-span-2">{t('leaderboard.columns.rank')}</div>
+                <div className="col-span-4 md:col-span-4">{t('leaderboard.columns.volunteer')}</div>
+                <div className="col-span-3">{t('leaderboard.columns.location')}</div>
+                <div className="col-span-3 text-end">{t('leaderboard.columns.points')}</div>
               </div>
               <div id="scrollableDiv" className="flex-1 overflow-y-auto min-h-0">
                 <InfiniteScroll
@@ -92,8 +105,8 @@ const LeaderboardEmbedPage = () => {
                     allUsers.length > 0 ? (
                       <div className="text-center py-6 sm:py-8 text-gray-500">
                         <FaTrophy className="w-10 h-10 sm:w-12 sm:h-12 text-gray-300 mb-2 sm:mb-3" />
-                        <p className="font-semibold text-sm sm:text-base">You've reached the end!</p>
-                        <p className="text-xs sm:text-sm">No more data to load</p>
+                        <p className="font-semibold text-sm sm:text-base">{t('leaderboard.endTitle')}</p>
+                        <p className="text-xs sm:text-sm">{t('leaderboard.endText')}</p>
                       </div>
                     ) : null
                   }
@@ -105,7 +118,7 @@ const LeaderboardEmbedPage = () => {
                   ) : !isLoading ? (
                     <div className="flex flex-col items-center justify-center min-h-[300px] sm:min-h-[400px] text-gray-500">
                       <FaTrophy className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mb-3 sm:mb-4" />
-                      <p className="text-lg font-semibold">No data found</p>
+                      <p className="text-lg font-semibold">{t('leaderboard.noData')}</p>
                     </div>
                   ) : null}
                 </InfiniteScroll>

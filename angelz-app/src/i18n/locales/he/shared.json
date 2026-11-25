@@ -1,0 +1,41 @@
+{
+  "notFound": {
+    "title": "העמוד לא נמצא",
+    "message": "מצטערים, לא מצאנו את העמוד שחיפשת.",
+    "goHome": "מעבר לדף הבית",
+    "goOrganization": "מעבר ללוח הבקרה של הארגון",
+    "goVolunteer": "מעבר ללוח הבקרה של המתנדב",
+    "sectionMessage": "עמוד {{section}} זה אינו קיים.",
+    "sectionBack": "חזרה ללוח הבקרה של {{section}}",
+    "sections": {
+      "organization": "ארגון",
+      "volunteer": "מתנדב"
+    }
+  },
+  "confirm": {
+    "no": "לא",
+    "yes": "כן"
+  },
+  "pagination": {
+    "prev": "הקודם",
+    "next": "הבא",
+    "itemsPerPage": "פריטים בעמוד:",
+    "showing": "מוצגים {{range}} מתוך {{total}}"
+  },
+  "tagInput": {
+    "label": "תגיות",
+    "placeholder": "יש ללחוץ על Enter להוספת תגיות",
+    "remove": "הסרת תגית"
+  },
+  "image": {
+    "preview": "תצוגה מקדימה",
+    "user": "משתמש"
+  },
+  "input": {
+    "showPassword": "הצגת סיסמה",
+    "hidePassword": "הסתרת סיסמה"
+  },
+  "map": {
+    "searchPlaceholder": "חיפוש מיקום....."
+  }
+}

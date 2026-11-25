@@ -1,0 +1,49 @@
+{
+  "appName": "Angelz App",
+  "language": {
+    "label": "Language"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "retry": "Retry",
+    "goBack": "Go Back",
+    "close": "Close",
+    "confirm": "Confirm",
+    "submit": "Submit",
+    "search": "Search..."
+  },
+  "nav": {
+    "feeds": "Feeds",
+    "volunteers": "Volunteers",
+    "missions": "Missions",
+    "create": "Create",
+    "createMission": "Create Mission",
+    "createPost": "Create Post",
+    "leaderboard": "Leaderboard",
+    "organizations": "Organizations",
+    "invitedVolunteers": "Invited Volunteers",
+    "editProfile": "Edit Profile",
+    "viewProfile": "View Profile",
+    "changePassword": "Change Password",
+    "myMissions": "My Missions",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "toast": {
+    "loggedOut": "Logged out successfully!"
+  },
+  "network": {
+    "connectionLost": "Connection Lost",
+    "waiting": "Waiting for internet connection..."
+  },
+  "logoAlt": "Logo",
+  "userType": {
+    "volunteer": "Volunteer",
+    "organization": "Organization",
+    "volunteer_group": "Volunteer Group"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "title": {
+    "organization": "Organization Notifications",
+    "volunteer": "Volunteer Notifications"
+  },
+  "tabs": {
+    "all": "All",
+    "unread": "Unread"
+  },
+  "close": "Close",
+  "loading": "Loading...",
+  "empty": "No notifications",
+  "actions": {
+    "accept": "Accept",
+    "reject": "Reject",
+    "approve": "Approve",
+    "join": "Join",
+    "startMission": "Start Mission",
+    "submitCompletion": "Submit Completion"
+  },
+  "status": {
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "handled": "Handled"
+  }
+}

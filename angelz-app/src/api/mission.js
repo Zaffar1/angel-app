@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import api from "./client";
+import i18n from "../i18n";
 import { showSuccess, showError } from "../utils/toast";
 import { syncInvalidateQueries } from "../utils/querySync";
 
@@ -13,7 +14,7 @@ export function useCreateMission(options = {}) {
       return data;
     },
     onSuccess: (data) => {
-      showSuccess(data?.message || "Mission created successfully!");
+      showSuccess(data?.message || i18n.t("missionDetails:toast.created"));
       queryClient.invalidateQueries({ queryKey: ["orgMissions"], refetchType: "all" });
       queryClient.invalidateQueries({ queryKey: ["missions"], refetchType: "all" });
       queryClient.invalidateQueries({ queryKey: ["feeds"], refetchType: "all" });
@@ -25,7 +26,7 @@ export function useCreateMission(options = {}) {
       options?.onSuccess?.(data);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Mission creation failed!";
+      const msg = err.response?.data?.message || i18n.t("missionDetails:toast.createFailed");
       showError(msg);
       options?.onError?.(err);
     },
@@ -43,7 +44,7 @@ export function useUpdateMission(options = {}) {
     },
     onSuccess: (data, variables) => {
       const id = variables?.id;
-      showSuccess(data?.message || "Mission updated successfully!");
+      showSuccess(data?.message || i18n.t("missionDetails:toast.updated"));
       if (id) {
         queryClient.invalidateQueries({ queryKey: ["mission", String(id)] });
         queryClient.invalidateQueries({ queryKey: ["mission", Number(id)] });
@@ -71,7 +72,7 @@ export function useUpdateMission(options = {}) {
         msg = responseData;
       }
       if (!msg) {
-        msg = err.message || "Mission update failed!";
+        msg = err.message || i18n.t("missionDetails:toast.updateFailed");
       }
       showError(msg);
       options?.onError?.(err, msg);
@@ -88,7 +89,7 @@ export function useDeleteMission(options = {}) {
       return data;
     },
     onSuccess: (data, id) => {
-      showSuccess(data?.message || "Mission deleted successfully!");
+      showSuccess(data?.message || i18n.t("missionDetails:toast.deleted"));
       queryClient.removeQueries(["mission", id]);
       queryClient.resetQueries({ queryKey: ["orgMissions"] });
       queryClient.resetQueries({ queryKey: ["missions"] });
@@ -98,7 +99,7 @@ export function useDeleteMission(options = {}) {
       options?.onSuccess?.(data, id);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Mission deletion failed!";
+      const msg = err.response?.data?.message || i18n.t("missionDetails:toast.deleteFailed");
       showError(msg);
       options?.onError?.(err);
     },
@@ -126,11 +127,11 @@ export function useCanPostMissionMutation(options = {}) {
     },
     onSuccess: (data, id) => {
       syncInvalidateQueries(["mission", id], ["feeds", "all-posts"], ["feeds"], ["all-posts"]);
-      showSuccess(data?.message || "Mission posted successfully!");
+      showSuccess(data?.message || i18n.t("missionDetails:toast.posted"));
       options?.onSuccess?.(data);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Mission post failed!";
+      const msg = err.response?.data?.message || i18n.t("missionDetails:toast.postFailed");
       showError(msg);
       options?.onError?.(err);
     },
@@ -232,12 +233,12 @@ export function useRequestMission(options = {}) {
         return data;
       },
       onSuccess: (data) => {
-        showSuccess(data?.message || "Mission request sent successfully!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.requestSent"));
         syncInvalidateQueries(["notifications"]);
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        showError(err.response?.data?.message || "Failed to send mission request!");
+        showError(err.response?.data?.message || i18n.t("missionDetails:toast.requestFailed"));
         options?.onError?.(err);
       },
     });
@@ -253,7 +254,7 @@ export function useRequestMission(options = {}) {
       },
       onSuccess: (data, variables) => {
         const missionId = typeof variables === "object" ? variables.mission_id : variables;
-        showSuccess(data?.message || "Completion request sent successfully!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.completionSent"));
         if (missionId) {
           queryClient.invalidateQueries(["mission", String(missionId)]);
           queryClient.invalidateQueries(["mission", Number(missionId)]);
@@ -263,7 +264,7 @@ export function useRequestMission(options = {}) {
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        showError(err.response?.data?.message || "Failed to send completion request!");
+        showError(err.response?.data?.message || i18n.t("missionDetails:toast.completionFailed"));
         options?.onError?.(err);
       },
     });
@@ -277,12 +278,12 @@ export function useRequestMission(options = {}) {
         return data;
       },
       onSuccess: (data) => {
-        showSuccess(data?.message || "Volunteer request accepted successfully!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.volunteerAccepted"));
         queryClient.invalidateQueries(["notifications"]);
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        showError(err.response?.data?.message || "Failed to accept volunteer request!");
+        showError(err.response?.data?.message || i18n.t("missionDetails:toast.volunteerAcceptFailed"));
         options?.onError?.(err);
       },
     });
@@ -296,12 +297,12 @@ export function useRequestMission(options = {}) {
         return data;
       },
       onSuccess: (data) => {
-        showSuccess(data?.message || "Volunteer request rejected successfully!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.volunteerRejected"));
         queryClient.invalidateQueries(["notifications"]);
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        showError(err.response?.data?.message || "Failed to reject volunteer request!");
+        showError(err.response?.data?.message || i18n.t("missionDetails:toast.volunteerRejectFailed"));
         options?.onError?.(err);
       },
     });
@@ -314,12 +315,12 @@ export function useRequestMission(options = {}) {
         return data;
       },
       onSuccess: (data) => {
-        showSuccess(data?.message || "Mission started successfully!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.started"));
         syncInvalidateQueries(["feeds", "all-posts"], ["missions"], ["orgMissions"]);
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        showError(err.response?.data?.message || "Failed to start mission!");
+        showError(err.response?.data?.message || i18n.t("missionDetails:toast.startFailed"));
         options?.onError?.(err);
       },
     });
@@ -332,12 +333,12 @@ export function useRequestMission(options = {}) {
         return data;
       },
       onSuccess: (data) => {
-        showSuccess(data?.message || "Mission marked as complete!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.markedComplete"));
         syncInvalidateQueries(["feeds", "all-posts"], ["missions"], ["orgMissions"]);
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        showError(err.response?.data?.message || "Failed to mark mission as complete!");
+        showError(err.response?.data?.message || i18n.t("missionDetails:toast.markCompleteFailed"));
         options?.onError?.(err);
       },
     });
@@ -350,11 +351,11 @@ export function useRequestMission(options = {}) {
         return data;
       },
       onSuccess: (data) => {
-        showSuccess(data?.message || "Mission completion rejected!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.completionRejected"));
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        showError(err.response?.data?.message || "Failed to reject mission completion!");
+        showError(err.response?.data?.message || i18n.t("missionDetails:toast.completionRejectFailed"));
         options?.onError?.(err);
       },
     });
@@ -374,11 +375,11 @@ export function useRequestMission(options = {}) {
           queryClient.invalidateQueries({ queryKey: ["mission", Number(missionId)] });
         }
         syncInvalidateQueries(["feeds", "all-posts"], ["feeds"], ["all-posts"]);
-        showSuccess(data?.message || "Feed liked successfully!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.feedLiked"));
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        const msg = err.response?.data?.message || "Feed liked failed!";
+        const msg = err.response?.data?.message || i18n.t("missionDetails:toast.feedLikeFailed");
         showError(msg);
         options?.onError?.(err);
       },
@@ -394,11 +395,11 @@ export function useRequestMission(options = {}) {
       },
       onSuccess: (data) => {
         syncInvalidateQueries(["feeds", "all-posts"], ["feeds"], ["all-posts"]);
-        showSuccess(data?.message || "Comment disabled successfully!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.commentDisabled"));
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        const msg = err.response?.data?.message || "Comment disabled failed!";
+        const msg = err.response?.data?.message || i18n.t("missionDetails:toast.commentDisableFailed");
         showError(msg);
         options?.onError?.(err);
       },
@@ -419,11 +420,11 @@ export function useRequestMission(options = {}) {
           queryClient.invalidateQueries({ queryKey: ["mission", Number(missionId)] });
         }
         syncInvalidateQueries(["feeds", "all-posts"], ["feeds"], ["all-posts"]);
-        showSuccess(data?.message || "Comment successfully!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.commented"));
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        const msg = err.response?.data?.message || "Comment failed!";
+        const msg = err.response?.data?.message || i18n.t("missionDetails:toast.commentFailed");
         showError(msg);
         options?.onError?.(err);
       },
@@ -440,11 +441,11 @@ export function useRequestMission(options = {}) {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: ["mission"] });
         syncInvalidateQueries(["feeds", "all-posts"], ["feeds"], ["all-posts"]);
-        showSuccess(data?.message || "Comment updated!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.commentUpdated"));
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        const msg = err.response?.data?.message || "Update failed!";
+        const msg = err.response?.data?.message || i18n.t("missionDetails:toast.commentUpdateFailed");
         showError(msg);
         options?.onError?.(err);
       },
@@ -458,11 +459,11 @@ export function useRequestMission(options = {}) {
         return data;
       },
       onSuccess: (data) => {
-        showSuccess(data?.message || "You successfully join organization!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.joinedOrg"));
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        showError(err.response?.data?.message || "Failed to join organization!");
+        showError(err.response?.data?.message || i18n.t("missionDetails:toast.joinOrgFailed"));
         options?.onError?.(err);
       },
     });
@@ -476,14 +477,14 @@ export function useRequestMission(options = {}) {
         return data;
       },
       onSuccess: (data, variables) => {
-        showSuccess(data?.message || "Comment deleted successfully!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.commentDeleted"));
         queryClient.invalidateQueries({ queryKey: ["mission"] });
         syncInvalidateQueries(["feeds", "all-posts"], ["feeds"], ["all-posts"]);
 
         options?.onSuccess?.(data, variables);
       },
       onError: (err) => {
-        const msg = err.response?.data?.message || "Comment deletion failed!";
+        const msg = err.response?.data?.message || i18n.t("missionDetails:toast.commentDeleteFailed");
         showError(msg); options?.onError?.(err);
       },
     });
@@ -496,11 +497,11 @@ export function useRequestMission(options = {}) {
         return data;
       },
       onSuccess: (data) => {
-        showSuccess(data?.message || "You rejected the organization request!");
+        showSuccess(data?.message || i18n.t("missionDetails:toast.orgRequestRejected"));
         options?.onSuccess?.(data);
       },
       onError: (err) => {
-        showError(err.response?.data?.message || "Failed to reject the organization request!");
+        showError(err.response?.data?.message || i18n.t("missionDetails:toast.orgRequestRejectFailed"));
         options?.onError?.(err);
       },
     });

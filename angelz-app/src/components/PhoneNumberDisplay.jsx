@@ -9,11 +9,12 @@ export function PhoneNumberDisplay({ phone, number, className = "" }) {
   const isValid = phoneDigits.length === 10;
 
   if (!isValid) {
-    return <span className={className}>{displayVal}</span>;
+    return <span dir="ltr" className={className}>{displayVal}</span>;
   }
 
   return (
     <a
+      dir="ltr"
       href={`tel:+1${phoneDigits}`}
       className={`text-blue-600 hover:text-blue-800 hover:underline ${className}`}
       onClick={(e) => e.stopPropagation()}

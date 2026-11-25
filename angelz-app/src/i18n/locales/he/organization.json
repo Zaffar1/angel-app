@@ -1,0 +1,111 @@
+{
+  "types": {
+    "foodDistribution": "חלוקת מזון",
+    "medicalAssistance": "סיוע רפואי",
+    "educationSupport": "תמיכה בחינוך",
+    "shelterManagement": "ניהול מקלטים",
+    "disasterRelief": "סיוע באסונות",
+    "communityOutreach": "הוצאה לקהילה",
+    "environmentalProjects": "פרויקטים סביבתיים",
+    "elderlyCare": "טיפול בקשישים",
+    "childWelfare": "רווחת הילד"
+  },
+  "card": {
+    "unknownOrganization": "ארגון לא ידוע",
+    "noDescription": "אין תיאור זמין.",
+    "organization": "ארגון",
+    "notAvailable": "לא זמין",
+    "notProvided": "לא צוין",
+    "typeFallback": "ארגון",
+    "viewOrganization": "צפייה בארגון"
+  },
+  "list": {
+    "loadFailed": "טעינת הארגונים נכשלה: {{message}}",
+    "title": "כל הארגונים",
+    "total": "סה\"כ: {{count}}",
+    "noMore": "אין עוד ארגונים לטעינה."
+  },
+  "profile": {
+    "title": "פרופיל הארגון",
+    "edit": "עריכה",
+    "labels": {
+      "firstName": "שם פרטי",
+      "lastName": "שם משפחה",
+      "organizationName": "שם הארגון",
+      "organizationWebsite": "אתר הארגון",
+      "phoneNumber": "מספר טלפון",
+      "location": "מיקום",
+      "city": "עיר",
+      "state": "מדינה/מחוז",
+      "country": "מדינה",
+      "address": "כתובת",
+      "organizationType": "סוג הארגון",
+      "description": "תיאור"
+    },
+    "selectType": "בחירת סוג",
+    "saveChanges": "שמירת שינויים"
+  },
+  "validation": {
+    "firstNameRequired": "שם פרטי הוא שדה חובה",
+    "lastNameRequired": "שם משפחה הוא שדה חובה",
+    "descriptionRequired": "תיאור הוא שדה חובה",
+    "organizationNameRequired": "שם הארגון הוא שדה חובה",
+    "urlInvalid": "יש להזין כתובת מלאה (לדוגמה: https://example.com)",
+    "httpsPrefix": "פורמט לא תקין, יש להשתמש ב-https://",
+    "contactInvalid": "מספר טלפון לא תקין",
+    "addressRequired": "כתובת היא שדה חובה",
+    "cityRequired": "עיר היא שדה חובה",
+    "stateRequired": "מדינה/מחוז הוא שדה חובה",
+    "countryRequired": "מדינה היא שדה חובה",
+    "typeRequired": "סוג הארגון הוא שדה חובה"
+  },
+  "toast": {
+    "profileUpdated": "הפרופיל עודכן בהצלחה!",
+    "profileUpdateFailed": "עדכון הפרופיל נכשל!"
+  },
+  "detail": {
+    "bannerAlt": "באנר",
+    "report": "דיווח",
+    "bug": "תקלה",
+    "organizationName": "שם הארגון",
+    "cityUnknown": "עיר לא ידועה",
+    "assignMyVolunteers": "שיוך המתנדבים שלי",
+    "memberSince": "חבר מאז",
+    "notAvailable": "לא זמין",
+    "typeUnknown": "סוג לא ידוע",
+    "stateValue": "מדינה/מחוז: {{state}}",
+    "stateNotAvailable": "מדינה/מחוז לא זמין",
+    "descriptionTitle": "תיאור הארגון",
+    "noDescription": "לא סופק תיאור עבור ארגון זה.",
+    "location": "מיקום",
+    "missionsBy": "כל המשימות של {{name}}",
+    "volunteersOf": "כל המתנדבים של {{name}}",
+    "tabMissions": "משימות",
+    "tabVolunteers": "מתנדבים",
+    "noMissions": "אין משימות להצגה.",
+    "noMoreMissions": "אין עוד משימות לטעינה.",
+    "inviteVolunteer": "הזמנת מתנדב",
+    "noVolunteers": "לא נמצאו מתנדבים עבור ארגון זה.",
+    "noMoreVolunteers": "אין עוד מתנדבים לטעינה.",
+    "closeModal": "סגירת החלון",
+    "assignTitle": "שיוך מתנדבים",
+    "assignSubtitle": "בחרו מתנדבים מהקבוצה שלכם לשיוך לארגון זה.",
+    "noAvailableVolunteers": "אין מתנדבים זמינים לשיוך.",
+    "cancel": "ביטול",
+    "assigning": "משייך...",
+    "assignSelected": "שיוך הנבחרים ({{count}})"
+  },
+  "invite": {
+    "selectVolunteer": "בחירת מתנדב",
+    "inviting": "מזמין",
+    "invite": "הזמנה"
+  },
+  "volunteerCard": {
+    "volunteer": "מתנדב",
+    "volunteerMember": "חבר מתנדב",
+    "points": "נקודות",
+    "emailAddress": "כתובת אימייל",
+    "notProvided": "לא צוין",
+    "contactNumber": "מספר טלפון"
+  }
+}

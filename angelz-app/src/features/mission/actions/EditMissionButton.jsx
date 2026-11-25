@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import useLocale from "../../../hooks/useLocale";
 import { FaPen } from "react-icons/fa";
 import { showError } from "../../../utils/toast";
 import { getNonEditableMissionMessage, getNonEditableMissionReason } from "../../../utils/missionStatusUtils";
 
 export default function EditMissionButton({ missionId, status }) {
+    const { t } = useLocale("mission");
     const navigate = useNavigate();
     const isOpen = String(status || "").toLowerCase() === "open";
 
@@ -20,7 +22,7 @@ export default function EditMissionButton({ missionId, status }) {
         <div
             onClick={handleClick}
             className={`inline-flex items-center justify-center ${isOpen ? "cursor-pointer" : "cursor-not-allowed"}`}
-            title={isOpen ? "Edit Mission" : `${getNonEditableMissionReason(status)} (Only open missions can be edited)`}
+            title={isOpen ? t("actions.edit") : t("actions.onlyOpenEditable", { reason: getNonEditableMissionReason(status) })}
         >
             <button
                 type="button"

@@ -1,0 +1,133 @@
+{
+  "status": {
+    "open": "פתוחה",
+    "pending": "ממתינה",
+    "accepted": "אושרה",
+    "completed": "הושלמה",
+    "process": "בתהליך",
+    "requested": "נשלחה בקשה",
+    "rejected": "נדחתה",
+    "expired": "פגה תוקף",
+    "scheduled": "מתוזמנת",
+    "inprogress": "בביצוע",
+    "completion_requested": "התבקשה השלמה"
+  },
+  "card": {
+    "untitled": "משימה ללא שם",
+    "unknownOrg": "ארגון לא ידוע",
+    "points": "{{points}} נקודות"
+  },
+  "list": {
+    "allMissions": "כל המשימות",
+    "count": "כמות: {{count}}",
+    "missionsCount": "משימות: {{count}}",
+    "createMission": "יצירת משימה",
+    "noMore": "אין משימות נוספות לטעינה.",
+    "loadFailed": "טעינת המשימות נכשלה: {{message}}",
+    "orgNameFallback": "שם הארגון"
+  },
+  "error": {
+    "loadFailedOne": "טעינת המשימה נכשלה: {{message}}"
+  },
+  "helper": {
+    "na": "לא זמין",
+    "enabled": "מופעל",
+    "disabled": "כבוי",
+    "statusTag": "{{label}}: {{state}}"
+  },
+  "form": {
+    "createTitle": "יצירת משימה חדשה",
+    "editTitle": "עריכת משימה",
+    "statusBadge": "סטטוס: {{status}}",
+    "selectImage": "בחירת תמונה",
+    "name": "שם המשימה",
+    "description": "תיאור",
+    "descriptionPlaceholder": "כתבו על המשימה.....",
+    "location": "מיקום",
+    "locationHintCreate": "לחצו על המפה כדי לקבוע את מיקום המשימה.",
+    "locationHintEdit": "לחצו על המפה כדי לעדכן את מיקום המשימה.",
+    "startDateTime": "תאריך ושעת התחלה",
+    "endDateTime": "תאריך ושעת סיום",
+    "relevantDistance": "טווח רלוונטי",
+    "selectDistance": "בחירת טווח",
+    "distance": {
+      "local": "מקומי",
+      "cityWide": "ברמת העיר",
+      "countryWide": "ברמת המדינה",
+      "global": "גלובלי"
+    },
+    "workType": "סוג עבודה",
+    "selectWorkTypeCreate": "בחירת סוג עבודה",
+    "selectWorkTypeEdit": "בחירת סוג עבודה",
+    "workTypes": {
+      "tutor": "הוראה",
+      "staff": "צוות",
+      "cleaning": "ניקיון",
+      "watchman": "שמירה"
+    },
+    "points": "נקודות",
+    "pointsPlaceholder": "הזינו נקודות",
+    "volunteersRequired": "מספר מתנדבים נדרש",
+    "volunteersPlaceholder": "הזינו מספר",
+    "missionType": "סוג משימה",
+    "selectMissionType": "בחירת סוג משימה",
+    "missionTypes": {
+      "virtual": "וירטואלית",
+      "onSite": "במקום"
+    },
+    "allowInteraction": "אפשר אינטראקציה",
+    "liked": "אהבתי",
+    "like": "לייק",
+    "share": "שיתוף",
+    "comment": "תגובה",
+    "createSubmit": "יצירת משימה",
+    "updateSubmit": "עדכון משימה",
+    "cannotUpdate": "לא ניתן לעדכן ({{reason}})",
+    "fixValidation": "יש לתקן את שגיאות האימות.",
+    "validationFallback": "שגיאת אימות: יש לבדוק את כל שדות החובה.",
+    "updateFailed": "עדכון המשימה נכשל.",
+    "errorUpdatingTitle": "שגיאה בעדכון המשימה",
+    "dismissError": "סגירת השגיאה",
+    "errorLoadingTitle": "שגיאה בטעינת המשימה",
+    "errorLoadingBody": "לא ניתן היה לטעון את פרטי המשימה. יש לבדוק את החיבור ולנסות שוב.",
+    "goBack": "חזרה",
+    "retry": "ניסיון חוזר"
+  },
+  "actions": {
+    "edit": "עריכת משימה",
+    "delete": "מחיקת משימה",
+    "onlyOpenEditable": "{{reason}} (ניתן לערוך רק משימות פתוחות)"
+  },
+  "deleteModal": {
+    "title": "מחיקת משימה",
+    "confirm": "האם למחוק את המשימה?",
+    "warning": "לא ניתן לבטל פעולה זו.",
+    "cancel": "ביטול",
+    "delete": "מחיקה"
+  },
+  "dateTime": {
+    "date": "תאריך",
+    "time": "שעה",
+    "selectedSchedule": "מועד שנבחר",
+    "at": " בשעה {{time}}",
+    "clear": "ניקוי הבחירה"
+  },
+  "validation": {
+    "nameRequired": "יש להזין שם משימה",
+    "selectLocation": "יש לבחור מיקום",
+    "longitudeNumber": "קו האורך חייב להיות מספר",
+    "invalidStart": "שעת התחלה לא תקינה",
+    "startRequired": "יש להזין שעת התחלה",
+    "invalidEnd": "שעת סיום לא תקינה",
+    "endRequired": "יש להזין שעת סיום",
+    "endAfterStart": "שעת הסיום חייבת להיות אחרי שעת ההתחלה",
+    "validDistance": "יש לבחור טווח תקין",
+    "validWorkType": "יש לבחור סוג עבודה תקין",
+    "validMissionType": "יש לבחור סוג משימה תקין",
+    "volunteerNumber": "מספר המתנדבים חייב להיות מספר",
+    "volunteerNegative": "מספר המתנדבים הנדרש לא יכול להיות שלילי",
+    "pointsNumber": "הנקודות חייבות להיות מספר",
+    "pointsNegative": "הנקודות לא יכולות להיות שליליות",
+    "timingStartBeforeEnd": "שעת ההתחלה חייבת להיות לפני שעת הסיום"
+  }
+}

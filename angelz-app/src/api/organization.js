@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import api from './client';
 import { showSuccess, showError } from '../utils/toast';
+import i18n from '../i18n';
 
 export function useOrganizationEditProfile(options = {}) {
   return useMutation({
@@ -9,11 +10,11 @@ export function useOrganizationEditProfile(options = {}) {
       return data;
     },
     onSuccess: (data) => {
-      showSuccess(data?.message || "Profile updated successfully!");
+      showSuccess(data?.message || i18n.t("organization:toast.profileUpdated"));
       options?.onSuccess?.(data);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Profile update failed!";
+      const msg = err.response?.data?.message || i18n.t("organization:toast.profileUpdateFailed");
       showError(msg);
       options?.onError?.(err);
     },
@@ -59,4 +60,4 @@ export function useGetOrganizationDetail(id, options = {}) {
     enabled: !!id,
     ...options,
   });
-}
+}

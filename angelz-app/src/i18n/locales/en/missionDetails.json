@@ -1,0 +1,144 @@
+{
+  "toast": {
+    "created": "Mission created successfully!",
+    "createFailed": "Mission creation failed!",
+    "updated": "Mission updated successfully!",
+    "updateFailed": "Mission update failed!",
+    "deleted": "Mission deleted successfully!",
+    "deleteFailed": "Mission deletion failed!",
+    "posted": "Mission posted successfully!",
+    "postFailed": "Mission post failed!",
+    "requestSent": "Mission request sent successfully!",
+    "requestFailed": "Failed to send mission request!",
+    "completionSent": "Completion request sent successfully!",
+    "completionFailed": "Failed to send completion request!",
+    "volunteerAccepted": "Volunteer request accepted successfully!",
+    "volunteerAcceptFailed": "Failed to accept volunteer request!",
+    "volunteerRejected": "Volunteer request rejected successfully!",
+    "volunteerRejectFailed": "Failed to reject volunteer request!",
+    "started": "Mission started successfully!",
+    "startFailed": "Failed to start mission!",
+    "markedComplete": "Mission marked as complete!",
+    "markCompleteFailed": "Failed to mark mission as complete!",
+    "completionRejected": "Mission completion rejected!",
+    "completionRejectFailed": "Failed to reject mission completion!",
+    "feedLiked": "Feed liked successfully!",
+    "feedLikeFailed": "Feed liked failed!",
+    "commentDisabled": "Comment disabled successfully!",
+    "commentDisableFailed": "Comment disabled failed!",
+    "commented": "Comment successfully!",
+    "commentFailed": "Comment failed!",
+    "commentUpdated": "Comment updated!",
+    "commentUpdateFailed": "Update failed!",
+    "joinedOrg": "You successfully join organization!",
+    "joinOrgFailed": "Failed to join organization!",
+    "commentDeleted": "Comment deleted successfully!",
+    "commentDeleteFailed": "Comment deletion failed!",
+    "orgRequestRejected": "You rejected the organization request!",
+    "orgRequestRejectFailed": "Failed to reject the organization request!",
+    "missionIdMissing": "Mission ID missing!"
+  },
+  "common": {
+    "na": "N/A"
+  },
+  "actions": {
+    "goBack": "Go Back",
+    "viewVolunteers": "View Volunteers",
+    "postOnFeed": "Post this on your feed",
+    "alreadyPosted": "Already Posted",
+    "postFeed": "Post Feed",
+    "zappIt": "Zapp It",
+    "alreadyApplied": "Already Applied",
+    "requestCompletion": "Request Completion"
+  },
+  "header": {
+    "unknownOrganization": "Unknown Organization",
+    "id": "ID: {{id}}",
+    "points": "Point(s)"
+  },
+  "labels": {
+    "workType": "Work Type",
+    "missionType": "Mission Type",
+    "distance": "Distance",
+    "volunteersRequired": "Volunteers Required",
+    "startTime": "Start Time",
+    "endTime": "End Time"
+  },
+  "sections": {
+    "description": "Description",
+    "preferredVolunteers": "Preferred Volunteers",
+    "location": "Location",
+    "interactionSettings": "Interaction Settings"
+  },
+  "interaction": {
+    "comments": "Comments",
+    "likes": "Likes",
+    "share": "Share"
+  },
+  "modal": {
+    "closeAria": "Close modal"
+  },
+  "assign": {
+    "title": "Assign Volunteers",
+    "subtitle": "Fulfill mission assignments for <strong>{{name}}</strong>.",
+    "capacityFulfilledTitle": "Mission Capacity Fulfilled",
+    "capacityFulfilledText": "All {{count}} required spot(s) have been successfully filled. No further volunteer assignments are required.",
+    "selectionCompleteTitle": "Selection Complete",
+    "selectionCompleteText": "Exactly {{count}} volunteer(s) selected. Ready to finalize assignment.",
+    "selectionRequiredTitle": "Selection Required",
+    "selectionRequiredText": "Please select exactly <strong>{{remaining}}</strong> volunteer(s) to fulfill requirements. Selected: <strong>{{selected}} of {{remaining}}</strong>.",
+    "noVolunteers": "No volunteers found. Invite some volunteers first.",
+    "assigned": "Assigned",
+    "limitReached": "Limit reached",
+    "submit": "Assign Selected ({{selected}}/{{remaining}})"
+  },
+  "details": {
+    "title": "Mission Assignment Details",
+    "subtitleOverall": "Overall assignment progress for mission <strong>{{name}}</strong>.",
+    "subtitleGroup": "Group assignment progress for mission <strong>{{name}}</strong>.",
+    "emptyAll": "No volunteers have been assigned to this mission.",
+    "emptyGroup": "No volunteers from your group have been assigned to this mission."
+  },
+  "assignStatus": {
+    "pending": "Pending",
+    "started": "Started",
+    "completed": "Completed",
+    "completion_requested": "Completion Requested",
+    "scheduled": "Scheduled",
+    "ended": "Ended"
+  },
+  "applicants": {
+    "profile": "Profile",
+    "name": "Name",
+    "email": "Email",
+    "points": "Points",
+    "empty": "No applicants yet"
+  },
+  "nonEditable": {
+    "closed": "closed",
+    "message": {
+      "completed": "You cannot update this mission because it has already been completed. Only missions with 'Open' status can be edited.",
+      "inprogress": "You cannot update this mission because it is currently in process. Only missions with 'Open' status can be edited.",
+      "completionRequested": "You cannot update this mission because a completion review has been requested. Only missions with 'Open' status can be edited.",
+      "scheduled": "You cannot update this mission because it has already been scheduled. Only missions with 'Open' status can be edited.",
+      "accepted": "You cannot update this mission because volunteer assignments have already been accepted. Only missions with 'Open' status can be edited.",
+      "requested": "You cannot update this mission while volunteer requests are pending. Only missions with 'Open' status can be edited.",
+      "pending": "You cannot update this mission while it is pending review. Only missions with 'Open' status can be edited.",
+      "rejected": "You cannot update this mission because it was rejected. Only missions with 'Open' status can be edited.",
+      "expired": "You cannot update this mission because it has expired. Only missions with 'Open' status can be edited.",
+      "default": "You cannot update this mission because it is currently {{status}}. Only missions with 'Open' status can be edited."
+    },
+    "reason": {
+      "completed": "Mission has already been completed",
+      "inprogress": "Mission is currently in process",
+      "completionRequested": "Mission completion review requested",
+      "scheduled": "Mission has been scheduled",
+      "accepted": "Volunteer assignments accepted",
+      "requested": "Volunteer requests pending",
+      "pending": "Mission is pending review",
+      "rejected": "Mission was rejected",
+      "expired": "Mission has expired",
+      "default": "Mission is {{status}}"
+    }
+  }
+}

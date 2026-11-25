@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { clearCredentials } from "../features/auth/authSlice";
 import useUserProfile from "../hooks/useUserProfile";
 import Loader from "../components/Loader";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 export default function AppWrapper({ allowedRoles = [], children }) {
   const dispatch = useDispatch();
@@ -32,7 +33,16 @@ export default function AppWrapper({ allowedRoles = [], children }) {
   if (token && !user && isFetching) return <Loader />;
 
   if (!token) {
-    return isPublicPath ? children : <Navigate to="/login" replace />;
+    return isPublicPath ? (
+      <>
+        <div className="fixed top-3 end-3 z-50">
+          <LanguageSwitcher className="bg-white/80 shadow-sm backdrop-blur" />
+        </div>
+        {children}
+      </>
+    ) : (
+      <Navigate to="/login" replace />
+    );
   }
 
   if (isPublicPath) {

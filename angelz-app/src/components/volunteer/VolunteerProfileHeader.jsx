@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa";
+import useLocale from "../../hooks/useLocale";
 
 const VolunteerProfileHeader = ({ volunteer }) => {
+  const { t } = useLocale("volunteer");
   const navigate = useNavigate();
 
   return (
@@ -9,13 +11,13 @@ const VolunteerProfileHeader = ({ volunteer }) => {
       <button
         onClick={() => navigate(-1)}
         className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors cursor-pointer"
-        title="Go Back"
-        aria-label="Go Back"
+        title={t("profile.goBack")}
+        aria-label={t("profile.goBack")}
       >
-        <FaChevronLeft className="w-5 h-5" />
+        <FaChevronLeft className="w-5 h-5 rtl:rotate-180" />
       </button>
       <h1 className="text-lg sm:text-xl font-semibold text-gray-700">
-        {"Profile"}
+        {t("profile.title")}
       </h1>
     </div>
   );

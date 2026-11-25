@@ -1,0 +1,179 @@
+{
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "ranks": {
+    "bronze": "Bronze Angel",
+    "silver": "Silver Angel",
+    "gold": "Gold Angel"
+  },
+  "card": {
+    "unknownVolunteer": "Unknown volunteer",
+    "noDescription": "No description available.",
+    "notAvailable": "N/A",
+    "notProvided": "Not provided",
+    "type": "volunteer",
+    "viewVolunteer": "View Volunteer"
+  },
+  "profile": {
+    "guestUser": "Guest User",
+    "userAvatar": "User Avatar",
+    "anonymous": "anonymous",
+    "pointsEarned": "{{count}} Points Earned",
+    "title": "Profile",
+    "goBack": "Go Back",
+    "noData": "No data found",
+    "failedToLoad": "Failed to load profile: {{message}}",
+    "tabs": {
+      "feed": "Feed",
+      "completedActs": "Completed Acts",
+      "allActs": "All Acts"
+    }
+  },
+  "list": {
+    "volunteers": "Volunteers",
+    "volunteerGroups": "Volunteer Groups",
+    "totalIndividual": "Total Individual Volunteers: {{count}}",
+    "totalGroups": "Total Volunteer Groups: {{count}}",
+    "failedVolunteers": "Failed to load volunteers: {{message}}",
+    "failedGroups": "Failed to load volunteer groups: {{message}}",
+    "noMore": "No more volunteers to load.",
+    "noGroupsTitle": "No Volunteer Groups Found",
+    "noGroupsText": "There are no registered volunteer groups in the community at the moment.",
+    "group": "Group",
+    "noGroupDescription": "No description available for this group.",
+    "locationNotSet": "Location not set",
+    "members": "Members",
+    "totalPoints": "Total Points",
+    "viewGroupDetail": "View Group Detail"
+  },
+  "leaderboard": {
+    "userAlt": "User",
+    "pointsLabel": "points",
+    "columns": {
+      "rank": "Rank",
+      "volunteer": "Volunteer",
+      "location": "Location",
+      "points": "Points"
+    },
+    "titles": {
+      "group": "Group Volunteers Leaderboard",
+      "organization": "Organization Leaderboard",
+      "global": "Global Leaderboard"
+    },
+    "subtitles": {
+      "volunteersIn": "Volunteers in {{name}}",
+      "allGroups": "Top volunteers across all groups",
+      "yourOrganization": "Top volunteers in your organization",
+      "topIn": "Top volunteers in {{name}}",
+      "worldwide": "Top volunteers worldwide"
+    },
+    "defaults": {
+      "group": "Group",
+      "organization": "Organization",
+      "unknown": "Unknown"
+    },
+    "embedButton": "Embed Leaderboard",
+    "showFilters": "Show Filters",
+    "hideFilters": "Hide Filters",
+    "endTitle": "You've reached the end!",
+    "endText": "No more data to load",
+    "noData": "No data found",
+    "adjustFilters": "Try adjusting your filters",
+    "showing_one": "Showing {{count}} volunteer",
+    "showing_other": "Showing {{count}} volunteers",
+    "filteredBy": " • Filtered by ",
+    "filteredGroup": "Volunteer Group \"{{name}}\"",
+    "and": " and ",
+    "filteredOrganization": "Organization"
+  },
+  "filters": {
+    "title": "Filters",
+    "subtitle": "Refine your leaderboard",
+    "modes": {
+      "global": "Global",
+      "organization": "Org",
+      "group": "Group"
+    },
+    "active": "Active filters:",
+    "clear": "Clear",
+    "organization": "Organization",
+    "selectOrganization": "Select Organization",
+    "country": "Country",
+    "allCountries": "All Countries",
+    "state": "State",
+    "allStates": "All States",
+    "city": "City",
+    "allCities": "All Cities",
+    "volunteerGroup": "Volunteer Group",
+    "allGroups": "All Groups",
+    "group": "Group",
+    "hide": "Hide Filters"
+  },
+  "form": {
+    "title": "Volunteer Profile",
+    "edit": "Edit",
+    "labels": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "phone": "Phone Number",
+      "location": "Location",
+      "city": "City",
+      "state": "State",
+      "country": "Country",
+      "address": "Address",
+      "day": "Day",
+      "from": "From",
+      "to": "To",
+      "availableTimings": "Available Timings"
+    },
+    "arrays": {
+      "preferences": "Preferences",
+      "expertise": "Expertise",
+      "addPreference": "Add Preference",
+      "addExpertise": "Add Expertise",
+      "preferencePlaceholder": "Add preference",
+      "expertisePlaceholder": "Add expertise"
+    },
+    "timing": {
+      "slot": "Time Slot #{{number}}",
+      "selectDay": "Select day",
+      "add": "Add Time Slot",
+      "none": "No time slots added yet",
+      "hint": "Click \"Add Time Slot\" above to add one."
+    },
+    "save": "Save Changes"
+  },
+  "toast": {
+    "profileUpdated": "Profile updated successfully!",
+    "profileUpdateFailed": "Profile update failed!",
+    "invited": "Invitation sent successfully!",
+    "inviteFailed": "Invitation failed!"
+  },
+  "validation": {
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "contactRequired": "Contact number is required",
+    "contactInvalid": "Invalid contact number",
+    "addressRequired": "Address is required",
+    "cityRequired": "City is required",
+    "stateRequired": "State is required",
+    "countryRequired": "Country is required",
+    "dayRequired": "Day is required",
+    "dayInvalid": "Invalid day",
+    "startRequired": "Start time is required",
+    "endRequired": "End time is required",
+    "timeFormat": "Invalid time format (expected HH:MM or HH:MM:SS)",
+    "endAfterStart": "End time must be later than start time",
+    "timingMin": "At least one available timing is required"
+  },
+  "embed": {
+    "title": "Global Leaderboard"
+  }
+}

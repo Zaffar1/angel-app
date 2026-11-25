@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useDeleteMission } from "../../api/mission";
 import { useNavigate } from "react-router-dom";
+import useLocale from "../../hooks/useLocale";
 import { ThemeButton } from "../ThemeButton";
 import Portal from "../Portal";
 
 export default function DeleteMissionModal({ open, setOpen, missionId }) {
+    const { t } = useLocale("mission");
     const navigate = useNavigate();
     const { mutateAsync: deleteMission, isPending } = useDeleteMission();
 
@@ -36,14 +38,14 @@ export default function DeleteMissionModal({ open, setOpen, missionId }) {
 
                 <div className="relative bg-white w-full max-w-sm sm:max-w-md rounded-2xl shadow-2xl p-6 sm:p-8 animate-fade-in-up">
                     <h2 className="text-xl font-semibold text-gray-800 text-center mb-3">
-                        Delete Mission
+                        {t("deleteModal.title")}
                     </h2>
 
                     <p className="text-sm text-gray-600 text-center leading-relaxed">
-                        Are you sure you want to delete this mission?
+                        {t("deleteModal.confirm")}
                         <br />
                         <span className="text-red-500 font-medium">
-                            This action cannot be undone.
+                            {t("deleteModal.warning")}
                         </span>
                     </p>
 
@@ -54,7 +56,7 @@ export default function DeleteMissionModal({ open, setOpen, missionId }) {
                             textColor="text-gray-800"
                             onClick={() => setOpen(false)}
                         >
-                            Cancel
+                            {t("deleteModal.cancel")}
                         </ThemeButton>
                         <ThemeButton
                             bgColor="bg-red-500"
@@ -63,7 +65,7 @@ export default function DeleteMissionModal({ open, setOpen, missionId }) {
                             onClick={handleDelete}
                             isLoading={isPending}
                         >
-                            Delete
+                            {t("deleteModal.delete")}
                         </ThemeButton>
                     </div>
                 </div>

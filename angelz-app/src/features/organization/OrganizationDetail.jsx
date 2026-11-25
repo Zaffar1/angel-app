@@ -9,10 +9,12 @@ import {
   FaTimes,
   FaUserPlus,
 } from "react-icons/fa";
+import useLocale from "../../hooks/useLocale";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import useUserProfile from "../../hooks/useUserProfile";
 import { useGetOrganizationDetail } from "../../api/organization";
+import { getOrganizationTypeLabel } from "../../constant/ORGANIZATION_TYPE";
 import { formatDate } from "../../utils/dateUtils";
 import { getImageUrl } from "../../utils/getImageUrl";
 import Loader from "../../components/Loader";
@@ -28,6 +30,7 @@ import { useGetGroupVolunteers, useAssignGroupVolunteersToOrganization } from ".
 const CHUNK = PAGE_LIMIT.LIMIT;
 
 const OrganizationDetail = () => {
+  const { t } = useLocale("organization");
   const { id } = useParams();
   const navigate = useNavigate();
   const menuRef = useRef(null);
@@ -161,18 +164,18 @@ const OrganizationDetail = () => {
         <div className="relative">
           <img
             src={imageUrl}
-            alt="banner"
+            alt={t("detail.bannerAlt")}
             className="w-full h-52 object-cover rounded-t-[14px]"
           />
           <div className="absolute inset-0 bg-black/30 rounded-t-[14px]" />
           <button
             onClick={() => navigate(-1)}
-            className="absolute top-3 left-3 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors cursor-pointer"
+            className="absolute top-3 start-3 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors cursor-pointer"
           >
-            <FaChevronLeft className="w-5 h-5 text-white" />
+            <FaChevronLeft className="w-5 h-5 text-white rtl:rotate-180" />
           </button>
 
-          <div className="absolute top-3 right-3" ref={menuRef}>
+          <div className="absolute top-3 end-3" ref={menuRef}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="text-white text-2xl"
@@ -180,23 +183,23 @@ const OrganizationDetail = () => {
               …
             </button>
             {menuOpen && (
-              <div className="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg text-sm">
-                <button className="block px-4 py-2 hover:bg-gray-100 w-full text-left">
-                  Report
+              <div className="absolute end-0 mt-2 w-32 bg-white rounded-lg shadow-lg text-sm">
+                <button className="block px-4 py-2 hover:bg-gray-100 w-full text-start">
+                  {t("detail.report")}
                 </button>
-                <button className="block px-4 py-2 hover:bg-gray-100 w-full text-left">
-                  Bug
+                <button className="block px-4 py-2 hover:bg-gray-100 w-full text-start">
+                  {t("detail.bug")}
                 </button>
               </div>
             )}
           </div>
 
-          <div className="absolute bottom-3 inset-x-0 flex items-center justify-between px-4 text-white">
+          <div className="absolute bottom-3 inset-x-0 flex flex-wrap items-center justify-between gap-2 px-4 text-white">
             <div>
               <h2 className="text-lg font-semibold">
-                {organization.company_name || "Organization Name"}
+                {organization.company_name || t("detail.organizationName")}
               </h2>
-              <p className="text-sm opacity-90">{organization.city || "City Unknown"}</p>
+              <p className="text-sm opacity-90">{organization.city || t("detail.cityUnknown")}</p>
             </div>
             <div className="flex items-center gap-4">
               {user?.type === "volunteer_group" && (
@@ -204,15 +207,15 @@ const OrganizationDetail = () => {
                   onClick={() => setShowAssignModal(true)}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-xs transition-all shadow-md cursor-pointer border border-blue-500"
                 >
-                  <FaUserPlus /> Assign My Volunteers
+                  <FaUserPlus /> {t("detail.assignMyVolunteers")}
                 </button>
               )}
               <div className="flex items-center gap-2 text-sm">
                 <FaCalendarDay className="w-4 h-4" />
                 <span>
-                  Member since{" "}
+                  {t("detail.memberSince")}{" "}
                   <span className="capitalize">
-                    {organization.created_at ? formatDate(organization.created_at) : "N/A"}
+                    {organization.created_at ? formatDate(organization.created_at) : t("detail.notAvailable")}
                   </span>
                 </span>
               </div>
@@ -237,25 +240,25 @@ const OrganizationDetail = () => {
               </div>
               <div className="flex items-center gap-2">
                 <FaBuilding className="w-4 h-4 text-amber-500" />
-                <span>{organization.services || "Type Unknown"}</span>
+                <span>{getOrganizationTypeLabel(organization.services) || t("detail.typeUnknown")}</span>
               </div>
               <div className="flex items-center gap-2">
                 <FaGlobe className="w-4 h-4 text-purple-500" />
-                <span>{organization.state ? `State: ${organization.state}` : "State N/A"}</span>
+                <span>{organization.state ? t("detail.stateValue", { state: organization.state }) : t("detail.stateNotAvailable")}</span>
               </div>
             </div>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">Organization Description</h3>
+            <h3 className="text-lg font-semibold text-gray-900">{t("detail.descriptionTitle")}</h3>
             <p className="mt-3 text-sm text-gray-700 leading-relaxed">
-              {organization.description || "No description provided for this organization."}
+              {organization.description || t("detail.noDescription")}
             </p>
           </div>
 
           {organization.lat && organization.lng && (
             <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Location</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("detail.location")}</h3>
               <MapComponent
                 defaultLocation={{
                   lat: Number(organization.lat),
@@ -270,11 +273,11 @@ const OrganizationDetail = () => {
 
       <div className="max-w-7xl mx-auto mt-10">
         {/* Tab header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
           <h2 className="text-xl font-semibold">
             {activeTab === "missions"
-              ? `All missions by ${organization?.company_name}`
-              : `All volunteers of ${organization?.company_name}`}
+              ? t("detail.missionsBy", { name: organization?.company_name })
+              : t("detail.volunteersOf", { name: organization?.company_name })}
           </h2>
           <div className="flex gap-2">
             <button
@@ -284,7 +287,7 @@ const OrganizationDetail = () => {
                 : "bg-gray-200 text-gray-700"
                 }`}
             >
-              Missions
+              {t("detail.tabMissions")}
             </button>
 
             <button
@@ -294,7 +297,7 @@ const OrganizationDetail = () => {
                 : "bg-gray-200 text-gray-700"
                 }`}
             >
-              Volunteers
+              {t("detail.tabVolunteers")}
             </button>
           </div>
         </div>
@@ -313,7 +316,7 @@ const OrganizationDetail = () => {
                   );
                 })
               ) : (
-                <p className="col-span-3 text-gray-500">No missions to display.</p>
+                <p className="col-span-3 text-gray-500">{t("detail.noMissions")}</p>
               )}
             </div>
 
@@ -325,7 +328,7 @@ const OrganizationDetail = () => {
 
             {!hasMissionMore && slicedMissions.length > 0 && (
               <p className="text-center py-8 text-gray-500 font-medium">
-                No more missions to load.
+                {t("detail.noMoreMissions")}
               </p>
             )}
           </>
@@ -340,7 +343,7 @@ const OrganizationDetail = () => {
               {/* Invite section — only visible to own org */}
               {user?.id === organization?.id && (
                 <div className="max-w-7xl mx-auto my-6">
-                  <h2 className="text-xl font-semibold mb-4">Invite Volunteer</h2>
+                  <h2 className="text-xl font-semibold mb-4">{t("detail.inviteVolunteer")}</h2>
                   <InviteVolunteerDropdown
                     volunteers={volunteers.filter(v => !invitedVolunteers?.some(iv => iv.id === v.id))}
                     isLoading={isPending}
@@ -360,7 +363,7 @@ const OrganizationDetail = () => {
                     );
                   })
                 ) : (
-                  <p className="col-span-3 text-gray-500">No volunteers found for this organization.</p>
+                  <p className="col-span-3 text-gray-500">{t("detail.noVolunteers")}</p>
                 )}
               </div>
 
@@ -372,7 +375,7 @@ const OrganizationDetail = () => {
 
               {!hasVolunteerMore && slicedVolunteers.length > 0 && (
                 <p className="text-center py-8 text-gray-500 font-medium">
-                  No more volunteers to load.
+                  {t("detail.noMoreVolunteers")}
                 </p>
               )}
             </>
@@ -388,21 +391,21 @@ const OrganizationDetail = () => {
             <div style={{ backgroundColor: "oklch(54.6% 0.245 262.881)" }} className="text-white p-6 sm:p-8 relative">
               <button
                 onClick={() => setShowAssignModal(false)}
-                className="absolute right-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
-                aria-label="Close modal"
+                className="absolute end-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+                aria-label={t("detail.closeModal")}
               >
                 <FaTimes className="text-lg" />
               </button>
-              <h2 className="text-2xl font-bold text-white">Assign Volunteers</h2>
+              <h2 className="text-2xl font-bold text-white">{t("detail.assignTitle")}</h2>
               <p className="text-xs text-white/80 mt-1.5">
-                Select volunteers from your group to assign to this organization.
+                {t("detail.assignSubtitle")}
               </p>
             </div>
 
             {/* Modal Body */}
             <div className="p-6 flex flex-col flex-1 max-h-[50vh] overflow-y-auto space-y-3 bg-gray-50/50">
               {availableVolunteers.length === 0 ? (
-                <p className="text-center py-8 text-gray-400 text-sm">No available volunteers to assign.</p>
+                <p className="text-center py-8 text-gray-400 text-sm">{t("detail.noAvailableVolunteers")}</p>
               ) : (
                 availableVolunteers.map((vol) => (
                   <label
@@ -431,14 +434,14 @@ const OrganizationDetail = () => {
                 onClick={() => setShowAssignModal(false)}
                 className="px-5 py-2 border border-gray-200 rounded-full text-gray-600 hover:bg-gray-100 font-semibold cursor-pointer bg-white transition-colors"
               >
-                Cancel
+                {t("detail.cancel")}
               </button>
               <button
                 disabled={selectedVolunteersForAssign.length === 0 || assignOrgMutation.isPending}
                 onClick={handleAssignSubmit}
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-full font-semibold transition-colors cursor-pointer shadow-sm"
               >
-                {assignOrgMutation.isPending ? "Assigning..." : `Assign Selected (${selectedVolunteersForAssign.length})`}
+                {assignOrgMutation.isPending ? t("detail.assigning") : t("detail.assignSelected", { count: selectedVolunteersForAssign.length })}
               </button>
             </div>
           </div>

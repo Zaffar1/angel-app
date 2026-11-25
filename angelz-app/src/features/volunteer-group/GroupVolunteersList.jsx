@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "react-router-dom";
+import useLocale from "../../hooks/useLocale";
 import {
   FaUserPlus,
   FaBuilding,
@@ -29,6 +30,7 @@ import Loader from "../../components/Loader";
 import VolunteerDetailsModal from "./components/VolunteerDetailsModal";
 
 export default function GroupVolunteersList() {
+  const { t } = useLocale("volunteerGroup");
   const [searchTerm, setSearchTerm] = useState("");
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [selectedVolunteerForDetails, setSelectedVolunteerForDetails] = useState(null);
@@ -68,14 +70,14 @@ export default function GroupVolunteersList() {
     <div className="max-w-6xl mx-auto my-8 space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Invited Volunteers</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage, invite, and assign your volunteer group members.</p>
+          <h1 className="text-2xl font-bold text-gray-800">{t("list.title")}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t("list.subtitle")}</p>
         </div>
         <button
           onClick={() => setShowInviteModal(true)}
           className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-medium transition-all shadow-md hover:shadow-lg cursor-pointer"
         >
-          <FaUserPlus /> Invite Volunteer
+          <FaUserPlus /> {t("list.inviteVolunteer")}
         </button>
       </div>
 
@@ -84,36 +86,36 @@ export default function GroupVolunteersList() {
         <div className="relative max-w-md">
           <input
             type="text"
-            placeholder="Search volunteers by name or email..."
+            placeholder={t("list.searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-full outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+            className="w-full ps-10 pe-4 py-2.5 border border-gray-200 rounded-full outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           />
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+          <FaSearch className="absolute start-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
         </div>
 
         {filteredVolunteers.length === 0 ? (
           <div className="text-center py-16 space-y-4">
-            <p className="text-gray-400 text-lg">No volunteers found.</p>
+            <p className="text-gray-400 text-lg">{t("list.noVolunteers")}</p>
             {volunteers.length === 0 && (
               <button
                 onClick={() => setShowInviteModal(true)}
                 className="px-6 py-2 border border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition-colors font-medium cursor-pointer"
               >
-                Invite Your First Volunteer
+                {t("list.inviteFirst")}
               </button>
             )}
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-start border-collapse">
               <thead>
                 <tr className="border-b border-gray-100 text-gray-400 text-sm">
-                  <th className="py-3 px-4 font-semibold">Name</th>
-                  <th className="py-3 px-4 font-semibold">Email</th>
-                  <th className="py-3 px-4 font-semibold">Phone</th>
-                  <th className="py-3 px-4 font-semibold">Status</th>
-                  <th className="py-3 px-4 font-semibold text-right">Actions</th>
+                  <th className="py-3 px-4 font-semibold">{t("list.table.name")}</th>
+                  <th className="py-3 px-4 font-semibold">{t("list.table.email")}</th>
+                  <th className="py-3 px-4 font-semibold">{t("list.table.phone")}</th>
+                  <th className="py-3 px-4 font-semibold">{t("list.table.status")}</th>
+                  <th className="py-3 px-4 font-semibold text-end">{t("list.table.actions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -128,15 +130,15 @@ export default function GroupVolunteersList() {
                     </td>
                     <td className="py-4 px-4">
                       <span className="bg-green-50 text-green-700 text-xs px-2.5 py-1 rounded-full font-semibold">
-                        Invited
+                        {t("list.invited")}
                       </span>
                     </td>
-                    <td className="py-4 px-4 text-right">
+                    <td className="py-4 px-4 text-end">
                       <button
                         onClick={() => setSelectedVolunteerForDetails(vol)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-full text-xs font-semibold transition-colors cursor-pointer"
                       >
-                        <FaEye /> View Details
+                        <FaEye /> {t("list.viewDetails")}
                       </button>
                     </td>
                   </tr>
@@ -158,16 +160,16 @@ export default function GroupVolunteersList() {
                   setShowInviteModal(false);
                   resetInviteForm();
                 }}
-                className="absolute right-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
-                aria-label="Close modal"
+                className="absolute end-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+                aria-label={t("common.closeModal")}
               >
                 <FaTimes className="text-lg" />
               </button>
               <h2 className="text-2xl font-bold text-white flex items-center gap-2.5">
-                <FaUserPlus className="text-xl" /> Invite a New Volunteer
+                <FaUserPlus className="text-xl" /> {t("list.invite.title")}
               </h2>
               <p className="text-xs text-white/80 mt-1.5">
-                Add a new volunteer to your group with their contact details.
+                {t("list.invite.subtitle")}
               </p>
             </div>
 
@@ -175,32 +177,33 @@ export default function GroupVolunteersList() {
             <form onSubmit={handleInviteSubmit(handleInvite)} className="flex flex-col flex-1">
               <div className="p-6 sm:p-8 space-y-4 bg-gray-50/50 flex-1 overflow-y-auto max-h-[60vh]">
                 <InputField
-                  label="Name"
-                  placeholder="Volunteer full name"
+                  label={t("list.invite.name")}
+                  placeholder={t("list.invite.namePlaceholder")}
                   {...registerInvite("name")}
                   error={inviteErrors.name?.message}
                 />
                 <InputField
-                  label="Email"
+                  label={t("list.invite.email")}
                   type="email"
-                  placeholder="Volunteer email address"
+                  dir="ltr"
+                  placeholder={t("list.invite.emailPlaceholder")}
                   {...registerInvite("email")}
                   error={inviteErrors.email?.message}
                 />
                 <PhoneInput
                   control={controlInvite}
                   name="contact_no"
-                  label="Phone Number"
+                  label={t("list.invite.phone")}
                   error={inviteErrors.contact_no}
                 />
                 <div>
                   <label className="block text-gray-700 text-sm font-semibold mb-1.5">
-                    Description / Notes
+                    {t("list.invite.description")}
                   </label>
                   <textarea
                     {...registerInvite("description")}
                     rows={3}
-                    placeholder="Add any details, skills, or qualifications..."
+                    placeholder={t("list.invite.descriptionPlaceholder")}
                     className="w-full p-3.5 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-sm transition-all resize-none"
                   />
                   {inviteErrors.description?.message && (
@@ -219,14 +222,14 @@ export default function GroupVolunteersList() {
                   }}
                   className="px-5 py-2.5 border border-gray-200 rounded-full text-gray-600 hover:bg-gray-100 font-semibold cursor-pointer bg-white transition-colors text-sm shadow-sm"
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </button>
                 <ThemeButton
                   type="submit"
                   isLoading={inviteMutation.isPending}
                   className="!rounded-full font-semibold shadow-sm text-sm !px-6"
                 >
-                  Send Invitation
+                  {t("list.invite.send")}
                 </ThemeButton>
               </div>
             </form>

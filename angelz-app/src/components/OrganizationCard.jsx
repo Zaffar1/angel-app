@@ -1,13 +1,15 @@
 import React from "react";
+import useLocale from "../hooks/useLocale";
 import { useNavigate } from "react-router-dom";
 import { FaBuilding, FaEnvelope, FaUser } from "react-icons/fa";
 import { getImageUrl } from "../utils/getImageUrl";
 import useUserProfile from "../hooks/useUserProfile";
+import { getOrganizationTypeLabel } from "../constant/ORGANIZATION_TYPE";
 
 export default function OrganizationCard({
     id,
-    company_name = "Unknown Organization",
-    company_description = "No description available.",
+    company_name: companyNameProp,
+    company_description: companyDescriptionProp,
     company_type,
     email,
     name,
@@ -15,6 +17,9 @@ export default function OrganizationCard({
     file,
     image,
 }) {
+    const { t } = useLocale("organization");
+    const company_name = companyNameProp === undefined ? t("card.unknownOrganization") : companyNameProp;
+    const company_description = companyDescriptionProp === undefined ? t("card.noDescription") : companyDescriptionProp;
     const navigate = useNavigate();
     const { user } = useUserProfile();
 
@@ -40,8 +45,8 @@ export default function OrganizationCard({
                         alt={company_name}
                         className="w-full h-44 object-cover transition-transform duration-200 group-hover:scale-105"
                     />
-                    <span className="absolute top-3 left-3 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
-                        {company_type || "Organization"}
+                    <span className="absolute top-3 start-3 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
+                        {getOrganizationTypeLabel(company_type) || t("card.organization")}
                     </span>
                 </div>
             </div>
@@ -55,21 +60,22 @@ export default function OrganizationCard({
                 <div className="flex flex-col gap-2 text-sm text-gray-700 py-1">
                     <div className="flex items-center gap-2">
                         <FaUser className="text-[#4C95FF] w-4 h-4" />
-                        <span className="font-medium">{name || "N/A"}</span>
+                        <span className="font-medium">{name || t("card.notAvailable")}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <FaEnvelope className="text-[#4C95FF] w-4 h-4" />
-                        <span className="font-medium">{email || "Not provided"}</span>
+                        <span className="font-medium">{email || t("card.notProvided")}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <FaBuilding className="text-[#4C95FF] w-4 h-4" />
-                        <span className="font-medium text-blue-600/80">{type || "organization"}</span>
+                        <span className="font-medium text-blue-600/80">{type ? t(`common:userType.${type}`, { defaultValue: type }) : t("card.typeFallback")}</span>
                     </div>
                 </div>
                 <button
                     className="w-full py-3 mt-2 flex items-center justify-center gap-2 bg-gradient-to-r from-[#4C95FF] to-[#2B61FF] hover:opacity-90 text-white rounded-full text-sm font-bold shadow-md transition-all active:scale-[0.98]"
                     onClick={handleClick}
-                > View Organization
+                >
+                    {t("card.viewOrganization")}
                 </button>
             </div>
         </div>

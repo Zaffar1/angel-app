@@ -1,21 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import useLocale from "../hooks/useLocale";
 import { FaBuilding, FaEnvelope, FaUser } from "react-icons/fa";
 import { getImageUrl } from "../utils/getImageUrl";
 
 export default function VolunteerCard({
     id,
-    name = "Unknown volunteer",
-    description = "No description available.",
+    name,
+    description,
     email,
     type,
     file,
     image,
 }) {
+    const { t } = useLocale("volunteer");
     const navigate = useNavigate();
     const [imgError, setImgError] = useState(false);
 
     // Prioritize image or file from backend
+    name = name || t("card.unknownVolunteer");
+    description = description || t("card.noDescription");
     const displayImage = image || file;
     const imageUrl = getImageUrl(displayImage);
 
@@ -48,8 +52,8 @@ export default function VolunteerCard({
                             {getInitials(name)}
                         </div>
                     )}
-                    <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-[#2B61FF] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm uppercase">
-                        {type || "volunteer"}
+                    <span className="absolute top-3 start-3 bg-white/90 backdrop-blur-md text-[#2B61FF] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm uppercase">
+                        {type ? t(`common:userType.${type}`, { defaultValue: type }) : t("card.type")}
                     </span>
                 </div>
             </div>
@@ -66,15 +70,15 @@ export default function VolunteerCard({
                     <div className="flex flex-col gap-2 text-sm text-gray-700 py-1">
                         <div className="flex items-center gap-2">
                             <FaUser className="text-[#4C95FF] w-4 h-4" />
-                            <span className="font-medium">{name || "N/A"}</span>
+                            <span className="font-medium">{name || t("card.notAvailable")}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <FaEnvelope className="text-[#4C95FF] w-4 h-4" />
-                            <span className="font-medium">{email || "Not provided"}</span>
+                            <span className="font-medium">{email || t("card.notProvided")}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <FaBuilding className="text-[#4C95FF] w-4 h-4" />
-                            <span className="font-medium text-blue-600/80">{type || "volunteer"}</span>
+                            <span className="font-medium text-blue-600/80">{type ? t(`common:userType.${type}`, { defaultValue: type }) : t("card.type")}</span>
                         </div>
                     </div>
                 </div>
@@ -84,7 +88,7 @@ export default function VolunteerCard({
                         className="w-full py-3 flex items-center justify-center gap-2 bg-gradient-to-r from-[#4C95FF] to-[#2B61FF] hover:opacity-90 text-white rounded-full text-sm font-bold shadow-md transition-all active:scale-[0.98]"
                         onClick={handleClick}
                     >
-                        View Volunteer
+                        {t("card.viewVolunteer")}
                     </button>
                 </div>
             </div>

@@ -1,14 +1,16 @@
 import { useDispatch } from "react-redux";
+import useLocale from "../hooks/useLocale";
 import { showSuccess } from "../utils/toast";
 import { clearCredentials } from "../features/auth/authSlice";
 
 import { FaSignOutAlt, FaChevronRight } from "react-icons/fa";
 
 export default function Logout({ className = "" }) {
+    const { t } = useLocale();
     const dispatch = useDispatch();
     const handleLogout = () => {
         dispatch(clearCredentials());
-        showSuccess("Logged out successfully!");
+        showSuccess(t("common:toast.loggedOut"));
     };
     return (
         <button
@@ -17,7 +19,7 @@ export default function Logout({ className = "" }) {
         >
             <div className="flex items-center gap-3">
                 <FaSignOutAlt className="w-4 h-4" />
-                Logout
+                {t("common:nav.logout")}
             </div>
             {/* <FaChevronRight className="w-3 h-3 text-red-300" /> */}
         </button>

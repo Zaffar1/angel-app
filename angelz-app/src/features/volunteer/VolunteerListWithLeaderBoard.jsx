@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import useLocale from "../../hooks/useLocale";
 import { FaTrophy, FaCode } from 'react-icons/fa';
 import EmbedCodeModal from '../../components/EmbedCodeModal';
 import { Filters } from '../../components/leaderboard/Filters';
@@ -11,6 +12,7 @@ import { PAGE_LIMIT } from '../../constant/PAGE_LIMIT';
 import useUserProfile from '../../hooks/useUserProfile';
 
 const VolunteerListWithLeaderBoard = () => {
+  const { t } = useLocale('volunteer');
   const { user } = useUserProfile();
   const loggedInAsOrg = user?.role === 'organization';
 
@@ -192,7 +194,7 @@ const VolunteerListWithLeaderBoard = () => {
               className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md text-sm font-medium"
             >
               <FaCode className="w-4 h-4" />
-              Embed Leaderboard
+              {t('leaderboard.embedButton')}
             </button>
           </div>
         )}
@@ -207,7 +209,7 @@ const VolunteerListWithLeaderBoard = () => {
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
                 </svg>
-                Show Filters
+                {t('leaderboard.showFilters')}
               </button>
             </div>
           )}
@@ -222,15 +224,15 @@ const VolunteerListWithLeaderBoard = () => {
                   <div>
                     <h1 className="text-xl sm:text-2xl font-bold text-white">
                       {leaderboardMode === 'group'
-                        ? "Group Volunteers Leaderboard"
-                        : (isViewingOrgLeaderboard ? "Organization Leaderboard" : "Global Leaderboard")}
+                        ? t('leaderboard.titles.group')
+                        : (isViewingOrgLeaderboard ? t('leaderboard.titles.organization') : t('leaderboard.titles.global'))}
                     </h1>
                     <p className="text-blue-100 text-xs sm:text-sm">
                       {leaderboardMode === 'group'
-                        ? (filter.volunteer_group_id ? `Volunteers in ${volunteerGroups.find(g => String(g.id) === String(filter.volunteer_group_id))?.name || 'Group'}` : "Top volunteers across all groups")
+                        ? (filter.volunteer_group_id ? t('leaderboard.subtitles.volunteersIn', { name: volunteerGroups.find(g => String(g.id) === String(filter.volunteer_group_id))?.name || t('leaderboard.defaults.group') }) : t('leaderboard.subtitles.allGroups'))
                         : (isViewingOrgLeaderboard
-                          ? (loggedInAsOrg ? "Top volunteers in your organization" : `Top volunteers in ${organizations.find(o => (o.organization_id || o.id) == activeOrgId)?.company_name || 'Organization'}`)
-                          : "Top volunteers worldwide")}
+                          ? (loggedInAsOrg ? t('leaderboard.subtitles.yourOrganization') : t('leaderboard.subtitles.topIn', { name: organizations.find(o => (o.organization_id || o.id) == activeOrgId)?.company_name || t('leaderboard.defaults.organization') }))
+                          : t('leaderboard.subtitles.worldwide'))}
                     </p>
                   </div>
                 </div>
@@ -243,17 +245,17 @@ const VolunteerListWithLeaderBoard = () => {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    Hide Filters
+                    {t('leaderboard.hideFilters')}
                   </button>
                 )}
               </div>
             </div>
 
             <div className="grid grid-cols-12 gap-2 sm:gap-4 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-[linear-gradient(#FFFFFF80,#FFFFFF80)] border-b-3 border-blue-200 text-xs sm:text-sm font-semibold text-gray-700">
-              <div className="col-span-2 md:col-span-2">Rank</div>
-              <div className="col-span-4 md:col-span-4">Volunteer</div>
-              <div className="col-span-3">Location</div>
-              <div className="col-span-3 text-right">Points</div>
+              <div className="col-span-2 md:col-span-2">{t('leaderboard.columns.rank')}</div>
+              <div className="col-span-4 md:col-span-4">{t('leaderboard.columns.volunteer')}</div>
+              <div className="col-span-3">{t('leaderboard.columns.location')}</div>
+              <div className="col-span-3 text-end">{t('leaderboard.columns.points')}</div>
             </div>
 
             <div className="min-h-[300px] sm:min-h-[400px]">
@@ -265,8 +267,8 @@ const VolunteerListWithLeaderBoard = () => {
                 endMessage={
                   <div className="text-center py-6 sm:py-8 text-gray-500">
                     <FaTrophy className="w-10 h-10 sm:w-12 sm:h-12 text-gray-300 mx-auto mb-2 sm:mb-3" />
-                    <p className="font-semibold text-sm sm:text-base">You've reached the end!</p>
-                    <p className="text-xs sm:text-sm">No more data to load</p>
+                    <p className="font-semibold text-sm sm:text-base">{t('leaderboard.endTitle')}</p>
+                    <p className="text-xs sm:text-sm">{t('leaderboard.endText')}</p>
                   </div>
                 }
               >
@@ -281,8 +283,8 @@ const VolunteerListWithLeaderBoard = () => {
                 ) : !isLoading ? (
                   <div className="text-center py-12 sm:py-16 text-gray-500">
                     <FaTrophy className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
-                    <p className="text-lg font-semibold">No data found</p>
-                    <p className="text-sm">Try adjusting your filters</p>
+                    <p className="text-lg font-semibold">{t('leaderboard.noData')}</p>
+                    <p className="text-sm">{t('leaderboard.adjustFilters')}</p>
                   </div>
                 ) : null}
               </InfiniteScroll>
@@ -290,13 +292,13 @@ const VolunteerListWithLeaderBoard = () => {
           </div>
 
           <div className="mt-3 sm:mt-4 text-center text-xs sm:text-sm text-gray-500">
-            Showing {allUsers.length} volunteers
+            {t('leaderboard.showing', { count: allUsers.length })}
             {(filter.city || filter.state || filter.organization_id || filter.volunteer_group_id) && (
               <span>
-                {' • Filtered by '}
-                {filter.volunteer_group_id && `Volunteer Group "${volunteerGroups.find(g => String(g.id) === String(filter.volunteer_group_id))?.name || 'Group'}"`}
-                {filter.volunteer_group_id && (filter.organization_id || filter.city || filter.state) && ' and '}
-                {filter.organization_id && `Organization`}
+                {t('leaderboard.filteredBy')}
+                {filter.volunteer_group_id && t('leaderboard.filteredGroup', { name: volunteerGroups.find(g => String(g.id) === String(filter.volunteer_group_id))?.name || t('leaderboard.defaults.group') })}
+                {filter.volunteer_group_id && (filter.organization_id || filter.city || filter.state) && t('leaderboard.and')}
+                {filter.organization_id && t('leaderboard.filteredOrganization')}
                 {!filter.organization_id && filter.city && `${filter.city}`}
                 {!filter.organization_id && filter.city && filter.state && ', '}
                 {!filter.organization_id && filter.state && `${filter.state}`}

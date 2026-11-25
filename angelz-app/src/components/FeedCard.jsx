@@ -1,10 +1,12 @@
 import { FaGripHorizontal, FaHeart, FaSms, FaShare, FaCalendar } from "react-icons/fa"
 import { useAllFeeds } from "../api/mission";
 import { useCallback, useState } from "react";
+import useLocale from "../hooks/useLocale";
 import Loader from "./Loader";
 import FeedCardComponent from "./FeedCardComponent";
 
 export default function Feed() {
+    const { t } = useLocale("feed");
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
 
@@ -28,7 +30,7 @@ export default function Feed() {
     if (isError)
         return (
             <p className="text-center py-10 text-red-500">
-                Failed to load missions: {error?.response?.data?.message || error.message}
+                {t("missionsFailed", { message: error?.response?.data?.message || error.message })}
             </p>
         );
 

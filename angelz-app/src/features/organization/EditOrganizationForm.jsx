@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import useLocale from "../../hooks/useLocale";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ThemeButton } from "../../components/ThemeButton";
@@ -7,12 +8,13 @@ import { ImageInput } from "../../components/ImageInput";
 import { editOrganizationProfileSchema } from "../../schema/organization";
 import useUserProfile from "../../hooks/useUserProfile";
 import { useOrganizationEditProfile } from "../../api/organization";
-import { ORGANIZATAION_TYPE_OPTIONS } from "../../constant/ORGANIZATION_TYPE";
+import { ORGANIZATAION_TYPE_OPTIONS, getOrganizationTypeLabel } from "../../constant/ORGANIZATION_TYPE";
 import MapComponent from "../../components/MapComponent";
 import { PhoneInput } from "../../components/PhoneInput";
 import { cleanUSPhoneNumber } from "../../utils/phoneUtils";
 
 export default function EditOrganizationForm() {
+    const { t } = useLocale("organization");
     const { user, refetch } = useUserProfile();
     const { mutate, isPending } = useOrganizationEditProfile();
     const {
@@ -90,7 +92,7 @@ export default function EditOrganizationForm() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="glass-card max-w-2xl mx-auto p-6 sm:p-8 md:p-10 space-y-8 my-8 transition-all duration-300">
-            <h2 className="text-2xl font-semibold text-center">Organization Profile</h2>
+            <h2 className="text-2xl font-semibold text-center">{t("profile.title")}</h2>
             <div className="flex flex-col items-center gap-2">
                 <Controller
                     control={control}
@@ -100,53 +102,53 @@ export default function EditOrganizationForm() {
                     )}
                 />
                 <span className="text-sm text-amber-500 cursor-pointer" onClick={() => document.querySelector("input[type=file]").click()}>
-                    Edit
+                    {t("profile.edit")}
                 </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <InputField label="First Name" {...register("name")} error={errors.name?.message} />
-                <InputField label="Last Name" {...register("last_name")} error={errors.last_name?.message} />
-                <InputField label="Organization Name" {...register("company_name")} error={errors.company_name?.message} />
-                <InputField label="Organization Website" {...register("organization_website")} error={errors.organization_website?.message} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <InputField label={t("profile.labels.firstName")} {...register("name")} error={errors.name?.message} />
+                <InputField label={t("profile.labels.lastName")} {...register("last_name")} error={errors.last_name?.message} />
+                <InputField label={t("profile.labels.organizationName")} {...register("company_name")} error={errors.company_name?.message} />
+                <InputField label={t("profile.labels.organizationWebsite")} dir="ltr" {...register("organization_website")} error={errors.organization_website?.message} />
                 {/* <InputField label="Email" {...register("email")} error={errors.email?.message} disabled={true} /> */}
                 <PhoneInput
                     control={control}
                     name="contact_no"
-                    label="Phone Number"
+                    label={t("profile.labels.phoneNumber")}
                     error={errors.contact_no}
                 />
             </div>
             <div className="">
-                <label className="block text-gray-700 text-sm font-medium mb-1">Location</label>
+                <label className="block text-gray-700 text-sm font-medium mb-1">{t("profile.labels.location")}</label>
                 <MapComponent
                     defaultLocation={{ lat: parseFloat(user?.lat) || 40.730610, lng: parseFloat(user?.lng) || -73.935242 }}
                     address={user?.address}
                     onLocationSelect={handleLocationSelect}
                 />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-                <InputField label="City" {...register("city")} disabled={true} error={errors.city?.message} />
-                <InputField label="State" {...register("state")} disabled={true} error={errors.state?.message} />
-                <InputField label="Country" {...register("country")} disabled={true} error={errors.country?.message} />
-                <InputField label="Address" {...register("address")} disabled={true} error={errors.address?.message} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <InputField label={t("profile.labels.city")} {...register("city")} disabled={true} error={errors.city?.message} />
+                <InputField label={t("profile.labels.state")} {...register("state")} disabled={true} error={errors.state?.message} />
+                <InputField label={t("profile.labels.country")} {...register("country")} disabled={true} error={errors.country?.message} />
+                <InputField label={t("profile.labels.address")} {...register("address")} disabled={true} error={errors.address?.message} />
             </div>
             <div>
-                <label className="block text-gray-700 text-sm font-medium mb-1">Organization Type</label>
+                <label className="block text-gray-700 text-sm font-medium mb-1">{t("profile.labels.organizationType")}</label>
                 <select {...register("services")} className={`w-full p-2 border bg-white ${errors.services ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`}>
-                    <option value="">Select type</option>
+                    <option value="">{t("profile.selectType")}</option>
                     {ORGANIZATAION_TYPE_OPTIONS.map(type => (
-                        <option key={type} value={type}>{type}</option>
+                        <option key={type} value={type}>{getOrganizationTypeLabel(type)}</option>
                     ))}
                 </select>
                 {errors.services && <p className="text-red-500 text-xs mt-1">{errors.services.message}</p>}
             </div>
             <div>
-                <label className="block text-gray-700 text-sm font-medium mb-1">Description</label>
+                <label className="block text-gray-700 text-sm font-medium mb-1">{t("profile.labels.description")}</label>
                 <textarea {...register("description")} rows={3} className={`w-full p-2 border bg-white ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400`} />
                 {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
             </div>
-            <ThemeButton type="submit" isLoading={isPending}>Save Changes</ThemeButton>
+            <ThemeButton type="submit" isLoading={isPending}>{t("profile.saveChanges")}</ThemeButton>
         </form>
     );
 }

@@ -1,0 +1,111 @@
+{
+  "types": {
+    "foodDistribution": "Food Distribution",
+    "medicalAssistance": "Medical Assistance",
+    "educationSupport": "Education Support",
+    "shelterManagement": "Shelter Management",
+    "disasterRelief": "Disaster Relief",
+    "communityOutreach": "Community Outreach",
+    "environmentalProjects": "Environmental Projects",
+    "elderlyCare": "Elderly Care",
+    "childWelfare": "Child Welfare"
+  },
+  "card": {
+    "unknownOrganization": "Unknown Organization",
+    "noDescription": "No description available.",
+    "organization": "Organization",
+    "notAvailable": "N/A",
+    "notProvided": "Not provided",
+    "typeFallback": "organization",
+    "viewOrganization": "View Organization"
+  },
+  "list": {
+    "loadFailed": "Failed to load organizations: {{message}}",
+    "title": "All Organizations",
+    "total": "Total: {{count}}",
+    "noMore": "No more organizations to load."
+  },
+  "profile": {
+    "title": "Organization Profile",
+    "edit": "Edit",
+    "labels": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "organizationName": "Organization Name",
+      "organizationWebsite": "Organization Website",
+      "phoneNumber": "Phone Number",
+      "location": "Location",
+      "city": "City",
+      "state": "State",
+      "country": "Country",
+      "address": "Address",
+      "organizationType": "Organization Type",
+      "description": "Description"
+    },
+    "selectType": "Select type",
+    "saveChanges": "Save Changes"
+  },
+  "validation": {
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "descriptionRequired": "Description is required",
+    "organizationNameRequired": "Organization name is required",
+    "urlInvalid": "Please provide a full URL (e.g., https://example.com)",
+    "httpsPrefix": "invalid format, use with https://",
+    "contactInvalid": "Invalid contact number",
+    "addressRequired": "Address is required",
+    "cityRequired": "City is required",
+    "stateRequired": "State is required",
+    "countryRequired": "Country is required",
+    "typeRequired": "Organization type is required"
+  },
+  "toast": {
+    "profileUpdated": "Profile updated successfully!",
+    "profileUpdateFailed": "Profile update failed!"
+  },
+  "detail": {
+    "bannerAlt": "banner",
+    "report": "Report",
+    "bug": "Bug",
+    "organizationName": "Organization Name",
+    "cityUnknown": "City Unknown",
+    "assignMyVolunteers": "Assign My Volunteers",
+    "memberSince": "Member since",
+    "notAvailable": "N/A",
+    "typeUnknown": "Type Unknown",
+    "stateValue": "State: {{state}}",
+    "stateNotAvailable": "State N/A",
+    "descriptionTitle": "Organization Description",
+    "noDescription": "No description provided for this organization.",
+    "location": "Location",
+    "missionsBy": "All missions by {{name}}",
+    "volunteersOf": "All volunteers of {{name}}",
+    "tabMissions": "Missions",
+    "tabVolunteers": "Volunteers",
+    "noMissions": "No missions to display.",
+    "noMoreMissions": "No more missions to load.",
+    "inviteVolunteer": "Invite Volunteer",
+    "noVolunteers": "No volunteers found for this organization.",
+    "noMoreVolunteers": "No more volunteers to load.",
+    "closeModal": "Close modal",
+    "assignTitle": "Assign Volunteers",
+    "assignSubtitle": "Select volunteers from your group to assign to this organization.",
+    "noAvailableVolunteers": "No available volunteers to assign.",
+    "cancel": "Cancel",
+    "assigning": "Assigning...",
+    "assignSelected": "Assign Selected ({{count}})"
+  },
+  "invite": {
+    "selectVolunteer": "Select a volunteer",
+    "inviting": "Inviting",
+    "invite": "Invite"
+  },
+  "volunteerCard": {
+    "volunteer": "Volunteer",
+    "volunteerMember": "Volunteer Member",
+    "points": "Points",
+    "emailAddress": "Email Address",
+    "notProvided": "Not Provided",
+    "contactNumber": "Contact Number"
+  }
+}

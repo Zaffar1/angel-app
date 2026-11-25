@@ -1,3 +1,4 @@
+import useLocale from "../../hooks/useLocale";
 import { Link } from "react-router-dom";
 import { useInfiniteMissions } from "../../api/mission";
 import MissionCard from "../../components/mission/missionCard";
@@ -7,6 +8,7 @@ import { useCallback, useRef } from "react";
 import { PAGE_LIMIT } from "../../constant/PAGE_LIMIT";
 
 const MissionListForAll = () => {
+    const { t } = useLocale("mission");
     const { user } = useUserProfile();
     const observer = useRef();
 
@@ -40,7 +42,7 @@ const MissionListForAll = () => {
     if (isError)
         return (
             <p className="text-center py-10 text-red-500">
-                Failed to load missions: {error?.response?.data?.message || error.message}
+                {t("list.loadFailed", { message: error?.response?.data?.message || error.message })}
             </p>
         );
 
@@ -48,12 +50,12 @@ const MissionListForAll = () => {
         <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-10">
                 <div className="">
-                    <h2 className="text-2xl font-semibold capitalize">All Missions</h2>
-                    <p className="font-medium text-lg capitalize">count: {missionCount}</p>
+                    <h2 className="text-2xl font-semibold capitalize">{t("list.allMissions")}</h2>
+                    <p className="font-medium text-lg capitalize">{t("list.count", { count: missionCount })}</p>
                 </div>
                 {isOrganization && (
                     <Link to={'/organization/mission/create'} className="text-white text-md hover:bg-blue-600 transition bg-blue-500 rounded-full px-4 py-2 capitalize">
-                        Create mission
+                        {t("list.createMission")}
                     </Link>
                 )}
             </div>
@@ -78,7 +80,7 @@ const MissionListForAll = () => {
 
             {!hasNextPage && missions.length > 0 && (
                 <p className="text-center py-10 text-gray-500 font-medium">
-                    No more missions to load.
+                    {t("list.noMore")}
                 </p>
             )}
         </div>

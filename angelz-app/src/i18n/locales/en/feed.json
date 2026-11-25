@@ -1,0 +1,85 @@
+{
+  "list": {
+    "failed": "Failed to load feeds: {{message}}",
+    "title": "All Feeds",
+    "noMore": "No more feeds to load."
+  },
+  "missionsFailed": "Failed to load missions: {{message}}",
+  "card": {
+    "post": "Post",
+    "mission": "Mission",
+    "anonymous": "Anonymous",
+    "na": "N/A",
+    "missionAlt": "mission",
+    "postFallback": "Post",
+    "earned": "Earned",
+    "points": "{{points}} points",
+    "like_one": "{{count}} Like",
+    "like_other": "{{count}} Likes",
+    "comment_one": "{{count}} Comment",
+    "comment_other": "{{count}} Comments",
+    "shares": "50 Shares",
+    "postedBy": "Posted by {{name}}",
+    "commentAction": "Comment",
+    "shareAction": "Share"
+  },
+  "like": {
+    "liked": "Liked",
+    "like": "Like",
+    "liking": "Liking...",
+    "unliking": "Unliking..."
+  },
+  "comments": {
+    "maxLength": "Comment cannot exceed 100 characters",
+    "alreadyCommentedPlaceholder": "You have already commented",
+    "placeholder": "Write your comment...",
+    "posting": "Posting...",
+    "submit": "Comment",
+    "alreadyCommented": "You have already commented on this feed.",
+    "user": "User",
+    "editPlaceholder": "Edit comment...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "disabled": "This comment is disabled by the author.",
+    "edit": "Edit comment",
+    "delete": "Delete comment",
+    "deleteTitle": "Delete Comment?",
+    "deleteMessage": "Are you sure you want to delete this comment?",
+    "sectionTitle": "Feed Comments",
+    "first": "Be the first to comment on this feed.",
+    "viewAll": "View all comments"
+  },
+  "create": {
+    "title": "Create New Post",
+    "selectImage": "Select image",
+    "titleLabel": "Title",
+    "allowInteraction": "Allow Interaction",
+    "liked": "Liked",
+    "like": "Like",
+    "share": "Share",
+    "comment": "Comment",
+    "submit": "Create Post",
+    "validation": {
+      "titleRequired": "Title is required",
+      "imageRequired": "Image is required"
+    }
+  },
+  "toast": {
+    "postCreated": "Post created successfully!",
+    "postFailed": "Post creation failed!"
+  },
+  "embed": {
+    "title": "Embed Leaderboard",
+    "closeModal": "Close modal",
+    "instructions": "Paste this snippet anywhere in your website's HTML to display a live, automatically-updating leaderboard:",
+    "copied": "Copied!",
+    "copy": "Copy",
+    "liveUrl": "Live URL:",
+    "copyCode": "Copy Code",
+    "close": "Close"
+  },
+  "whatsapp": {
+    "defaultTitle": "Check out this post",
+    "message": "Title: {{title}}\n Description: {{description}}\n"
+  }
+}

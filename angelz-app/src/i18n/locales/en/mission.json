@@ -1,0 +1,133 @@
+{
+  "status": {
+    "open": "Open",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "completed": "Completed",
+    "process": "Process",
+    "requested": "Requested",
+    "rejected": "Rejected",
+    "expired": "Expired",
+    "scheduled": "Scheduled",
+    "inprogress": "Inprogress",
+    "completion_requested": "Completion Requested"
+  },
+  "card": {
+    "untitled": "Untitled Mission",
+    "unknownOrg": "Unknown Org",
+    "points": "{{points}} Points"
+  },
+  "list": {
+    "allMissions": "All Missions",
+    "count": "count: {{count}}",
+    "missionsCount": "Missions: {{count}}",
+    "createMission": "Create mission",
+    "noMore": "No more missions to load.",
+    "loadFailed": "Failed to load missions: {{message}}",
+    "orgNameFallback": "Organization name"
+  },
+  "error": {
+    "loadFailedOne": "Failed to load mission: {{message}}"
+  },
+  "helper": {
+    "na": "N/A",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "statusTag": "{{label}}: {{state}}"
+  },
+  "form": {
+    "createTitle": "Create New Mission",
+    "editTitle": "Edit Mission",
+    "statusBadge": "Status: {{status}}",
+    "selectImage": "Select image",
+    "name": "Mission Name",
+    "description": "Description",
+    "descriptionPlaceholder": "Write about Mission.....",
+    "location": "Location",
+    "locationHintCreate": "Click on the map to set mission coordinates.",
+    "locationHintEdit": "Click on the map to update mission coordinates.",
+    "startDateTime": "Start Date & Time",
+    "endDateTime": "End Date & Time",
+    "relevantDistance": "Relevant Distance",
+    "selectDistance": "Select Distance",
+    "distance": {
+      "local": "Local",
+      "cityWide": "City Wide",
+      "countryWide": "Country Wide",
+      "global": "Global"
+    },
+    "workType": "Work type",
+    "selectWorkTypeCreate": "Select Work type",
+    "selectWorkTypeEdit": "Select work type",
+    "workTypes": {
+      "tutor": "Tutor",
+      "staff": "Staff",
+      "cleaning": "Cleaning",
+      "watchman": "Watchman"
+    },
+    "points": "Points",
+    "pointsPlaceholder": "Enter points",
+    "volunteersRequired": "Volunteers Required",
+    "volunteersPlaceholder": "Enter number",
+    "missionType": "Mission type",
+    "selectMissionType": "Select Mission type",
+    "missionTypes": {
+      "virtual": "Virtual",
+      "onSite": "On-site"
+    },
+    "allowInteraction": "Allow Interaction",
+    "liked": "Liked",
+    "like": "Like",
+    "share": "Share",
+    "comment": "Comment",
+    "createSubmit": "Create Mission",
+    "updateSubmit": "Update Mission",
+    "cannotUpdate": "Cannot Update ({{reason}})",
+    "fixValidation": "Please fix validation errors.",
+    "validationFallback": "Validation error: please check all required fields.",
+    "updateFailed": "Failed to update mission.",
+    "errorUpdatingTitle": "Error Updating Mission",
+    "dismissError": "Dismiss error",
+    "errorLoadingTitle": "Error Loading Mission",
+    "errorLoadingBody": "Could not retrieve mission details. Please verify your connection and try again.",
+    "goBack": "Go Back",
+    "retry": "Retry"
+  },
+  "actions": {
+    "edit": "Edit Mission",
+    "delete": "Delete Mission",
+    "onlyOpenEditable": "{{reason}} (Only open missions can be edited)"
+  },
+  "deleteModal": {
+    "title": "Delete Mission",
+    "confirm": "Are you sure you want to delete this mission?",
+    "warning": "This action cannot be undone.",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "dateTime": {
+    "date": "Date",
+    "time": "Time",
+    "selectedSchedule": "Selected Schedule",
+    "at": " at {{time}}",
+    "clear": "Clear selections"
+  },
+  "validation": {
+    "nameRequired": "Mission name is required",
+    "selectLocation": "Select Your location",
+    "longitudeNumber": "Longitude must be a number",
+    "invalidStart": "Invalid start time",
+    "startRequired": "Start time is required",
+    "invalidEnd": "Invalid end time",
+    "endRequired": "End time is required",
+    "endAfterStart": "End time must be after start time",
+    "validDistance": "Select a valid distance",
+    "validWorkType": "Select a valid work type",
+    "validMissionType": "Select a valid mission type",
+    "volunteerNumber": "Volunteer count must be a number",
+    "volunteerNegative": "Volunteers required cannot be negative",
+    "pointsNumber": "Points must be a number",
+    "pointsNegative": "Points cannot be negative",
+    "timingStartBeforeEnd": "Start time must be earlier than end time"
+  }
+}

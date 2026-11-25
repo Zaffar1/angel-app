@@ -1,3 +1,4 @@
+import useLocale from "../hooks/useLocale";
 import { FaCalendar, FaComment, FaEllipsisH, FaGripHorizontal, FaHeart, FaShare, FaSms, FaTextHeight } from "react-icons/fa";
 import { formatDate, formatTime } from "../utils/dateUtils";
 import { getImageUrl } from "../utils/getImageUrl";
@@ -17,11 +18,12 @@ export default function FeedCardComponent({
     liked,
     id,
     total_likes,
-    author_name = "N/A",
+    author_name,
     comments,
     total_comments,
     latest_comment_at,
     posted_by, }) {
+    const { t } = useLocale("feed");
 
     const initials = company_name
         ?.split(" ")
@@ -52,7 +54,7 @@ export default function FeedCardComponent({
                             <span className="font-medium text-gray-900 text-sm">
                                 {company_name}
                             </span>
-                            <span className="px-2 py-0.5 bg-green-100 text-green-600 rounded text-[10px] font-bold uppercase tracking-wider">Mission</span>
+                            <span className="px-2 py-0.5 bg-green-100 text-green-600 rounded text-[10px] font-bold uppercase tracking-wider">{t("card.mission")}</span>
                         </div>
                     </div>
                 </div>
@@ -64,7 +66,7 @@ export default function FeedCardComponent({
                 <div className="rounded-xl overflow-hidden">
                     <img
                         src={imageUrl}
-                        alt="mission"
+                        alt={t("card.missionAlt")}
                         className="w-full h-72 md:h-80 lg:h-96 object-cover"
                     />
                 </div>
@@ -95,7 +97,7 @@ export default function FeedCardComponent({
                 </div>
 
                 <span className="font-semibold text-gray-900 text-sm">
-                    Earned <span className="text-black">{points} points</span>
+                    {t("card.earned")} <span className="text-black">{t("card.points", { points })}</span>
                 </span>
             </div>
 
@@ -103,12 +105,12 @@ export default function FeedCardComponent({
 
             <div className="flex justify-between items-center text-xs text-gray-500 px-5 mt-3">
                 <div className="flex gap-4">
-                    <span>{total_likes} {total_likes === 1 ? "Like" : "Likes"}</span>
-                    <span>{total_comments} {total_comments === 1 ? "Comment" : "Comments"}</span>
-                    <span>50 Shares</span>
+                    <span>{t("card.like", { count: total_likes ?? 0 })}</span>
+                    <span>{t("card.comment", { count: total_comments ?? 0 })}</span>
+                    <span>{t("card.shares")}</span>
                 </div>
                 <div className="flex gap-4">
-                    <span>Posted by {author_name}</span>
+                    <span>{t("card.postedBy", { name: author_name ?? t("card.na") })}</span>
 
                 </div>
             </div>
@@ -122,10 +124,10 @@ export default function FeedCardComponent({
                     type="mission"
                 />
                 <span className={`flex items-center gap-2 hover:text-blue-500 transition ${latest_comment_at ? "text-blue-500" : ""}`}>
-                    <FaComment className="w-4 h-4" /> Comment</span>
+                    <FaComment className="w-4 h-4" /> {t("card.commentAction")}</span>
                 {/* <WhatsappShare post={{name, description}}/> */}
                 <button className="flex items-center gap-2 hover:text-green-600 transition">
-                    <FaShare className="w-4 h-4" /> Share
+                    <FaShare className="w-4 h-4" /> {t("card.shareAction")}
                 </button>
             </div>
             <div className="border-t border-gray-200 mx-5 my-4"></div>

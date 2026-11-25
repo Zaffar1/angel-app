@@ -1,7 +1,9 @@
+import useLocale from "../hooks/useLocale";
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FaCode, FaCopy, FaCheck, FaTimes, FaExternalLinkAlt } from 'react-icons/fa';
 
 export default function EmbedCodeModal({ open, onClose }) {
+    const { t } = useLocale('feed');
     const [copied, setCopied] = useState(false);
     const copyTimeoutRef = useRef(null);
 
@@ -54,12 +56,12 @@ export default function EmbedCodeModal({ open, onClose }) {
                 <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600">
                     <div className="flex items-center gap-3 text-white font-semibold">
                         <FaCode className="w-5 h-5" />
-                        <span>Embed Leaderboard</span>
+                        <span>{t('embed.title')}</span>
                     </div>
                     <button
                         onClick={onClose}
                         className="text-white/70 hover:text-white transition-colors rounded-lg p-1"
-                        aria-label="Close modal"
+                        aria-label={t('embed.closeModal')}
                     >
                         <FaTimes className="w-5 h-5" />
                     </button>
@@ -68,34 +70,34 @@ export default function EmbedCodeModal({ open, onClose }) {
                 {/* Content */}
                 <div className="p-6 space-y-4">
                     <p className="text-sm text-gray-600">
-                        Paste this snippet anywhere in your website's HTML to display a live, automatically-updating leaderboard:
+                        {t('embed.instructions')}
                     </p>
 
                     {/* Code block */}
                     <div className="relative">
-                        <pre className="bg-gray-900 text-green-400 text-xs sm:text-sm rounded-xl p-4 overflow-x-auto whitespace-pre font-mono leading-relaxed border border-gray-700">
+                        <pre dir="ltr" className="bg-gray-900 text-green-400 text-xs sm:text-sm rounded-xl p-4 overflow-x-auto whitespace-pre font-mono leading-relaxed border border-gray-700">
                             {iframeSnippet}
                         </pre>
                         <button
                             onClick={handleCopy}
-                            className={`absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${copied
+                            className={`absolute top-3 end-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${copied
                                 ? 'bg-green-500 text-white'
                                 : 'bg-white/10 text-gray-300 hover:bg-white/25'
                                 }`}
                         >
-                            {copied ? <><FaCheck className="w-3 h-3" /> Copied!</> : <><FaCopy className="w-3 h-3" /> Copy</>}
+                            {copied ? <><FaCheck className="w-3 h-3" /> {t('embed.copied')}</> : <><FaCopy className="w-3 h-3" /> {t('embed.copy')}</>}
                         </button>
                     </div>
 
                     {/* Live URL */}
                     <div className="flex items-center gap-2 p-3 bg-indigo-50 rounded-xl border border-indigo-100">
                         <FaExternalLinkAlt className="w-3.5 h-3.5 text-indigo-500 flex-shrink-0" />
-                        <span className="text-xs text-indigo-700 font-medium">Live URL:</span>
+                        <span className="text-xs text-indigo-700 font-medium">{t('embed.liveUrl')}</span>
                         <a
                             href={embedUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-indigo-600 underline hover:text-indigo-800 break-all"
+                            dir="ltr" className="text-xs text-indigo-600 underline hover:text-indigo-800 break-all"
                         >
                             {embedUrl}
                         </a>
@@ -112,13 +114,13 @@ export default function EmbedCodeModal({ open, onClose }) {
                             }`}
                     >
                         {copied ? <FaCheck className="w-3.5 h-3.5" /> : <FaCopy className="w-3.5 h-3.5" />}
-                        {copied ? 'Copied!' : 'Copy Code'}
+                        {copied ? t('embed.copied') : t('embed.copyCode')}
                     </button>
                     <button
                         onClick={onClose}
                         className="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-200 transition-all"
                     >
-                        Close
+                        {t('embed.close')}
                     </button>
                 </div>
             </div>

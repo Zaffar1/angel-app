@@ -1,0 +1,26 @@
+{
+  "title": {
+    "organization": "התראות ארגון",
+    "volunteer": "התראות מתנדב"
+  },
+  "tabs": {
+    "all": "הכל",
+    "unread": "שלא נקראו"
+  },
+  "close": "סגירה",
+  "loading": "טוען...",
+  "empty": "אין התראות",
+  "actions": {
+    "accept": "אישור",
+    "reject": "דחייה",
+    "approve": "אישור",
+    "join": "הצטרפות",
+    "startMission": "התחלת משימה",
+    "submitCompletion": "שליחת השלמה"
+  },
+  "status": {
+    "accepted": "אושר",
+    "rejected": "נדחה",
+    "handled": "טופל"
+  }
+}

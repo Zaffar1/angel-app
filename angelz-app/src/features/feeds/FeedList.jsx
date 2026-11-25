@@ -1,5 +1,6 @@
 
 import { useCallback } from "react";
+import useLocale from "../../hooks/useLocale";
 import { useInfiniteFeeds } from "../../api/mission";
 import Loader from "../../components/Loader";
 import FeedCardComponent from "../../components/FeedCardComponent";
@@ -8,6 +9,7 @@ import { InfiniteScroll } from "../../components/InfiniteScroll";
 import { PAGE_LIMIT } from "../../constant/PAGE_LIMIT";
 
 export default function FeedList() {
+    const { t } = useLocale("feed");
     const {
         data,
         fetchNextPage,
@@ -39,14 +41,14 @@ export default function FeedList() {
     if (isError)
         return (
             <p className="text-center py-10 text-red-500">
-                Failed to load feeds: {error?.response?.data?.message || error?.message}
+                {t("list.failed", { message: error?.response?.data?.message || error?.message })}
             </p>
         );
 
     return (
         <div className="max-w-7xl mx-auto pb-10">
-            <h1 className="ml-4 text-lg sm:text-xl font-semibold text-gray-700 mb-6">
-                All Feeds
+            <h1 className="ms-4 text-lg sm:text-xl font-semibold text-gray-700 mb-6">
+                {t("list.title")}
             </h1>
             <InfiniteScroll
                 hasMore={hasNextPage}
@@ -55,7 +57,7 @@ export default function FeedList() {
                 loader={<div className="py-10"><Loader fullPage={false} /></div>}
                 endMessage={
                     <div className="text-center py-10 text-gray-500 font-medium">
-                        No more feeds to load.
+                        {t("list.noMore")}
                     </div>
                 }
             >

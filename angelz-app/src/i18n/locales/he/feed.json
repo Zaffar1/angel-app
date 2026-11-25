@@ -1,0 +1,87 @@
+{
+  "list": {
+    "failed": "טעינת הפידים נכשלה: {{message}}",
+    "title": "כל הפידים",
+    "noMore": "אין עוד פידים לטעינה."
+  },
+  "missionsFailed": "טעינת המשימות נכשלה: {{message}}",
+  "card": {
+    "post": "פוסט",
+    "mission": "משימה",
+    "anonymous": "אנונימי",
+    "na": "לא זמין",
+    "missionAlt": "משימה",
+    "postFallback": "פוסט",
+    "earned": "הרווחת",
+    "points": "{{points}} נקודות",
+    "like_one": "לייק {{count}}",
+    "like_two": "{{count}} לייקים",
+    "like_other": "{{count}} לייקים",
+    "comment_one": "תגובה {{count}}",
+    "comment_two": "{{count}} תגובות",
+    "comment_other": "{{count}} תגובות",
+    "shares": "50 שיתופים",
+    "postedBy": "פורסם על ידי {{name}}",
+    "commentAction": "תגובה",
+    "shareAction": "שיתוף"
+  },
+  "like": {
+    "liked": "אהבתי",
+    "like": "לייק",
+    "liking": "מוסיף לייק...",
+    "unliking": "מסיר לייק..."
+  },
+  "comments": {
+    "maxLength": "התגובה לא יכולה לחרוג מ-100 תווים",
+    "alreadyCommentedPlaceholder": "כבר הגבת",
+    "placeholder": "כתבו את התגובה שלכם...",
+    "posting": "מפרסם...",
+    "submit": "תגובה",
+    "alreadyCommented": "כבר הגבת על פיד זה.",
+    "user": "משתמש",
+    "editPlaceholder": "עריכת תגובה...",
+    "save": "שמירה",
+    "cancel": "ביטול",
+    "disabled": "תגובה זו הושבתה על ידי הכותב.",
+    "edit": "עריכת תגובה",
+    "delete": "מחיקת תגובה",
+    "deleteTitle": "למחוק את התגובה?",
+    "deleteMessage": "האם למחוק את התגובה הזו?",
+    "sectionTitle": "תגובות לפיד",
+    "first": "היו הראשונים להגיב על פיד זה.",
+    "viewAll": "הצגת כל התגובות"
+  },
+  "create": {
+    "title": "יצירת פוסט חדש",
+    "selectImage": "בחירת תמונה",
+    "titleLabel": "כותרת",
+    "allowInteraction": "אפשור אינטראקציה",
+    "liked": "אהבתי",
+    "like": "לייק",
+    "share": "שיתוף",
+    "comment": "תגובה",
+    "submit": "יצירת פוסט",
+    "validation": {
+      "titleRequired": "יש להזין כותרת",
+      "imageRequired": "יש לבחור תמונה"
+    }
+  },
+  "toast": {
+    "postCreated": "הפוסט נוצר בהצלחה!",
+    "postFailed": "יצירת הפוסט נכשלה!"
+  },
+  "embed": {
+    "title": "הטמעת לוח מובילים",
+    "closeModal": "סגירת החלון",
+    "instructions": "הדביקו את הקטע הזה בכל מקום ב-HTML של האתר שלכם כדי להציג לוח מובילים חי שמתעדכן אוטומטית:",
+    "copied": "הועתק!",
+    "copy": "העתקה",
+    "liveUrl": "כתובת חיה:",
+    "copyCode": "העתקת הקוד",
+    "close": "סגירה"
+  },
+  "whatsapp": {
+    "defaultTitle": "תראו את הפוסט הזה",
+    "message": "כותרת: {{title}}\n תיאור: {{description}}\n"
+  }
+}

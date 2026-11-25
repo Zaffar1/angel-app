@@ -2,14 +2,14 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 
 const navItems = [
-  { name: "Feeds", path: "/volunteer/feed/all" },
-  { name: "Organizations", path: "/volunteer/organization-list" },
-  { name: "Missions", path: "/volunteer/mission/all" },
-  { name: "Leaderboard", path: "/volunteer/list-with-leaderboard" },
+  { labelKey: "common:nav.feeds", path: "/volunteer/feed/all" },
+  { labelKey: "common:nav.organizations", path: "/volunteer/organization-list" },
+  { labelKey: "common:nav.missions", path: "/volunteer/mission/all" },
+  { labelKey: "common:nav.leaderboard", path: "/volunteer/list-with-leaderboard" },
   {
-    name: "Create",
+    labelKey: "common:nav.create",
     dropdownItems: [
-      { name: "Create Post", path: "/volunteer/post/create" },
+      { labelKey: "common:nav.createPost", path: "/volunteer/post/create" },
     ],
   },
 ];

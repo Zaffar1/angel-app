@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import useLocale from "../../hooks/useLocale";
 import {
     VolunteerProfileHeader,
     VolunteerProfileInfo,
@@ -10,6 +11,7 @@ import { useGetVolunteerDetail } from "../../api/volunteer";
 import Loader from "../../components/Loader";
 
 const VolunteerDetail = () => {
+    const { t } = useLocale("volunteer");
     const { id } = useParams();
     const { user, isLoading: profileLoading } = useUserProfile();
     const {
@@ -28,7 +30,7 @@ const VolunteerDetail = () => {
     if (isError)
         return (
             <div className="min-h-screen flex items-center justify-center text-red-500">
-                Failed to load profile: {error?.response?.data?.message || error.message}
+                {t("profile.failedToLoad", { message: error?.response?.data?.message || error.message })}
             </div>
         );
 

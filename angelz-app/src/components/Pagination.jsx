@@ -1,4 +1,5 @@
 import React, { useMemo, memo } from "react";
+import useLocale from "../hooks/useLocale";
 
 const Pagination = ({
     currentPage,
@@ -10,7 +11,7 @@ const Pagination = ({
     limits = [10, 20, 50],
     maxPages = 5,
 }) => {
-    if (!totalPages || totalPages < 1) return null;
+    const { t } = useLocale("shared");
 
     const pages = useMemo(() => {
         if (totalPages <= maxPages) return [...Array(totalPages)].map((_, i) => i + 1);
@@ -19,6 +20,8 @@ const Pagination = ({
         start = Math.max(end - maxPages + 1, 1);
         return [...Array(end - start + 1)].map((_, i) => start + i);
     }, [currentPage, totalPages, maxPages]);
+
+    if (!totalPages || totalPages < 1) return null;
 
     const showRange = `${Math.min((currentPage - 1) * limit + 1, totalItems || 0)} – ${Math.min(currentPage * limit, totalItems || 0)}`;
 
@@ -30,7 +33,7 @@ const Pagination = ({
                     disabled={currentPage === 1}
                     className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 transition"
                 >
-                    Prev
+                    {t("pagination.prev")}
                 </button>
 
                 {pages[0] > 1 && <>
@@ -58,14 +61,14 @@ const Pagination = ({
                     disabled={currentPage === totalPages}
                     className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 transition"
                 >
-                    Next
+                    {t("pagination.next")}
                 </button>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-2 items-center text-gray-600 text-sm">
                 {onLimitChange && (
                     <div className="flex items-center gap-2">
-                        <span>Items per page:</span>
+                        <span>{t("pagination.itemsPerPage")}</span>
                         <select
                             value={limit}
                             onChange={e => onLimitChange(Number(e.target.value))}
@@ -75,7 +78,7 @@ const Pagination = ({
                         </select>
                     </div>
                 )}
-                {totalItems !== undefined && <span>{`Showing ${showRange} of ${totalItems}`}</span>}
+                {totalItems !== undefined && <span>{t("pagination.showing", { range: showRange, total: totalItems })}</span>}
             </div>
         </div>
     );

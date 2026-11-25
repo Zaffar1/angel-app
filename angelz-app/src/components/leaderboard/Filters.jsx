@@ -1,4 +1,5 @@
 import React from 'react';
+import useLocale from "../../hooks/useLocale";
 import { FaFilter, FaSyncAlt, FaMapMarkerAlt, FaGlobe, FaTimes, FaTrophy, FaBuilding, FaUsers } from 'react-icons/fa';
 
 export const Filters = ({
@@ -17,6 +18,7 @@ export const Filters = ({
     mode = 'global',
     volunteerGroups = []
 }) => {
+    const { t } = useLocale('volunteer');
 
     const normalizeOptions = (list) => {
         const seen = new Map();
@@ -42,8 +44,8 @@ export const Filters = ({
                         <FaFilter className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                        <h3 className="font-semibold text-gray-900">Filters</h3>
-                        <p className="text-sm text-gray-500">Refine your leaderboard</p>
+                        <h3 className="font-semibold text-gray-900">{t("filters.title")}</h3>
+                        <p className="text-sm text-gray-500">{t("filters.subtitle")}</p>
                     </div>
                 </div>
 
@@ -62,21 +64,21 @@ export const Filters = ({
                     className={`w-full flex items-center justify-center gap-1.5 py-2.5 px-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${mode === 'global' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                     <FaTrophy className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span>Global</span>
+                    <span>{t("filters.modes.global")}</span>
                 </button>
                 <button
                     onClick={() => onToggleMode('organization')}
                     className={`w-full flex items-center justify-center gap-1.5 py-2.5 px-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${mode === 'organization' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                     <FaBuilding className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span>Org</span>
+                    <span>{t("filters.modes.organization")}</span>
                 </button>
                 <button
                     onClick={() => onToggleMode('group')}
                     className={`w-full flex items-center justify-center gap-1.5 py-2.5 px-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${mode === 'group' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                     <FaUsers className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span>Group</span>
+                    <span>{t("filters.modes.group")}</span>
                 </button>
             </div>
 
@@ -85,13 +87,13 @@ export const Filters = ({
                 <div className="flex items-center justify-between mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
                     <div className="flex-1">
                         <span className="text-sm text-blue-700 font-medium block mb-1">
-                            Active filters:
+                            {t("filters.active")}
                         </span>
                         <div className="text-xs text-blue-600 flex flex-wrap gap-1">
                             {mode === 'group' && filter.volunteer_group_id && (
                                 <span className="inline-flex items-center gap-1 bg-blue-100 px-2 py-1 rounded">
                                     <FaUsers className="w-3 h-3" />
-                                    {volunteerGroups.find(g => String(g.id) === String(filter.volunteer_group_id))?.name || "Group"}
+                                    {volunteerGroups.find(g => String(g.id) === String(filter.volunteer_group_id))?.name || t("filters.group")}
                                 </span>
                             )}
                             {mode === 'global' && filter.country && (
@@ -119,7 +121,7 @@ export const Filters = ({
                         className="flex items-center gap-2 px-3 py-1 text-blue-600 hover:text-blue-800 transition-colors text-sm bg-white rounded-lg border border-blue-200 self-start"
                     >
                         <FaSyncAlt className="w-3 h-3" />
-                        Clear
+                        {t("filters.clear")}
                     </button>
                 </div>
             )}
@@ -130,14 +132,14 @@ export const Filters = ({
                     <div>
                         <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
                             <FaBuilding className="w-4 h-4 text-blue-500" />
-                            Organization
+                            {t("filters.organization")}
                         </label>
                         <select
                             value={filter.organization_id}
                             onChange={(e) => onFilterChange('organization_id', e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm text-sm"
                         >
-                            <option value="">Select Organization</option>
+                            <option value="">{t("filters.selectOrganization")}</option>
                             {organizations.map(org => (
                                 <option key={org.organization_id || org.id} value={org.organization_id || org.id}>
                                     {org.company_name || org.name}
@@ -152,14 +154,14 @@ export const Filters = ({
                         <div>
                             <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
                                 <FaGlobe className="w-4 h-4 text-blue-500" />
-                                Country
+                                {t("filters.country")}
                             </label>
                             <select
                                 value={filter.country}
                                 onChange={(e) => onFilterChange('country', e.target.value)}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm"
                             >
-                                <option value="">All Countries</option>
+                                <option value="">{t("filters.allCountries")}</option>
                                 {normalizedCountries.map(country => (
                                     <option key={country} value={country}>{country}</option>
                                 ))}
@@ -169,14 +171,14 @@ export const Filters = ({
                         <div>
                             <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
                                 <FaGlobe className="w-4 h-4 text-blue-500" />
-                                State
+                                {t("filters.state")}
                             </label>
                             <select
                                 value={filter.state}
                                 onChange={(e) => onFilterChange('state', e.target.value)}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm"
                             >
-                                <option value="">All States</option>
+                                <option value="">{t("filters.allStates")}</option>
                                 {normalizedStates.map(state => (
                                     <option key={state} value={state}>{state}</option>
                                 ))}
@@ -186,14 +188,14 @@ export const Filters = ({
                         <div>
                             <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
                                 <FaMapMarkerAlt className="w-4 h-4 text-blue-500" />
-                                City
+                                {t("filters.city")}
                             </label>
                             <select
                                 value={filter.city}
                                 onChange={(e) => onFilterChange('city', e.target.value)}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm"
                             >
-                                <option value="">All Cities</option>
+                                <option value="">{t("filters.allCities")}</option>
                                 {normalizedCities.map(city => (
                                     <option key={city} value={city}>{city}</option>
                                 ))}
@@ -206,14 +208,14 @@ export const Filters = ({
                     <div>
                         <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
                             <FaUsers className="w-4 h-4 text-blue-500" />
-                            Volunteer Group
+                            {t("filters.volunteerGroup")}
                         </label>
                         <select
                             value={filter.volunteer_group_id || ""}
                             onChange={(e) => onFilterChange('volunteer_group_id', e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm text-sm"
                         >
-                            <option value="">All Groups</option>
+                            <option value="">{t("filters.allGroups")}</option>
                             {volunteerGroups.map(group => (
                                 <option key={group.id} value={group.id}>{group.name}</option>
                             ))}
@@ -227,7 +229,7 @@ export const Filters = ({
                 className="hidden lg:flex w-full items-center justify-center gap-2 mt-8 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-xl border border-gray-200 transition-colors font-medium"
             >
                 <FaTimes className="w-4 h-4" />
-                Hide Filters
+                {t("filters.hide")}
             </button>
         </div>
     );

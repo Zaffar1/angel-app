@@ -1,3 +1,5 @@
+import useLocale from "../../hooks/useLocale";
+import i18n from "../../i18n";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -14,8 +16,8 @@ import {
 } from "react-icons/fa";
 
 const createPostSchema = yup.object().shape({
-    title: yup.string().required("Title is required"),
-    image: yup.mixed().required("Image is required"),
+    title: yup.string().required(() => i18n.t("feed:create.validation.titleRequired")),
+    image: yup.mixed().required(() => i18n.t("feed:create.validation.imageRequired")),
     tags: yup.array().of(yup.string()).optional(),
     allow_interaction: yup.object().shape({
         comments: yup.boolean(),
@@ -25,6 +27,7 @@ const createPostSchema = yup.object().shape({
 });
 
 export const CreatePost = () => {
+    const { t } = useLocale("feed");
     const { mutate, isPending } = usePostMutation();
     const navigate = useNavigate();
     const { user } = useUserProfile();
@@ -67,7 +70,7 @@ export const CreatePost = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="glass-card max-w-3xl mx-auto p-6 sm:p-8 md:p-10 space-y-8 my-8 transition-all duration-300"
         >
-            <h2 className="text-2xl font-semibold text-center text-gray-800">Create New Post</h2>
+            <h2 className="text-2xl font-semibold text-center text-gray-800">{t("create.title")}</h2>
             <div className="flex flex-col items-center w-full">
                 <Controller
                     control={control}
@@ -89,7 +92,7 @@ export const CreatePost = () => {
                     <div className="bg-[#4C95FF]/10 p-2 rounded-lg">
                         <IoPaperPlaneSharp className="rotate-45" />
                     </div>
-                    <span className="text-sm">Select image</span>
+                    <span className="text-sm">{t("create.selectImage")}</span>
                 </div>
                 {errors.image && (
                     <p className="text-xs text-red-500 mt-2">{errors.image.message}</p>
@@ -97,7 +100,7 @@ export const CreatePost = () => {
             </div>
             <div className="space-y-6">
                 <InputField
-                    label="Title"
+                    label={t("create.titleLabel")}
                     {...register("title")}
                     error={errors.title?.message}
                 />
@@ -115,7 +118,7 @@ export const CreatePost = () => {
                 />
 
                 <div className="space-y-1">
-                    <label className="block text-gray-700 text-sm font-medium mb-1">Allow Interaction</label>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">{t("create.allowInteraction")}</label>
                     <div className="flex flex-wrap gap-10 items-center px-1 py-1">
                         <label className="flex items-center gap-3 cursor-pointer group select-none">
                             <input
@@ -127,7 +130,7 @@ export const CreatePost = () => {
                                 {allowInteraction?.likes ? <FaHeart size={26} /> : <FaRegHeart size={26} />}
                             </div>
                             <span className={`text-sm font-bold transition-colors ${allowInteraction?.likes ? "text-red-500" : "text-gray-500"}`}>
-                                {allowInteraction?.likes ? "Liked" : "Like"}
+                                {allowInteraction?.likes ? t("create.liked") : t("create.like")}
                             </span>
                         </label>
 
@@ -141,7 +144,7 @@ export const CreatePost = () => {
                                 <FaPaperPlane size={22} className={allowInteraction?.share ? "rotate-12" : ""} />
                             </div>
                             <span className={`text-sm font-bold transition-colors ${allowInteraction?.share ? "text-purple-500" : "text-gray-500"}`}>
-                                Share
+                                {t("create.share")}
                             </span>
                         </label>
 
@@ -155,13 +158,13 @@ export const CreatePost = () => {
                                 {allowInteraction?.comments ? <FaComment size={24} /> : <FaRegComment size={24} />}
                             </div>
                             <span className={`text-sm font-bold transition-colors ${allowInteraction?.comments ? "text-[#4C95FF]" : "text-gray-500"}`}>
-                                Comment
+                                {t("create.comment")}
                             </span>
                         </label>
                     </div>
                 </div>
             </div>
-            <ThemeButton type="submit" isLoading={isPending} className="w-full mt-4">Create Post</ThemeButton>
+            <ThemeButton type="submit" isLoading={isPending} className="w-full mt-4">{t("create.submit")}</ThemeButton>
         </form>
     );
 };

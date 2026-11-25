@@ -1,14 +1,15 @@
 // src/schema/organization.js
 import * as yup from "yup";
+import i18n from "../i18n";
 
 export const editOrganizationProfileSchema = yup.object().shape({
-    name: yup.string().required("First name is required"),
-    last_name: yup.string().required("Last name is required"),
-    description: yup.string().required("Description is required"),
-    company_name: yup.string().required("Organization name is required"),
+    name: yup.string().required(() => i18n.t("organization:validation.firstNameRequired")),
+    last_name: yup.string().required(() => i18n.t("organization:validation.lastNameRequired")),
+    description: yup.string().required(() => i18n.t("organization:validation.descriptionRequired")),
+    company_name: yup.string().required(() => i18n.t("organization:validation.organizationNameRequired")),
     organization_website: yup.string()
-        .url('Please provide a full URL (e.g., https://example.com)')
-        .test('https-prefix', 'invalid format, use with https://', function(value) {
+        .url(() => i18n.t("organization:validation.urlInvalid"))
+        .test('https-prefix', () => i18n.t("organization:validation.httpsPrefix"), function(value) {
             if (!value) return true; // allow empty
             return value.toLowerCase().startsWith('https://');
         })
@@ -20,12 +21,12 @@ export const editOrganizationProfileSchema = yup.object().shape({
             originalValue === "" ? null : value
         )
         .nullable()
-        .matches(/^\d{10,15}$/, "Invalid contact number"),
-    address: yup.string().required("Address is required"),
-    city: yup.string().required("City is required"),
-    state: yup.string().required("State is required"),
+        .matches(/^\d{10,15}$/, () => i18n.t("organization:validation.contactInvalid")),
+    address: yup.string().required(() => i18n.t("organization:validation.addressRequired")),
+    city: yup.string().required(() => i18n.t("organization:validation.cityRequired")),
+    state: yup.string().required(() => i18n.t("organization:validation.stateRequired")),
     zipcode: yup.string().nullable(),
-    country: yup.string().required("Country is required"),
+    country: yup.string().required(() => i18n.t("organization:validation.countryRequired")),
     image: yup.mixed().nullable(),
-    services: yup.string().required("Organization type is required")
+    services: yup.string().required(() => i18n.t("organization:validation.typeRequired"))
 });

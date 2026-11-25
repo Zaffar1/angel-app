@@ -1,3 +1,4 @@
+import useLocale from "../../hooks/useLocale";
 import { FaMapMarkerAlt, FaCaretUp, FaCaretDown } from 'react-icons/fa';
 import { RankBadge, RankNumber } from './Badges';
 
@@ -10,6 +11,7 @@ const TrendIndicator = ({ trend, change }) => (
 );
 
 export const UserRow = ({ user, rank }) => {
+    const { t } = useLocale('volunteer');
     const isTopFive = rank <= 5;
     return (
         <div className="grid grid-cols-12 items-center gap-4 px-4 sm:px-6 py-4 hover:bg-blue-50/50 transition-colors border-b border-gray-200/50 last:border-b-0">
@@ -51,11 +53,11 @@ export const UserRow = ({ user, rank }) => {
                 </div>
             </div>
 
-            <div className="col-span-3 text-right">
+            <div className="col-span-3 text-end">
                 <div className="text-lg sm:text-xl font-bold text-blue-600">
                     {user?.points}
                 </div>
-                <div className="text-xs text-gray-500 font-medium">points</div>
+                <div className="text-xs text-gray-500 font-medium">{t("leaderboard.pointsLabel")}</div>
             </div>
         </div>
     );

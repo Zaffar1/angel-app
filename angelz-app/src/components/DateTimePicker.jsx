@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
+import useLocale from "../hooks/useLocale";
 import { formatDate, formatTime, toDateTimeLocal, parseDate } from '../utils/dateUtils';
 import { FaCalendarAlt, FaClock, FaCheck, FaTimes } from 'react-icons/fa';
 
 export function DateTimePicker({ value, onChange, label, error, minDate, required }) {
+    const { t } = useLocale("mission");
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
 
@@ -92,7 +94,7 @@ export function DateTimePicker({ value, onChange, label, error, minDate, require
                     >
                         <FaCalendarAlt className={date ? 'text-[#4C95FF]' : 'text-[#4C95FF]/60'} />
                         <span className={`font-medium ${date ? 'text-gray-900' : 'text-gray-400'}`}>
-                            {date ? formatDate(date) : 'Date'}
+                            {date ? formatDate(date) : t("dateTime.date")}
                         </span>
                     </div>
                     <input
@@ -114,7 +116,7 @@ export function DateTimePicker({ value, onChange, label, error, minDate, require
                     >
                         <FaClock className={time ? 'text-purple-500' : 'text-purple-500/60'} />
                         <span className={`font-medium ${time ? 'text-gray-900' : 'text-gray-400'}`}>
-                            {time ? formatTime(time) : 'Time'}
+                            {time ? formatTime(time) : t("dateTime.time")}
                         </span>
                     </div>
                     <input
@@ -134,16 +136,16 @@ export function DateTimePicker({ value, onChange, label, error, minDate, require
                             <FaCheck size={12} />
                         </div>
                         <div className="text-xs">
-                            <p className="text-gray-500 font-medium">Selected Schedule</p>
+                            <p className="text-gray-500 font-medium">{t("dateTime.selectedSchedule")}</p>
                             <span className="font-bold text-green-900 capitalize">{formatDate(date)}</span>
-                            <span className="text-green-700"> at {formatTime(time)}</span>
+                            <span className="text-green-700">{t("dateTime.at", { time: formatTime(time) })}</span>
                         </div>
                     </div>
                     <button
                         type="button"
                         onClick={handleClear}
                         className="text-gray-400 hover:text-red-500 transition-colors p-2"
-                        title="Clear selections"
+                        title={t("dateTime.clear")}
                     >
                         <FaTimes size={14} />
                     </button>

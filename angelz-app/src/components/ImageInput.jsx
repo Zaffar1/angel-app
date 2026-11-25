@@ -1,8 +1,10 @@
 import { useRef } from "react";
+import useLocale from "../hooks/useLocale";
 import { FaCamera } from "react-icons/fa";
 import { getImageUrl } from "../utils/getImageUrl";
 
 export function ImageInput({ label, value, onChange, error, size = "avatar" }) {
+  const { t } = useLocale("shared");
   const fileRef = useRef();
 
   const handleFileChange = (e) => {
@@ -33,7 +35,7 @@ export function ImageInput({ label, value, onChange, error, size = "avatar" }) {
         {imageSrc ? (
           <img
             src={imageSrc}
-            alt="Preview"
+            alt={t("image.preview")}
             className={`object-cover border-2 border-purple-500 cursor-pointer ${isFull
               ? "w-full h-[220px] rounded-2xl"
               : "w-24 h-24 rounded-full"
@@ -52,7 +54,7 @@ export function ImageInput({ label, value, onChange, error, size = "avatar" }) {
 
         {imageSrc && (
           <span
-            className={`absolute bg-indigo-600 p-2.5 rounded-full shadow-lg hover:bg-indigo-700 transition-all border-2 border-white ${isFull ? "right-4 bottom-4" : "right-1 bottom-1"
+            className={`absolute bg-indigo-600 p-2.5 rounded-full shadow-lg hover:bg-indigo-700 transition-all border-2 border-white ${isFull ? "end-4 bottom-4" : "end-1 bottom-1"
               }`}
           >
             <FaCamera className="text-white" size={isFull ? 18 : 12} />

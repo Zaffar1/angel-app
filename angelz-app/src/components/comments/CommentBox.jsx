@@ -1,7 +1,9 @@
 import { useState } from "react";
+import useLocale from "../../hooks/useLocale";
 import { useAddCommentOnFeedMutation } from "../../api/mission";
 
 export default function CommentBox({ missionId, hasCommented, type }) {
+    const { t } = useLocale("feed");
     const [comment, setComment] = useState("");
     const [error, setError] = useState("");
 
@@ -11,7 +13,7 @@ export default function CommentBox({ missionId, hasCommented, type }) {
 
     const handleChange = (e) => {
         const value = e.target.value;
-        if (value.length > 100) setError("Comment cannot exceed 100 characters");
+        if (value.length > 100) setError(t("comments.maxLength"));
         else setError("");
         setComment(value.slice(0, 100));
     };
@@ -33,7 +35,7 @@ export default function CommentBox({ missionId, hasCommented, type }) {
                     value={comment}
                     onChange={handleChange}
                     onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-                    placeholder={hasCommented ? "You have already commented" : "Write your comment..."}
+                    placeholder={hasCommented ? t("comments.alreadyCommentedPlaceholder") : t("comments.placeholder")}
                     disabled={hasCommented}
                     className={`flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none w-full backdrop-blur-sm
                         ${error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-400"} 
@@ -44,7 +46,7 @@ export default function CommentBox({ missionId, hasCommented, type }) {
                     disabled={isButtonDisabled}
                     className={`px-4 py-2 text-sm bg-blue-600 text-white rounded-lg disabled:opacity-50 ${isButtonDisabled ? "cursor-not-allowed" : "cursor-pointer"} w-full sm:w-auto`}
                 >
-                    {isPending ? "Posting..." : "Comment"}
+                    {isPending ? t("comments.posting") : t("comments.submit")}
                 </button>
             </form>
             <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -52,7 +54,7 @@ export default function CommentBox({ missionId, hasCommented, type }) {
                 {error && <span className="text-red-500">{error}</span>}
             </div>
             {hasCommented && (
-                <p className="text-xs text-red-500 ">You have already commented on this feed.</p>
+                <p className="text-xs text-red-500 ">{t("comments.alreadyCommented")}</p>
             )}
         </div>
     );

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Trans } from "react-i18next";
+import useLocale from "../../hooks/useLocale";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaTimes, FaCheckCircle, FaEye, FaChevronLeft } from "react-icons/fa";
 import { ThemeButton } from "../../components/ThemeButton";
@@ -21,6 +23,7 @@ import { ErrorText } from "../../components/mission/errorText";
 
 
 export default function MissionDetails() {
+    const { t } = useLocale("missionDetails");
     const { id } = useParams();
     const navigate = useNavigate();
     const { data, isLoading, isError, error, refetch } = useMissionDetail(id);
@@ -74,6 +77,12 @@ export default function MissionDetails() {
     };
 
     const mission = data?.data;
+    // Backend stores raw option values ("on-site", "city wide"); show their translated labels (fall back to the raw value).
+    const tOption = (group, raw) => {
+        if (!raw) return raw;
+        const key = String(raw).replace(/[-\s]+(\w)/g, (_, c) => c.toUpperCase());
+        return t(`mission:${group}.${key}`, { defaultValue: raw });
+    };
     const isOrganization = user?.type === "organization";
 
     const currentAssignedCount = mission?.assigned_volunteers?.length || mission?.assigned_count || 0;
@@ -117,7 +126,7 @@ export default function MissionDetails() {
     const hasCompletedVolunteerInGroup = isGroupApplicationAccepted && Boolean(completedVolunteerInGroup || assignedCompletedVolunteer);
 
     const handleGroupCompletionClick = () => {
-        if (!mission?.id) return showError("Mission ID missing!");
+        if (!mission?.id) return showError(t("toast.missionIdMissing"));
 
         const completedVol = completedVolunteerInGroup || assignedCompletedVolunteer;
         updateVolunteerStatus({
@@ -153,13 +162,12 @@ export default function MissionDetails() {
         : 0;
 
     const renderAssignStatusBadge = (status) => {
-        const displayVal = formatStatus(
-            status === "process"
-                ? "pending"
-                : (status === "in_progress" || status === "inprogress")
-                    ? "started"
-                    : status
-        );
+        const mappedStatus = status === "process"
+            ? "pending"
+            : (status === "in_progress" || status === "inprogress")
+                ? "started"
+                : status;
+        const displayVal = t(`assignStatus.${mappedStatus}`, { defaultValue: formatStatus(mappedStatus) });
 
         // Determine colors/classes based on status
         let colorClass = "bg-gray-100 text-gray-700 border-gray-200";
@@ -215,18 +223,22 @@ export default function MissionDetails() {
         "https://placehold.co/1200x600?text=No+Image+Available";
 
     const handleApply = () => {
-        if (!mission?.id) return showError("Mission ID missing!");
+        if (!mission?.id) return showError(t("toast.missionIdMissing"));
         requestMission(mission.id, { onSuccess: refetch });
     };
 
     const handlePostFeed = () => {
-        if (!mission?.id) return showError("Mission ID missing!");
+        if (!mission?.id) return showError(t("toast.missionIdMissing"));
         postFeed(mission.id);
     }
 
     const effectiveStatus = getEffectiveMissionStatus(mission.status, mission.start_time);
     const disabled = isMissionDisabled(effectiveStatus);
     const statusColor = getStatusClass(effectiveStatus);
+    const displayStatus = effectiveStatus === "process" ? "pending" : effectiveStatus;
+    const statusLabel = displayStatus
+        ? t(`mission:status.${displayStatus}`, { defaultValue: formatStatus(displayStatus) })
+        : "";
     const applicants = mission?.applied_volunteers;
 
     const {
@@ -240,7 +252,7 @@ export default function MissionDetails() {
     } = formatDateTimeWithLocalTime(mission?.end_time);
 
     const displayDateTime = (date, time) =>
-        date && time ? `${date} - ${time}` : "N/A";
+        date && time ? `${date} - ${time}` : t("common.na");
 
     const isCompletedByCurrentUser =
         mission?.assigned_volunteers?.length > 0
@@ -259,14 +271,14 @@ export default function MissionDetails() {
                 />
                 <button
                     onClick={() => navigate(-1)}
-                    className="absolute top-3 left-3 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors z-20 cursor-pointer"
-                    title="Go Back"
-                    aria-label="Go Back"
+                    className="absolute top-3 start-3 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors z-20 cursor-pointer"
+                    title={t("actions.goBack")}
+                    aria-label={t("actions.goBack")}
                 >
-                    <FaChevronLeft className="w-5 h-5 text-white" />
+                    <FaChevronLeft className="w-5 h-5 text-white rtl:rotate-180" />
                 </button>
                 {isOrganization &&
-                    <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
+                    <div className="absolute top-3 end-3 flex items-center gap-2 z-20">
                         <EditMissionButton missionId={mission?.id} status={mission?.status} />
                         <DeleteMissionButton missionId={mission?.id} />
                     </div>
@@ -277,7 +289,7 @@ export default function MissionDetails() {
                             {mission?.name}
                         </h1>
                         <p className="text-sm text-gray-200">
-                            {mission?.company_name || "Unknown Organization"}
+                            {mission?.company_name || t("header.unknownOrganization")}
                         </p>
                     </div>
                 </div>
@@ -288,12 +300,12 @@ export default function MissionDetails() {
                         <span
                             className={`capitalize px-3 py-1 rounded-full text-sm font-medium ${statusColor}`}
                         >
-                            {formatStatus(effectiveStatus === "process" ? "pending" : effectiveStatus)}
+                            {statusLabel}
                         </span>
                         <h2 className="text-xl font-semibold text-gray-700 mt-2">
                             {mission.name}
                         </h2>
-                        <p className="text-gray-500 text-sm mt-1">ID: {mission.id}</p>
+                        <p className="text-gray-500 text-sm mt-1">{t("header.id", { id: mission.id })}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
                         {isOrganization && (Number(mission?.organization_id) === Number(user?.org_id) || Number(mission?.organization_id) === Number(user?.organization_id) || Number(mission?.organization_id) === Number(user?.id)) && mission?.group_applications?.some(app => app.status === "accepted") && (
@@ -302,47 +314,47 @@ export default function MissionDetails() {
                                     onClick={() => setShowDetailsModal(true)}
                                     className="!bg-blue-600 hover:!bg-blue-700 !text-white font-bold !py-1.5 !px-4 !text-xs !rounded-full shadow-sm"
                                 >
-                                    View Volunteers
+                                    {t("actions.viewVolunteers")}
                                 </ThemeButton>
                             </div>
                         )}
                         {volunteerCanPostFeed && (
                             <div className="mb-2">
-                                <p className="text-xs mb-1">Post this on your feed</p>
+                                <p className="text-xs mb-1">{t("actions.postOnFeed")}</p>
                                 <ThemeButton
                                     onClick={handlePostFeed}
                                     isLoading={pendingPostFeed}
                                     fullWidth
                                     disabled={Boolean(mission?.can_post)}
                                 >
-                                    {!!mission?.can_post ? "Already Posted" : "Post Feed"}
+                                    {!!mission?.can_post ? t("actions.alreadyPosted") : t("actions.postFeed")}
                                 </ThemeButton>
                             </div>
                         )}
                         <div className="text-blue-600 font-black text-lg">
-                            {mission.points} <span className="font-semibold">Point(s)</span>
+                            {mission.points} <span className="font-semibold">{t("header.points")}</span>
                         </div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6 text-sm text-gray-700">
                     <div className="space-y-2">
-                        <Detail label="Work Type" value={mission.work_type} />
-                        <Detail label="Mission Type" value={mission.mission_type} />
-                        <Detail label="Distance" value={mission.relevant_distance} />
+                        <Detail label={t("labels.workType")} value={tOption("form.workTypes", mission.work_type)} />
+                        <Detail label={t("labels.missionType")} value={tOption("form.missionTypes", mission.mission_type)} />
+                        <Detail label={t("labels.distance")} value={tOption("form.distance", mission.relevant_distance)} />
                         <Detail
-                            label="Volunteers Required"
-                            value={volunteersRequiredVal !== null && volunteersRequiredVal !== undefined && volunteersRequiredVal !== "" ? volunteersRequiredVal : "N/A"}
+                            label={t("labels.volunteersRequired")}
+                            value={volunteersRequiredVal !== null && volunteersRequiredVal !== undefined && volunteersRequiredVal !== "" ? volunteersRequiredVal : t("common.na")}
                         />
                     </div>
                     <div className="space-y-2 flex items-end flex-col">
                         <Detail
-                            label="Start Time"
+                            label={t("labels.startTime")}
                             value={displayDateTime(mission_start_date, mission_start_time)}
                             isTimeDate={true}
                         />
                         <Detail
-                            label="End Time"
+                            label={t("labels.endTime")}
                             value={displayDateTime(mission_end_date, mission_end_time)}
                             isTimeDate={true}
                         />
@@ -350,7 +362,7 @@ export default function MissionDetails() {
                 </div>
 
                 {mission.description && (
-                    <Section title="Description">
+                    <Section title={t("sections.description")}>
                         <p className="text-gray-600 leading-relaxed whitespace-pre-line">
                             {mission.description}
                         </p>
@@ -358,7 +370,7 @@ export default function MissionDetails() {
                 )}
 
                 {preferredVolunteers.length > 0 && (
-                    <Section title="Preferred Volunteers">
+                    <Section title={t("sections.preferredVolunteers")}>
                         <div className="flex flex-wrap gap-2">
                             {preferredVolunteers.map((vol, i) => (
                                 <span
@@ -375,7 +387,7 @@ export default function MissionDetails() {
                 {mission.lat && mission.lng && (
                     <div className="mt-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            Location
+                            {t("sections.location")}
                         </h3>
 
                         <MapComponent
@@ -393,11 +405,11 @@ export default function MissionDetails() {
 
 
                 {allowInteraction && (
-                    <Section title="Interaction Settings">
+                    <Section title={t("sections.interactionSettings")}>
                         <div className="flex flex-wrap gap-3 text-sm">
-                            <StatusTag label="Comments" enabled={allowInteraction.comments} />
-                            <StatusTag label="Likes" enabled={allowInteraction.likes} />
-                            <StatusTag label="Share" enabled={allowInteraction.share} />
+                            <StatusTag label={t("interaction.comments")} enabled={allowInteraction.comments} />
+                            <StatusTag label={t("interaction.likes")} enabled={allowInteraction.likes} />
+                            <StatusTag label={t("interaction.share")} enabled={allowInteraction.share} />
                         </div>
                     </Section>
                 )}
@@ -408,12 +420,12 @@ export default function MissionDetails() {
                             <ThemeButton
                                 onClick={() => setShowAssignModal(true)}
                             >
-                                Zapp It
+                                {t("actions.zappIt")}
                             </ThemeButton>
                         )}
                         {hasAlreadyApplied && !(hasCompletedVolunteerInGroup && mission.status !== "completion_requested" && mission.status !== "completed") && (
                             <ThemeButton disabled>
-                                Already Applied
+                                {t("actions.alreadyApplied")}
                             </ThemeButton>
                         )}
                         {hasCompletedVolunteerInGroup &&
@@ -423,7 +435,7 @@ export default function MissionDetails() {
                                     onClick={handleGroupCompletionClick}
                                     isLoading={isUpdatingVolunteerStatus}
                                 >
-                                    Request Completion
+                                    {t("actions.requestCompletion")}
                                 </ThemeButton>
                             )}
                     </div>
@@ -448,14 +460,14 @@ export default function MissionDetails() {
                                     setShowAssignModal(false);
                                     setSelectedVolunteers([]);
                                 }}
-                                className="absolute right-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
-                                aria-label="Close modal"
+                                className="absolute end-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+                                aria-label={t("modal.closeAria")}
                             >
                                 <FaTimes className="text-lg" />
                             </button>
-                            <h2 className="text-2xl font-bold text-white">Assign Volunteers</h2>
+                            <h2 className="text-2xl font-bold text-white">{t("assign.title")}</h2>
                             <p className="text-xs text-white/80 mt-1.5">
-                                Fulfill mission assignments for <strong>{mission.name}</strong>.
+                                <Trans i18nKey="assign.subtitle" ns="missionDetails" values={{ name: mission.name }} components={{ strong: <strong /> }} />
                             </p>
                         </div>
 
@@ -466,9 +478,9 @@ export default function MissionDetails() {
                                 <div className="bg-green-50 border border-green-200 text-green-800 p-4 rounded-2xl flex items-start gap-3 shadow-sm text-sm">
                                     <span className="text-lg">🎉</span>
                                     <div>
-                                        <p className="font-bold">Mission Capacity Fulfilled</p>
+                                        <p className="font-bold">{t("assign.capacityFulfilledTitle")}</p>
                                         <p className="text-xs text-green-700 mt-0.5">
-                                            All {volunteerRequired} required spot(s) have been successfully filled. No further volunteer assignments are required.
+                                            {t("assign.capacityFulfilledText", { count: volunteerRequired })}
                                         </p>
                                     </div>
                                 </div>
@@ -476,9 +488,9 @@ export default function MissionDetails() {
                                 <div className="bg-green-50 border border-green-200 text-green-800 p-4 rounded-2xl flex items-start gap-3 shadow-sm text-sm">
                                     <span className="text-lg">✅</span>
                                     <div>
-                                        <p className="font-bold">Selection Complete</p>
+                                        <p className="font-bold">{t("assign.selectionCompleteTitle")}</p>
                                         <p className="text-xs text-green-700 mt-0.5 font-semibold">
-                                            Exactly {remainingSpots} volunteer(s) selected. Ready to finalize assignment.
+                                            {t("assign.selectionCompleteText", { count: remainingSpots })}
                                         </p>
                                     </div>
                                 </div>
@@ -486,9 +498,9 @@ export default function MissionDetails() {
                                 <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-2xl flex items-start gap-3 shadow-sm text-sm">
                                     <span className="text-lg">⚠️</span>
                                     <div>
-                                        <p className="font-bold text-amber-900">Selection Required</p>
+                                        <p className="font-bold text-amber-900">{t("assign.selectionRequiredTitle")}</p>
                                         <p className="text-xs text-amber-700 mt-0.5">
-                                            Please select exactly <strong>{remainingSpots}</strong> volunteer(s) to fulfill requirements. Selected: <strong>{selectedVolunteers.length} of {remainingSpots}</strong>.
+                                            <Trans i18nKey="assign.selectionRequiredText" ns="missionDetails" values={{ remaining: remainingSpots, selected: selectedVolunteers.length }} components={{ strong: <strong /> }} />
                                         </p>
                                     </div>
                                 </div>
@@ -500,11 +512,11 @@ export default function MissionDetails() {
                                 </div>
                             ) : volunteers.length === 0 ? (
                                 <p className="text-sm text-gray-500 text-center py-8 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                                    No volunteers found. Invite some volunteers first.
+                                    {t("assign.noVolunteers")}
                                 </p>
                             ) : (
                                 <form onSubmit={handleAssignSubmit} className="space-y-4 flex flex-col flex-1">
-                                    <div className="space-y-1.5 max-h-[40vh] overflow-y-auto pr-1">
+                                    <div className="space-y-1.5 max-h-[40vh] overflow-y-auto pe-1">
                                         {volunteers.map((vol) => {
                                             const isAlreadyAssigned = vol.missions?.some((m) => m.id === mission.id);
                                             const isLimitReached = selectedVolunteers.length >= remainingSpots;
@@ -535,12 +547,12 @@ export default function MissionDetails() {
                                                     </div>
                                                     {isAlreadyAssigned ? (
                                                         <span className="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">
-                                                            Assigned
+                                                            {t("assign.assigned")}
                                                         </span>
                                                     ) : (
                                                         !isChecked && isLimitReached && (
                                                             <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full">
-                                                                Limit reached
+                                                                {t("assign.limitReached")}
                                                             </span>
                                                         )
                                                     )}
@@ -560,7 +572,7 @@ export default function MissionDetails() {
                                                 }}
                                                 className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold transition-colors cursor-pointer text-sm shadow-sm"
                                             >
-                                                Close
+                                                {t("common:actions.close")}
                                             </button>
                                         ) : (
                                             <>
@@ -572,7 +584,7 @@ export default function MissionDetails() {
                                                     }}
                                                     className="px-5 py-2.5 border border-gray-200 rounded-full text-gray-600 hover:bg-gray-100 font-semibold cursor-pointer bg-white transition-colors text-sm"
                                                 >
-                                                    Cancel
+                                                    {t("common:actions.cancel")}
                                                 </button>
                                                 <ThemeButton
                                                     type="submit"
@@ -580,7 +592,7 @@ export default function MissionDetails() {
                                                     isLoading={isAssigning}
                                                     disabled={selectedVolunteers.length !== remainingSpots}
                                                 >
-                                                    Assign Selected ({selectedVolunteers.length}/{remainingSpots})
+                                                    {t("assign.submit", { selected: selectedVolunteers.length, remaining: remainingSpots })}
                                                 </ThemeButton>
                                             </>
                                         )}
@@ -599,14 +611,14 @@ export default function MissionDetails() {
                         <div style={{ backgroundColor: "oklch(54.6% 0.245 262.881)" }} className="text-white p-6 sm:p-8 relative">
                             <button
                                 onClick={() => setShowDetailsModal(false)}
-                                className="absolute right-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
-                                aria-label="Close modal"
+                                className="absolute end-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+                                aria-label={t("modal.closeAria")}
                             >
                                 <FaTimes className="text-lg" />
                             </button>
-                            <h2 className="text-2xl font-bold text-white">Mission Assignment Details</h2>
+                            <h2 className="text-2xl font-bold text-white">{t("details.title")}</h2>
                             <p className="text-xs text-white/80 mt-1.5">
-                                {showAllAssigned ? "Overall" : "Group"} assignment progress for mission <strong>{mission.name}</strong>.
+                                <Trans i18nKey={showAllAssigned ? "details.subtitleOverall" : "details.subtitleGroup"} ns="missionDetails" values={{ name: mission.name }} components={{ strong: <strong /> }} />
                             </p>
                         </div>
 
@@ -614,7 +626,7 @@ export default function MissionDetails() {
                         <div className="p-6 overflow-y-auto space-y-4 max-h-[60vh] bg-gray-50/50">
                             {displayAssignedVolunteers.length === 0 ? (
                                 <p className="text-center py-8 text-gray-400 text-sm bg-white border border-gray-100 rounded-2xl shadow-sm">
-                                    {showAllAssigned ? "No volunteers have been assigned to this mission." : "No volunteers from your group have been assigned to this mission."}
+                                    {showAllAssigned ? t("details.emptyAll") : t("details.emptyGroup")}
                                 </p>
                             ) : (
                                 <div className="space-y-1.5">
@@ -642,7 +654,7 @@ export default function MissionDetails() {
                                 onClick={() => setShowDetailsModal(false)}
                                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold transition-colors cursor-pointer shadow-sm text-sm"
                             >
-                                Close
+                                {t("common:actions.close")}
                             </button>
                         </div>
                     </div>

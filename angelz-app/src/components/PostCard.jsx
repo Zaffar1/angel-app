@@ -1,3 +1,4 @@
+import useLocale from "../hooks/useLocale";
 import { FaEllipsisH, FaShare, FaComment } from "react-icons/fa";
 import { getImageUrl } from "../utils/getImageUrl";
 import { formatDate } from "../utils/dateUtils";
@@ -9,6 +10,7 @@ export default function PostCard({
     id, title, image, tags, created_at, user_id, user_name,
     allow_interaction, liked, total_likes = 0, total_comments = 0, latest_comment_at, comments = [], posted_by, can_post
 }) {
+    const { t } = useLocale("feed");
     const initials = user_name
         ?.split(" ")
         .map((w) => w[0])
@@ -28,7 +30,7 @@ export default function PostCard({
     }
     const interactionSettings = { ...defaultInteractions, ...parsed };
 
-    const imageUrl = getImageUrl(image) || `https://placehold.co/600x400?text=${encodeURIComponent(title || "Post")}`;
+    const imageUrl = getImageUrl(image) || `https://placehold.co/600x400?text=${encodeURIComponent(title || t("card.postFallback"))}`;
     const formattedDate = formatDate(created_at);
 
     const parsedTags = (() => {
@@ -52,8 +54,8 @@ export default function PostCard({
                     </div>
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2">
-                            <span className="font-semibold text-gray-900 text-sm leading-tight">{user_name || "Anonymous"}</span>
-                            <span className="px-2 py-0.5 bg-blue-100 text-blue-600 rounded text-[10px] font-bold uppercase tracking-wider">Post</span>
+                            <span className="font-semibold text-gray-900 text-sm leading-tight">{user_name || t("card.anonymous")}</span>
+                            <span className="px-2 py-0.5 bg-blue-100 text-blue-600 rounded text-[10px] font-bold uppercase tracking-wider">{t("card.post")}</span>
                         </div>
                         <span className="text-xs text-gray-400">{formattedDate}</span>
                     </div>
@@ -93,12 +95,12 @@ export default function PostCard({
 
             <div className="flex justify-between items-center text-xs text-gray-500 px-5 mt-3">
                 <div className="flex gap-4">
-                    <span>{total_likes} {total_likes === 1 ? "Like" : "Likes"}</span>
-                    <span>{total_comments} {total_comments === 1 ? "Comment" : "Comments"}</span>
-                    <span>50 Shares</span>
+                    <span>{t("card.like", { count: total_likes })}</span>
+                    <span>{t("card.comment", { count: total_comments })}</span>
+                    <span>{t("card.shares")}</span>
                 </div>
                 <div className="flex gap-4">
-                    <span>Posted by {user_name || "N/A"}</span>
+                    <span>{t("card.postedBy", { name: user_name || t("card.na") })}</span>
                 </div>
             </div>
 
@@ -111,10 +113,10 @@ export default function PostCard({
                     type="post"
                 />
                 <span className={`flex items-center gap-2 hover:text-blue-500 transition cursor-pointer ${latest_comment_at ? "text-blue-500" : ""}`}>
-                    <FaComment className="w-4 h-4" /> Comment
+                    <FaComment className="w-4 h-4" /> {t("card.commentAction")}
                 </span>
                 <button className="flex items-center gap-2 hover:text-green-600 transition">
-                    <FaShare className="w-4 h-4" /> Share
+                    <FaShare className="w-4 h-4" /> {t("card.shareAction")}
                 </button>
             </div>
 

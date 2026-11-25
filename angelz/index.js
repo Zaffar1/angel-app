@@ -140,7 +140,6 @@ server.listen(PORT, () => {
 socket.on('disconnect', () => {
   console.log('❌ User disconnected');
 });
-});
 
 // ==========================================
 // START SERVER

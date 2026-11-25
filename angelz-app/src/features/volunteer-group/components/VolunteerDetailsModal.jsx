@@ -7,9 +7,11 @@ import {
 import { PhoneNumberDisplay } from "../../../components/PhoneNumberDisplay";
 import { getImageUrl } from "../../../utils/getImageUrl";
 import { useGetGroupVolunteerById } from "../../../api/volunteerGroup";
+import useLocale from "../../../hooks/useLocale";
 import { formatStatus } from "../../../utils/missionStatusUtils";
 
 export default function VolunteerDetailsModal({ volunteer: initialVolunteer, onClose }) {
+  const { t } = useLocale("volunteerGroup");
   const { data: volunteer = initialVolunteer } = useGetGroupVolunteerById(initialVolunteer?.id);
 
   useEffect(() => {
@@ -70,8 +72,8 @@ export default function VolunteerDetailsModal({ volunteer: initialVolunteer, onC
         <div style={{ backgroundColor: "oklch(54.6% 0.245 262.881)" }} className="text-white p-6 sm:p-8 relative">
           <button
             onClick={onClose}
-            className="absolute right-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
-            aria-label="Close modal"
+            className="absolute end-5 top-5 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+            aria-label={t("common.closeModal")}
           >
             <FaTimes className="text-lg" />
           </button>
@@ -80,9 +82,9 @@ export default function VolunteerDetailsModal({ volunteer: initialVolunteer, onC
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-white/20 shadow-md bg-white/20 text-white font-bold flex items-center justify-center text-3xl sm:text-4xl uppercase select-none">
               {volunteer.name ? volunteer.name[0] : "V"}
             </div>
-            <div className="text-center sm:text-left space-y-1">
+            <div className="text-center sm:text-start space-y-1">
               <span className="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-semibold tracking-wide uppercase text-white/90 border border-white/10">
-                Volunteer Details
+                {t("modal.title")}
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold text-white">{volunteer.name}</h2>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-sm text-white/80 pt-1">
@@ -105,37 +107,37 @@ export default function VolunteerDetailsModal({ volunteer: initialVolunteer, onC
           {/* Volunteer Information Card */}
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
-              <span className="text-sm font-bold text-gray-500 uppercase tracking-wider">Volunteer Information</span>
+              <span className="text-sm font-bold text-gray-500 uppercase tracking-wider">{t("modal.information")}</span>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700 pt-2">
               <div>
-                <span className="text-gray-400 block text-xs font-medium">Full Name</span>
-                <p className="font-semibold text-gray-800 mt-0.5">{volunteer.name || "N/A"}</p>
+                <span className="text-gray-400 block text-xs font-medium">{t("modal.fullName")}</span>
+                <p className="font-semibold text-gray-800 mt-0.5">{volunteer.name || t("common.notAvailable")}</p>
               </div>
               <div>
-                <span className="text-gray-400 block text-xs font-medium">Email Address</span>
-                <p className="font-semibold text-gray-800 mt-0.5">{volunteer.email || "N/A"}</p>
+                <span className="text-gray-400 block text-xs font-medium">{t("modal.emailAddress")}</span>
+                <p dir="ltr" className="font-semibold text-gray-800 mt-0.5 rtl:text-end break-all">{volunteer.email || t("common.notAvailable")}</p>
               </div>
               <div>
-                <span className="text-gray-400 block text-xs font-medium">Phone Number</span>
+                <span className="text-gray-400 block text-xs font-medium">{t("modal.phoneNumber")}</span>
                 <div className="font-semibold text-gray-800 mt-0.5">
                   {volunteer.contact_no ? (
                     <PhoneNumberDisplay number={volunteer.contact_no} className="!text-gray-800 hover:!text-gray-800" />
                   ) : (
-                    "N/A"
+                    t("common.notAvailable")
                   )}
                 </div>
               </div>
               <div>
-                <span className="text-gray-400 block text-xs font-medium">Points Earned</span>
-                <p className="font-semibold text-blue-600 mt-0.5">{volunteer.points || 0} Point(s)</p>
+                <span className="text-gray-400 block text-xs font-medium">{t("modal.pointsEarned")}</span>
+                <p className="font-semibold text-blue-600 mt-0.5">{t("modal.points", { count: volunteer.points || 0 })}</p>
               </div>
             </div>
 
             {volunteer.description && (
               <div className="border-t pt-4">
-                <span className="text-gray-400 block text-xs font-medium">Description / Notes</span>
+                <span className="text-gray-400 block text-xs font-medium">{t("modal.descriptionNotes")}</span>
                 <p className="text-gray-600 mt-1 whitespace-pre-line leading-relaxed">{volunteer.description}</p>
               </div>
             )}
@@ -144,10 +146,10 @@ export default function VolunteerDetailsModal({ volunteer: initialVolunteer, onC
           {/* Assigned Missions List */}
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
             <h3 className="text-sm font-bold text-gray-700 tracking-wide uppercase border-b pb-3">
-              Assigned Missions & Status
+              {t("modal.assignedMissions")}
             </h3>
             {missions.length === 0 ? (
-              <p className="text-center text-sm text-gray-400 py-4">No missions assigned to this volunteer yet.</p>
+              <p className="text-center text-sm text-gray-400 py-4">{t("modal.noMissions")}</p>
             ) : (
               <div className="divide-y divide-gray-100 space-y-3">
                 {missions.map((m) => (
@@ -167,7 +169,7 @@ export default function VolunteerDetailsModal({ volunteer: initialVolunteer, onC
             onClick={onClose}
             className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full font-medium transition-colors cursor-pointer text-sm"
           >
-            Close
+            {t("common.close")}
           </button>
         </div>
       </div>

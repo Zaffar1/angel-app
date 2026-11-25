@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import useLocale from "../hooks/useLocale";
 import { IoCloseCircleOutline } from 'react-icons/io5';
 
-export const TagInput = ({ value = [], onChange, error, label = "Tags", placeholder = "Press enter to add tags" }) => {
+export const TagInput = ({ value = [], onChange, error, label, placeholder }) => {
+    const { t } = useLocale("shared");
+    const labelText = label === undefined ? t("tagInput.label") : label;
+    const placeholderText = placeholder === undefined ? t("tagInput.placeholder") : placeholder;
     const [inputValue, setInputValue] = useState('');
 
     const handleKeyDown = (e) => {
@@ -25,9 +29,9 @@ export const TagInput = ({ value = [], onChange, error, label = "Tags", placehol
 
     return (
         <div className="w-full">
-            {label && (
+            {labelText && (
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    {label}
+                    {labelText}
                 </label>
             )}
             <div className={`flex flex-wrap gap-2 p-2 min-h-[48px] bg-white/50 backdrop-blur-sm border rounded-xl transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 ${error ? 'border-red-500' : 'border-gray-200 hover:border-gray-300'}`}>
@@ -39,6 +43,7 @@ export const TagInput = ({ value = [], onChange, error, label = "Tags", placehol
                         {tag}
                         <button
                             type="button"
+                            aria-label={t("tagInput.remove")}
                             onClick={() => removeTag(tag)}
                             className="hover:text-blue-800 transition-colors"
                         >
@@ -51,7 +56,7 @@ export const TagInput = ({ value = [], onChange, error, label = "Tags", placehol
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={value.length === 0 ? placeholder : ""}
+                    placeholder={value.length === 0 ? placeholderText : ""}
                     className="flex-1 min-w-[120px] bg-transparent border-none outline-none text-sm text-gray-700 placeholder:text-gray-400 py-1"
                 />
             </div>

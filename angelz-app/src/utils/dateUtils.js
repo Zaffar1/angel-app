@@ -1,3 +1,5 @@
+import { getLocale } from "../i18n";
+
 /**
  * Safely parses any date string, timestamp, or Date object into a valid Date in the user's local timezone.
  * Handles MySQL DATETIME ("YYYY-MM-DD HH:mm:ss"), ISO strings with/without Z, and Unix timestamps.
@@ -63,7 +65,7 @@ export function formatTime(value) {
   if (str.includes("T") || str.includes("-") || str.includes("/") || str.includes(" ")) {
     const date = parseDate(str);
     if (date && !isNaN(date.getTime())) {
-      return date.toLocaleTimeString([], {
+      return date.toLocaleTimeString(getLocale(), {
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,
@@ -75,9 +77,15 @@ export function formatTime(value) {
   if (/^\d{1,2}:\d{2}/.test(str)) {
     const [h, m] = str.split(":");
     const hour = parseInt(h, 10);
-    const suffix = hour >= 12 ? "PM" : "AM";
-    const adjusted = hour % 12 || 12;
-    return `${adjusted}:${m} ${suffix}`;
+    const minute = parseInt(m, 10);
+    if (!isNaN(hour) && !isNaN(minute)) {
+      return new Date(2000, 0, 1, hour, minute).toLocaleTimeString(getLocale(), {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+    }
+    return str;
   }
 
   return str;
@@ -110,7 +118,7 @@ export function formatDate(dateStr) {
   if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
     const [y, m, d] = str.split("-").map(Number);
     const localDate = new Date(y, m - 1, d);
-    return localDate.toLocaleDateString("en-US", {
+    return localDate.toLocaleDateString(getLocale(), {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -119,7 +127,7 @@ export function formatDate(dateStr) {
 
   const date = parseDate(dateStr);
   if (!date || isNaN(date.getTime())) return "";
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(getLocale(), {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -133,13 +141,13 @@ export function formatDateTime(dateStr) {
   const date = parseDate(dateStr);
   if (!date || isNaN(date.getTime())) return { date: "", time: "" };
 
-  const formattedDate = date.toLocaleDateString("en-US", {
+  const formattedDate = date.toLocaleDateString(getLocale(), {
     month: "short",
     day: "2-digit",
     year: "numeric",
   });
 
-  const formattedTime = date.toLocaleTimeString([], {
+  const formattedTime = date.toLocaleTimeString(getLocale(), {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
@@ -155,12 +163,12 @@ export function formatDateTimeWithLocalTime(dateStr) {
   const date = parseDate(dateStr);
   if (!date || isNaN(date.getTime())) return { date: "", time: "" };
 
-  const formattedDate = date.toLocaleDateString("en-US", {
+  const formattedDate = date.toLocaleDateString(getLocale(), {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
-  const formattedTime = date.toLocaleTimeString([], {
+  const formattedTime = date.toLocaleTimeString(getLocale(), {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true

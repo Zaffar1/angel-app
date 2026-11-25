@@ -1,8 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
+import useLocale from "../hooks/useLocale";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useLikeToggleOnFeedMutation } from "../api/mission";
 
 export default function LikeToggleButton({ missionId, initialLiked = false, type }) {
+  const { t } = useLocale("feed");
   const [liked, setLiked] = useState(initialLiked);
 
   useEffect(() => {
@@ -19,9 +21,9 @@ export default function LikeToggleButton({ missionId, initialLiked = false, type
     mutate({ missionId, type });
   }, [missionId, type, mutate]);
 
-  const label = isPending ? !liked ? "Unliking..." : "Liking..." : liked
-    ? "Liked"
-    : "Like";
+  const label = isPending ? !liked ? t("like.unliking") : t("like.liking") : liked
+    ? t("like.liked")
+    : t("like.like");
 
   return (
     <button

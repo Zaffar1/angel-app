@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "./client";
+import i18n from "../i18n";
 import { showSuccess, showError } from "../utils/toast";
 
 export function useGetGroupVolunteers(options = {}) {
@@ -21,12 +22,12 @@ export function useInviteVolunteerByGroup(options = {}) {
       return data;
     },
     onSuccess: (data) => {
-      showSuccess(data?.message || "Volunteer invited successfully!");
+      showSuccess(data?.message || i18n.t("volunteerGroup:toast.invited"));
       queryClient.invalidateQueries(["groupVolunteers"]);
       options?.onSuccess?.(data);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Invitation failed!";
+      const msg = err.response?.data?.message || i18n.t("volunteerGroup:toast.inviteFailed");
       showError(msg);
       options?.onError?.(err);
     },
@@ -40,11 +41,11 @@ export function useAssignGroupVolunteersToMission(options = {}) {
       return data;
     },
     onSuccess: (data) => {
-      showSuccess(data?.message || "Volunteers assigned to mission successfully!");
+      showSuccess(data?.message || i18n.t("volunteerGroup:toast.assignedToMission"));
       options?.onSuccess?.(data);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Assignment failed!";
+      const msg = err.response?.data?.message || i18n.t("volunteerGroup:toast.assignFailed");
       showError(msg);
       options?.onError?.(err);
     },
@@ -58,11 +59,11 @@ export function useAssignGroupVolunteersToOrganization(options = {}) {
       return data;
     },
     onSuccess: (data) => {
-      showSuccess(data?.message || "Volunteers assigned to organization successfully!");
+      showSuccess(data?.message || i18n.t("volunteerGroup:toast.assignedToOrganization"));
       options?.onSuccess?.(data);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Assignment failed!";
+      const msg = err.response?.data?.message || i18n.t("volunteerGroup:toast.assignFailed");
       showError(msg);
       options?.onError?.(err);
     },
@@ -77,14 +78,14 @@ export function useUpdateGroupVolunteerMissionStatus(options = {}) {
       return data;
     },
     onSuccess: (data, variables) => {
-      showSuccess(data?.message || "Volunteer mission status updated successfully!");
+      showSuccess(data?.message || i18n.t("volunteerGroup:toast.statusUpdated"));
       queryClient.invalidateQueries(["groupVolunteers"]);
       queryClient.invalidateQueries(["mission", String(variables.mission_id)]);
       queryClient.invalidateQueries(["notifications"]);
       options?.onSuccess?.(data);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Failed to update mission status!";
+      const msg = err.response?.data?.message || i18n.t("volunteerGroup:toast.statusUpdateFailed");
       showError(msg);
       options?.onError?.(err);
     },

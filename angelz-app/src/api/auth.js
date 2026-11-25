@@ -3,6 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import api from './client';
 import { showSuccess, showError } from '../utils/toast';
 import { useDispatch } from 'react-redux';
+import i18n from '../i18n';
 import { clearCredentials, setCredentials } from '../features/auth/authSlice';
 
 export function useLogin(options = {}) {
@@ -17,13 +18,13 @@ export function useLogin(options = {}) {
             return data;
         },
         onSuccess: (data) => {
-            showSuccess(data?.message || 'Login successful!');
+            showSuccess(data?.message || i18n.t('auth:toast.loginSuccess'));
             options?.onSuccess?.(data);
             dispatch(setCredentials(data));
 
         },
         onError: (err) => {
-            const msg = err.response?.data?.message || 'Login failed!';
+            const msg = err.response?.data?.message || i18n.t('auth:toast.loginFailed');
             showError(msg);
             options?.onError?.(err);
         },
@@ -42,11 +43,11 @@ export function useRegister(options = {}) {
             if (data?.token) {
                 dispatch(setCredentials({ token: data.token, user: data?.user }));
             }
-            showSuccess(data?.message || "Registration successful!");
+            showSuccess(data?.message || i18n.t('auth:toast.registerSuccess'));
             options?.onSuccess?.(data);
         },
         onError: (err) => {
-            const msg = err.response?.data?.message || "Registration failed!";
+            const msg = err.response?.data?.message || i18n.t('auth:toast.registerFailed');
             showError(msg);
             options?.onError?.(err);
         },
@@ -88,11 +89,11 @@ export function useForgotPassword(options = {}) {
             return data;
         },
         onSuccess: (data) => {
-            showSuccess(data?.message || "Reset link sent to your email!");
+            showSuccess(data?.message || i18n.t('auth:toast.forgotSuccess'));
             options?.onSuccess?.(data);
         },
         onError: (err) => {
-            const msg = err.response?.data?.message || "Failed to send reset link!";
+            const msg = err.response?.data?.message || i18n.t('auth:toast.forgotFailed');
             showError(msg);
             options?.onError?.(err);
         },
@@ -106,11 +107,11 @@ export function useResetPassword(options = {}) {
             return data;
         },
         onSuccess: (data) => {
-            showSuccess(data?.message || "Password reset successful!");
+            showSuccess(data?.message || i18n.t('auth:toast.resetSuccess'));
             options?.onSuccess?.(data);
         },
         onError: (err) => {
-            const msg = err.response?.data?.message || "Failed to reset password!";
+            const msg = err.response?.data?.message || i18n.t('auth:toast.resetFailed');
             showError(msg);
             options?.onError?.(err);
         },
@@ -124,11 +125,11 @@ export function useChangePassword(options = {}) {
             return data;
         },
         onSuccess: (data) => {
-            showSuccess(data?.message || "Password changed successfully!");
+            showSuccess(data?.message || i18n.t('auth:toast.changeSuccess'));
             options?.onSuccess?.(data);
         },
         onError: (err) => {
-            const msg = err.response?.data?.message || "Failed to change password!";
+            const msg = err.response?.data?.message || i18n.t('auth:toast.changeFailed');
             showError(msg);
             options?.onError?.(err);
         },

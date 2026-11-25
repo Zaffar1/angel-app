@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import useLocale from "../../hooks/useLocale";
 import { FiEdit2, FiTrash2, FiCheck, FiX } from "react-icons/fi";
 import { FaCalendar, FaClock } from "react-icons/fa";
 import Tooltip from "../Tooltip";
@@ -10,6 +11,7 @@ import {
 import { formatDateTimeWithLocalTime } from "../../utils/dateUtils";
 
 export default function CommentItem({ comment, currentUserId, posted_by }) {
+    const { t } = useLocale("feed");
     const [editing, setEditing] = useState(false);
     const [value, setValue] = useState(comment?.comment);
     const [error, setError] = useState("");
@@ -33,7 +35,7 @@ export default function CommentItem({ comment, currentUserId, posted_by }) {
     const handleChange = (e) => {
         const input = e.target.value;
         if (input.length > 100) {
-            setError("Comment cannot exceed 100 characters");
+            setError(t("comments.maxLength"));
         } else {
             setError("");
         }
@@ -58,7 +60,7 @@ export default function CommentItem({ comment, currentUserId, posted_by }) {
                         <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-semibold">
                             {comment?.user_name?.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2) || "U"}
                         </span>
-                        <p className="text-gray-900 text-sm font-semibold leading-none">{comment?.user_name || "User"}</p>
+                        <p className="text-gray-900 text-sm font-semibold leading-none">{comment?.user_name || t("comments.user")}</p>
                     </div>
 
                     {editing ? (
@@ -68,7 +70,7 @@ export default function CommentItem({ comment, currentUserId, posted_by }) {
                                 value={value}
                                 onChange={handleChange}
                                 onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-                                placeholder="Edit comment..."
+                                placeholder={t("comments.editPlaceholder")}
                                 className={`flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none w-full
                                   ${error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-400"}`}
                             />
@@ -87,21 +89,21 @@ export default function CommentItem({ comment, currentUserId, posted_by }) {
                                         ) : (
                                             <FiCheck />
                                         )}
-                                        Save
+                                        {t("comments.save")}
                                     </button>
                                     <button
                                         disabled={isUpdating}
                                         onClick={() => { setEditing(false); setValue(comment?.comment); setError(""); }}
                                         className="text-red-500 flex items-center gap-1 text-sm"
                                     >
-                                        <FiX /> Cancel
+                                        <FiX /> {t("comments.cancel")}
                                     </button>
                                 </div>
                             </div>
                         </>
                     ) : (
                         <p className={`text-sm mt-1 leading-relaxed ${isDisabled ? "italic text-gray-400" : "text-gray-700"}`}>
-                            {isDisabled ? "This comment is disabled by the author." : comment?.comment}
+                            {isDisabled ? t("comments.disabled") : comment?.comment}
                         </p>
                     )}
 
@@ -110,10 +112,10 @@ export default function CommentItem({ comment, currentUserId, posted_by }) {
                         <div className="flex items-center gap-1"><FaClock className="text-orange-500 w-3 h-3" /><span>{time}</span></div>
                     </div>
 
-                    <div className="absolute top-3 right-3 flex gap-3">
+                    <div className="absolute top-3 end-3 flex gap-3">
                         {isCommentAuthor && !editing && (
                             <>
-                                <Tooltip text="Edit comment">
+                                <Tooltip text={t("comments.edit")}>
                                     <button
                                         disabled={isUpdating || isDisabled}
                                         onClick={() => setEditing(true)}
@@ -122,7 +124,7 @@ export default function CommentItem({ comment, currentUserId, posted_by }) {
                                         <FiEdit2 size={16} />
                                     </button>
                                 </Tooltip>
-                                <Tooltip text="Delete comment">
+                                <Tooltip text={t("comments.delete")}>
                                     <button
                                         disabled={isDeleting}
                                         onClick={() => setShowDeleteConfirm(true)}
@@ -141,8 +143,8 @@ export default function CommentItem({ comment, currentUserId, posted_by }) {
             </div>
             <ConfirmDialog
                 open={showDeleteConfirm}
-                title="Delete Comment?"
-                message="Are you sure you want to delete this comment?"
+                title={t("comments.deleteTitle")}
+                message={t("comments.deleteMessage")}
                 onConfirm={() => deleteMutation.mutate({ commentId: comment?.id })}
                 onClose={() => setShowDeleteConfirm(false)}
             />

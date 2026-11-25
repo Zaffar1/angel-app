@@ -26,6 +26,7 @@ export function PhoneInput({ control, name, label, error, ...props }) {
               onBlur={onBlur}
               maxLength={14}
               placeholder="(123) 456-7890"
+              dir="ltr"
               className={`w-full border px-3 py-2 bg-white rounded-lg ${error ? "border-red-500" : "border-gray-300"
                 } focus:outline-none focus:ring-2 focus:ring-blue-400`}
               {...props}

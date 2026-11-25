@@ -1,7 +1,9 @@
 import { useEffect } from "react";
+import useLocale from "../hooks/useLocale";
 import Portal from "./Portal";
 
 export default function ConfirmDialog({ open, title, message, onConfirm, onClose }) {
+  const { t } = useLocale("shared");
   useEffect(() => {
     if (!open) return;
 
@@ -22,7 +24,7 @@ export default function ConfirmDialog({ open, title, message, onConfirm, onClose
         role="dialog"
         aria-modal="true"
       >
-        <div className="bg-white rounded-lg shadow-xl p-5 w-80">
+        <div className="bg-white rounded-lg shadow-xl p-5 w-80 max-w-[90vw]">
           <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
           <p className="text-sm text-gray-600 mt-2">{message}</p>
 
@@ -31,7 +33,7 @@ export default function ConfirmDialog({ open, title, message, onConfirm, onClose
               onClick={onClose}
               className="px-3 py-1 text-sm text-gray-600 bg-gray-200 rounded hover:bg-gray-300"
             >
-              No
+              {t("confirm.no")}
             </button>
 
             <button
@@ -41,7 +43,7 @@ export default function ConfirmDialog({ open, title, message, onConfirm, onClose
               }}
               className="px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
             >
-              Yes
+              {t("confirm.yes")}
             </button>
           </div>
         </div>

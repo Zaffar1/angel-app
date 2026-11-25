@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useLocale from "../../hooks/useLocale";
 import { useQueryClient } from "@tanstack/react-query";
 import { FaSpinner, FaTimes } from "react-icons/fa";
 import { useNotifications } from "../../api/notification";
@@ -15,6 +16,7 @@ import { MISSION_STATUS, MISSION_TYPE } from "../../constant/MISSION_STATUS";
 import useUserProfile from "../../hooks/useUserProfile";
 
 export default function NotificationVolunteer({ onClose }) {
+  const { t } = useLocale("notifications");
   const ref = useRef(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -67,16 +69,16 @@ export default function NotificationVolunteer({ onClose }) {
 
   const ACTIONS = {
     [MISSION_STATUS.PROCESS]: {
-      label: "Start Mission",
+      labelKey: "actions.startMission",
       run: (mission_id, volunteer_id) =>
         startMission.mutateAsync({ mission_id, volunteer_id }),
     },
     [MISSION_STATUS.INPROGRESS]: {
-      label: "Submit Completion",
+      labelKey: "actions.submitCompletion",
       run: (mission_id) => requestCompletion.mutateAsync(mission_id),
     },
     [MISSION_STATUS.COMPLETION_REQUESTED]: {
-      label: "Submit Completion",
+      labelKey: "actions.submitCompletion",
       run: (mission_id) => requestCompletion.mutateAsync(mission_id),
     },
   };
@@ -114,12 +116,12 @@ export default function NotificationVolunteer({ onClose }) {
         const volStatus = n.volunteer_mission_status || "pending";
         if (volStatus === "pending") {
           action = {
-            label: "Start Mission",
+            labelKey: "actions.startMission",
             run: (mId) => startMission.mutateAsync({ mission_id: mId, volunteer_id: user.id })
           };
         } else if (volStatus === "in_progress") {
           action = {
-            label: "Submit Completion",
+            labelKey: "actions.submitCompletion",
             run: (mId) => requestCompletion.mutateAsync(mId)
           };
         }
@@ -156,39 +158,39 @@ export default function NotificationVolunteer({ onClose }) {
   return (
     <div
       ref={ref}
-      className="fixed md:absolute top-[75px] md:top-auto left-4 md:left-auto right-4 md:right-0 mt-2 w-auto md:w-[420px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100 p-5 z-50 animate-fadeIn"
+      className="fixed md:absolute top-[75px] md:top-auto start-4 md:start-auto end-4 md:end-0 mt-2 w-auto md:w-[420px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100 p-5 z-50 animate-fadeIn"
       onClick={(e) => e.stopPropagation()}
     >
       {/* Header */}
       <div className="flex justify-between items-center mb-4 border-b pb-3">
-        <h3 className="text-base font-bold text-gray-800">Volunteer Notifications</h3>
-        <button onClick={onClose} className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+        <h3 className="text-base font-bold text-gray-800">{t("title.volunteer")}</h3>
+        <button onClick={onClose} aria-label={t("close")} className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
           <FaTimes className="text-base" />
         </button>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-2 mb-4">
-        {["all", "unread"].map((t) => (
+        {["all", "unread"].map((tabKey) => (
           <button
-            key={t}
-            onClick={() => setTab(t)}
+            key={tabKey}
+            onClick={() => setTab(tabKey)}
             className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${tab === t
                 ? "bg-blue-600 text-white shadow-sm"
                 : "bg-gray-50 text-gray-600 hover:bg-gray-100"
               }`}
           >
-            {t[0].toUpperCase() + t.slice(1)}
+            {t(`tabs.${tabKey}`)}
           </button>
         ))}
       </div>
 
       {/* Notifications */}
-      <div className="max-h-[340px] overflow-y-auto space-y-3 pr-1">
+      <div className="max-h-[340px] overflow-y-auto space-y-3 pe-1">
         {isLoading ? (
-          <p className="text-sm text-center text-gray-500 py-4">Loading...</p>
+          <p className="text-sm text-center text-gray-500 py-4">{t("loading")}</p>
         ) : !filtered.length ? (
-          <p className="text-sm text-center text-gray-400 py-6">No notifications</p>
+          <p className="text-sm text-center text-gray-400 py-6">{t("empty")}</p>
         ) : (
           (() => {
             const seenMissionActions = new Set();
@@ -205,12 +207,12 @@ export default function NotificationVolunteer({ onClose }) {
                 const volStatus = n.volunteer_mission_status;
                 if (volStatus === "pending") {
                   action = {
-                    label: "Start Mission",
+                    labelKey: "actions.startMission",
                     run: (mId) => startMission.mutateAsync({ mission_id: mId, volunteer_id: user.id })
                   };
                 } else if (volStatus === "in_progress") {
                   action = {
-                    label: "Submit Completion",
+                    labelKey: "actions.submitCompletion",
                     run: (mId) => requestCompletion.mutateAsync(mId)
                   };
                 }
@@ -256,7 +258,7 @@ export default function NotificationVolunteer({ onClose }) {
                     } ${loading === n.id ? "opacity-50" : "shadow-sm hover:shadow"}`}
                 >
                   <div
-                    className="peer flex-1 min-w-0 pr-2 cursor-pointer"
+                    className="peer flex-1 min-w-0 pe-2 cursor-pointer"
                     onClick={() => handleNotificationClick(n)}
                   >
                     {/* Default truncated text */}
@@ -285,7 +287,7 @@ export default function NotificationVolunteer({ onClose }) {
                           {loading === n.id ? (
                             <FaSpinner className="animate-spin" size={12} />
                           ) : (
-                            "Join"
+                            t("actions.join")
                           )}
                         </button>
 
@@ -297,7 +299,7 @@ export default function NotificationVolunteer({ onClose }) {
                           disabled={loading === n.id}
                           className="px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer disabled:opacity-60"
                         >
-                          Reject
+                          {t("actions.reject")}
                         </button>
                       </div>
                     )}
@@ -315,7 +317,7 @@ export default function NotificationVolunteer({ onClose }) {
                         {loading === n.id ? (
                           <FaSpinner className="animate-spin" size={12} />
                         ) : (
-                          action.label
+                          t(action.labelKey)
                         )}
                       </button>
                     )}
@@ -323,7 +325,7 @@ export default function NotificationVolunteer({ onClose }) {
 
                   {/* Full text overlay in the exact same place on peer hover */}
                   {expandedId !== n.id && (
-                    <div className="absolute left-0 top-0 w-full min-h-full bg-white border border-gray-200 shadow-xl rounded-xl p-3.5 hidden md:peer-hover:block whitespace-normal break-words z-30 animate-fadeIn pointer-events-none">
+                    <div className="absolute start-0 top-0 w-full min-h-full bg-white border border-gray-200 shadow-xl rounded-xl p-3.5 hidden md:peer-hover:block whitespace-normal break-words z-30 animate-fadeIn pointer-events-none">
                       <p className="text-sm font-semibold text-gray-900 leading-relaxed">
                         {n.message}
                       </p>

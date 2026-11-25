@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useLocale from "../../hooks/useLocale";
 import { useQueryClient } from "@tanstack/react-query";
 import { FaSpinner, FaTimes } from "react-icons/fa";
 import { useNotifications } from "../../api/notification";
@@ -14,6 +15,7 @@ import { formatDateTime } from "../../utils/dateUtils";
 import { MISSION_STATUS, MISSION_TYPE } from "../../constant/MISSION_STATUS";
 
 export default function NotificationOrganization({ onClose }) {
+  const { t } = useLocale("notifications");
   const ref = useRef(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -97,34 +99,34 @@ export default function NotificationOrganization({ onClose }) {
   return (
     <div
       ref={ref}
-      className="fixed md:absolute top-[75px] md:top-auto left-4 md:left-auto right-4 md:right-0 mt-2 w-auto md:w-[420px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100 p-5 z-50 animate-fadeIn"
+      className="fixed md:absolute top-[75px] md:top-auto start-4 md:start-auto end-4 md:end-0 mt-2 w-auto md:w-[420px] bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100 p-5 z-50 animate-fadeIn"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between mb-4 border-b pb-3">
-        <h3 className="text-base font-bold text-gray-800">Organization Notifications</h3>
-        <button onClick={onClose} className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+        <h3 className="text-base font-bold text-gray-800">{t("title.organization")}</h3>
+        <button onClick={onClose} aria-label={t("close")} className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
           <FaTimes className="text-base" />
         </button>
       </div>
 
       <div className="flex gap-2 mb-4">
-        {["all", "unread"].map((t) => (
+        {["all", "unread"].map((tabKey) => (
           <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${tab === t ? "bg-blue-600 text-white shadow-sm" : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+            key={tabKey}
+            onClick={() => setTab(tabKey)}
+            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${tab === tabKey ? "bg-blue-600 text-white shadow-sm" : "bg-gray-50 text-gray-600 hover:bg-gray-100"
               }`}
           >
-            {t[0].toUpperCase() + t.slice(1)}
+            {t(`tabs.${tabKey}`)}
           </button>
         ))}
       </div>
 
-      <div className="max-h-[340px] overflow-y-auto space-y-3 pr-1">
+      <div className="max-h-[340px] overflow-y-auto space-y-3 pe-1">
         {isLoading ? (
-          <p className="text-center text-sm text-gray-500 py-4">Loading...</p>
+          <p className="text-center text-sm text-gray-500 py-4">{t("loading")}</p>
         ) : !filtered.length ? (
-          <p className="text-center text-sm text-gray-400 py-6">No notifications</p>
+          <p className="text-center text-sm text-gray-400 py-6">{t("empty")}</p>
         ) : (
           filtered.map((n) => {
             const done = handled.includes(n.id);
@@ -140,7 +142,7 @@ export default function NotificationOrganization({ onClose }) {
                   } ${done ? "opacity-40" : "shadow-sm hover:shadow"}`}
               >
                 <div
-                  className="peer flex-1 min-w-0 pr-2 cursor-pointer"
+                  className="peer flex-1 min-w-0 pe-2 cursor-pointer"
                   onClick={() => handleNotificationClick(n)}
                 >
                   {/* Default truncated text */}
@@ -174,16 +176,16 @@ export default function NotificationOrganization({ onClose }) {
                                   } disabled:opacity-60`}
                               >
                                 {busy(a) ? <FaSpinner size={12} className="animate-spin" /> : null}
-                                {a === "accept" ? "Accept" : "Reject"}
+                                {a === "accept" ? t("actions.accept") : t("actions.reject")}
                               </button>
                             ))
                           ) : n.group_application_status === "accepted" ? (
                             <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">
-                              Accepted
+                              {t("status.accepted")}
                             </span>
                           ) : n.group_application_status === "rejected" ? (
                             <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 border border-red-200">
-                              Rejected
+                              {t("status.rejected")}
                             </span>
                           ) : null}
                         </div>
@@ -204,7 +206,7 @@ export default function NotificationOrganization({ onClose }) {
                                   } disabled:opacity-60`}
                               >
                                 {busy(a) ? <FaSpinner size={12} className="animate-spin" /> : null}
-                                {a === "accept" ? "Accept" : "Reject"}
+                                {a === "accept" ? t("actions.accept") : t("actions.reject")}
                               </button>
                             ))}
                           </div>
@@ -225,7 +227,7 @@ export default function NotificationOrganization({ onClose }) {
                               {busy("complete") ? (
                                 <FaSpinner size={12} className="animate-spin" />
                               ) : (
-                                "Approve"
+                                t("actions.approve")
                               )}
                             </button>
                             <button
@@ -239,7 +241,7 @@ export default function NotificationOrganization({ onClose }) {
                               {busy("reject-completion") ? (
                                 <FaSpinner size={12} className="animate-spin" />
                               ) : (
-                                "Reject"
+                                t("actions.reject")
                               )}
                             </button>
                           </div>
@@ -247,14 +249,14 @@ export default function NotificationOrganization({ onClose }) {
                     </>
                   ) : (
                     <span className="text-xs text-gray-400 font-semibold italic shrink-0">
-                      Handled
+                      {t("status.handled")}
                     </span>
                   )}
                 </div>
 
                 {/* Full text overlay in the exact same place on peer hover */}
                 {expandedId !== n.id && (
-                  <div className="absolute left-0 top-0 w-full min-h-full bg-white border border-gray-200 shadow-xl rounded-xl p-3.5 hidden md:peer-hover:block whitespace-normal break-words z-30 animate-fadeIn pointer-events-none">
+                  <div className="absolute start-0 top-0 w-full min-h-full bg-white border border-gray-200 shadow-xl rounded-xl p-3.5 hidden md:peer-hover:block whitespace-normal break-words z-30 animate-fadeIn pointer-events-none">
                     <p className="text-sm font-semibold text-gray-900 leading-relaxed">
                       {n.message}
                     </p>

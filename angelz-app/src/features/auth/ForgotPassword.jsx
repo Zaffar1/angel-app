@@ -1,3 +1,4 @@
+import useLocale from "../../hooks/useLocale";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { forgotPasswordSchema } from "../../schema/auth";
@@ -7,6 +8,7 @@ import { InputField } from "../../components/InputField";
 import { ThemeButton } from "../../components/ThemeButton";
 
 export default function ForgotPassword() {
+    const { t } = useLocale("auth");
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(forgotPasswordSchema),
     });
@@ -21,17 +23,18 @@ export default function ForgotPassword() {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-6">
-            <div className="relative glass-card w-[600px] p-10 flex flex-col justify-center">
+            <div className="relative glass-card w-full max-w-[600px] p-10 flex flex-col justify-center">
                 <div className="max-w-md w-full mx-auto">
-                    <h2 className="text-3xl font-bold text-center mb-3">Forgot Password</h2>
+                    <h2 className="text-3xl font-bold text-center mb-3">{t("forgotPassword.title")}</h2>
                     <p className="text-gray-500 text-center mb-10">
-                        Enter your email address and we'll send you a link to reset your password.
+                        {t("forgotPassword.subtitle")}
                     </p>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <InputField
-                            label="Email"
-                            placeholder="Enter your registered email"
+                            label={t("forgotPassword.email")}
+                            placeholder={t("forgotPassword.emailPlaceholder")}
+                            dir="ltr"
                             {...register("email")}
                             error={errors.email?.message}
                         />
@@ -41,15 +44,15 @@ export default function ForgotPassword() {
                                 type="submit"
                                 isLoading={mutation.isPending}
                             >
-                                Send Reset Link
+                                {t("forgotPassword.submit")}
                             </ThemeButton>
                         </div>
                     </form>
 
                     <p className="text-center mt-6">
-                        Remember your password?{" "}
+                        {t("forgotPassword.remember")}{" "}
                         <Link to="/login" className="text-blue-500">
-                            Back to Login
+                            {t("forgotPassword.backToLogin")}
                         </Link>
                     </p>
                 </div>

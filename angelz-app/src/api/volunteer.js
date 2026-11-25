@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import api from './client';
+import i18n from '../i18n';
 import { showSuccess, showError } from '../utils/toast';
 import { syncInvalidateQueries } from '../utils/querySync';
 
@@ -10,11 +11,11 @@ export function useVolunteerEditProfile(options = {}) {
       return data;
     },
     onSuccess: (data) => {
-      showSuccess(data?.message || "Profile updated successfully!");
+      showSuccess(data?.message || i18n.t("volunteer:toast.profileUpdated"));
       options?.onSuccess?.(data);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Profile update failed!";
+      const msg = err.response?.data?.message || i18n.t("volunteer:toast.profileUpdateFailed");
       showError(msg);
       options?.onError?.(err);
     },
@@ -106,12 +107,12 @@ export function useInviteVolunteer(options = {}) {
       return data;
     },
     onSuccess: (data) => {
-      showSuccess(data?.message || 'Invitation sent successfully!');
+      showSuccess(data?.message || i18n.t("volunteer:toast.invited"));
       syncInvalidateQueries(["notifications"]);
       options?.onSuccess?.(data);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || 'Invitation failed!';
+      const msg = err.response?.data?.message || i18n.t("volunteer:toast.inviteFailed");
       showError(msg);
       options?.onError?.(err);
     },

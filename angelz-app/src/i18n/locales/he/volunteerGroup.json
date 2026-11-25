@@ -1,0 +1,117 @@
+{
+  "common": {
+    "goBack": "חזרה",
+    "volunteerGroup": "קבוצת מתנדבים",
+    "locationNotSet": "המיקום לא הוגדר",
+    "email": "אימייל",
+    "phone": "טלפון",
+    "aboutGroup": "אודות הקבוצה",
+    "baseLocationMap": "מפת מיקום הבסיס",
+    "close": "סגירה",
+    "closeModal": "סגירת החלון",
+    "cancel": "ביטול",
+    "notAvailable": "לא זמין"
+  },
+  "detail": {
+    "editProfile": "עריכת פרופיל",
+    "details": "פרטים",
+    "address": "כתובת",
+    "noAddress": "לא הוזנה כתובת",
+    "noDescription": "לא הוזן תיאור."
+  },
+  "edit": {
+    "title": "פרופיל קבוצת מתנדבים",
+    "changeImage": "החלפת לוגו / תמונה",
+    "labels": {
+      "name": "שם קבוצת המתנדבים",
+      "contactNo": "מספר ליצירת קשר",
+      "baseLocation": "מיקום הבסיס של הקבוצה",
+      "city": "עיר",
+      "state": "מחוז",
+      "country": "מדינה",
+      "address": "כתובת",
+      "description": "תיאור הקבוצה"
+    },
+    "descriptionPlaceholder": "ספרו לנו על קבוצת המתנדבים שלכם, על מטרתה ועוד...",
+    "save": "שמירת שינויי הפרופיל"
+  },
+  "org": {
+    "errorTitle": "שגיאה בטעינת הקבוצה",
+    "errorMessage": "לא ניתן היה לטעון את פרטי קבוצת המתנדבים המבוקשת.",
+    "members": "חברים",
+    "groupPoints": "נקודות הקבוצה",
+    "contactDetails": "פרטי התקשרות",
+    "baseAddress": "כתובת הבסיס",
+    "noDescription": "לא הוזן תיאור לקבוצה זו.",
+    "groupVolunteers": "מתנדבי הקבוצה ({{count}})",
+    "loadVolunteersFailed": "טעינת המתנדבים של הקבוצה נכשלה.",
+    "noVolunteers": "עדיין לא שויכו מתנדבים לקבוצה זו.",
+    "volShort": "מתנ׳",
+    "points": "{{count}} נק׳",
+    "noEmail": "אין אימייל",
+    "missions": "משימות:",
+    "viewVolunteer": "צפייה במתנדב"
+  },
+  "list": {
+    "title": "מתנדבים שהוזמנו",
+    "subtitle": "ניהול, הזמנה ושיבוץ של חברי קבוצת המתנדבים שלכם.",
+    "inviteVolunteer": "הזמנת מתנדב",
+    "searchPlaceholder": "חיפוש מתנדבים לפי שם או אימייל...",
+    "noVolunteers": "לא נמצאו מתנדבים.",
+    "inviteFirst": "הזמנת המתנדב הראשון",
+    "table": {
+      "name": "שם",
+      "email": "אימייל",
+      "phone": "טלפון",
+      "status": "סטטוס",
+      "actions": "פעולות"
+    },
+    "invited": "הוזמן",
+    "viewDetails": "צפייה בפרטים",
+    "invite": {
+      "title": "הזמנת מתנדב חדש",
+      "subtitle": "הוספת מתנדב חדש לקבוצה שלכם יחד עם פרטי הקשר שלו.",
+      "name": "שם",
+      "namePlaceholder": "שם מלא של המתנדב",
+      "email": "אימייל",
+      "emailPlaceholder": "כתובת האימייל של המתנדב",
+      "phone": "מספר טלפון",
+      "description": "תיאור / הערות",
+      "descriptionPlaceholder": "הוסיפו פרטים, כישורים או הכשרות...",
+      "send": "שליחת הזמנה"
+    }
+  },
+  "modal": {
+    "title": "פרטי מתנדב",
+    "information": "מידע על המתנדב",
+    "fullName": "שם מלא",
+    "emailAddress": "כתובת אימייל",
+    "phoneNumber": "מספר טלפון",
+    "pointsEarned": "נקודות שנצברו",
+    "points": "{{count}} נקודות",
+    "descriptionNotes": "תיאור / הערות",
+    "assignedMissions": "משימות משויכות וסטטוס",
+    "noMissions": "עדיין לא שויכו משימות למתנדב זה."
+  },
+  "validation": {
+    "nameRequired": "שם הקבוצה הוא שדה חובה",
+    "descriptionRequired": "תיאור הוא שדה חובה",
+    "invalidContact": "מספר ליצירת קשר לא תקין",
+    "addressRequired": "כתובת היא שדה חובה",
+    "cityRequired": "עיר היא שדה חובה",
+    "stateRequired": "מחוז הוא שדה חובה",
+    "countryRequired": "מדינה היא שדה חובה",
+    "inviteNameRequired": "שם הוא שדה חובה",
+    "invalidEmail": "כתובת אימייל לא תקינה",
+    "emailRequired": "אימייל הוא שדה חובה"
+  },
+  "toast": {
+    "invited": "המתנדב הוזמן בהצלחה!",
+    "inviteFailed": "ההזמנה נכשלה!",
+    "assignedToMission": "המתנדבים שויכו למשימה בהצלחה!",
+    "assignFailed": "השיבוץ נכשל!",
+    "assignedToOrganization": "המתנדבים שויכו לארגון בהצלחה!",
+    "statusUpdated": "סטטוס המשימה של המתנדב עודכן בהצלחה!",
+    "statusUpdateFailed": "עדכון סטטוס המשימה נכשל!"
+  }
+}

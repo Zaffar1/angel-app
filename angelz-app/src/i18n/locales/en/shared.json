@@ -1,0 +1,41 @@
+{
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "Sorry, we couldn’t find the page you’re looking for.",
+    "goHome": "Go to Home",
+    "goOrganization": "Go to Organization Dashboard",
+    "goVolunteer": "Go to Volunteer Dashboard",
+    "sectionMessage": "This {{section}} page doesn’t exist.",
+    "sectionBack": "Go back to {{section}} dashboard",
+    "sections": {
+      "organization": "organization",
+      "volunteer": "volunteer"
+    }
+  },
+  "confirm": {
+    "no": "No",
+    "yes": "Yes"
+  },
+  "pagination": {
+    "prev": "Prev",
+    "next": "Next",
+    "itemsPerPage": "Items per page:",
+    "showing": "Showing {{range}} of {{total}}"
+  },
+  "tagInput": {
+    "label": "Tags",
+    "placeholder": "Press enter to add tags",
+    "remove": "Remove tag"
+  },
+  "image": {
+    "preview": "Preview",
+    "user": "User"
+  },
+  "input": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "map": {
+    "searchPlaceholder": "Search Location....."
+  }
+}

@@ -1,6 +1,8 @@
 import React from "react";
+import useLocale from "../hooks/useLocale";
 
 export default function SocialLogin() {
+    const { t } = useLocale("auth");
     const providers = [
         {
             name: "Google",
@@ -21,7 +23,7 @@ export default function SocialLogin() {
                 <button
                     key={idx}
                     className="border p-2 rounded-lg hover:shadow flex items-center justify-center"
-                    onClick={() => alert(`Login with ${provider.name}`)} // 👈 later API call yahan se karna
+                    onClick={() => alert(t("social.loginWith", { provider: provider.name }))} // 👈 later API call yahan se karna
                 >
                     <img src={provider.icon} alt={provider.name} className="h-6 w-6" />
                 </button>

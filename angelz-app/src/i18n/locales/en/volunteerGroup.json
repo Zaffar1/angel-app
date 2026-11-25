@@ -1,0 +1,117 @@
+{
+  "common": {
+    "goBack": "Go Back",
+    "volunteerGroup": "Volunteer Group",
+    "locationNotSet": "Location not set",
+    "email": "Email",
+    "phone": "Phone",
+    "aboutGroup": "About Group",
+    "baseLocationMap": "Base Location Map",
+    "close": "Close",
+    "closeModal": "Close modal",
+    "cancel": "Cancel",
+    "notAvailable": "N/A"
+  },
+  "detail": {
+    "editProfile": "Edit Profile",
+    "details": "Details",
+    "address": "Address",
+    "noAddress": "No address provided",
+    "noDescription": "No description provided."
+  },
+  "edit": {
+    "title": "Volunteer Group Profile",
+    "changeImage": "Change Logo / Image",
+    "labels": {
+      "name": "Volunteer Group Name",
+      "contactNo": "Contact Number",
+      "baseLocation": "Group Base Location",
+      "city": "City",
+      "state": "State",
+      "country": "Country",
+      "address": "Address",
+      "description": "Group Description"
+    },
+    "descriptionPlaceholder": "Tell us about your volunteer group, its cause, etc...",
+    "save": "Save Profile Changes"
+  },
+  "org": {
+    "errorTitle": "Error Loading Group",
+    "errorMessage": "Could not load the requested volunteer group details.",
+    "members": "Members",
+    "groupPoints": "Group Points",
+    "contactDetails": "Contact Details",
+    "baseAddress": "Base Address",
+    "noDescription": "No description provided for this group.",
+    "groupVolunteers": "Group Volunteers ({{count}})",
+    "loadVolunteersFailed": "Failed to load volunteers for this group.",
+    "noVolunteers": "No volunteers are associated with this group yet.",
+    "volShort": "Vol",
+    "points": "{{count}} pts",
+    "noEmail": "No email",
+    "missions": "Missions:",
+    "viewVolunteer": "View Volunteer"
+  },
+  "list": {
+    "title": "Invited Volunteers",
+    "subtitle": "Manage, invite, and assign your volunteer group members.",
+    "inviteVolunteer": "Invite Volunteer",
+    "searchPlaceholder": "Search volunteers by name or email...",
+    "noVolunteers": "No volunteers found.",
+    "inviteFirst": "Invite Your First Volunteer",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "invited": "Invited",
+    "viewDetails": "View Details",
+    "invite": {
+      "title": "Invite a New Volunteer",
+      "subtitle": "Add a new volunteer to your group with their contact details.",
+      "name": "Name",
+      "namePlaceholder": "Volunteer full name",
+      "email": "Email",
+      "emailPlaceholder": "Volunteer email address",
+      "phone": "Phone Number",
+      "description": "Description / Notes",
+      "descriptionPlaceholder": "Add any details, skills, or qualifications...",
+      "send": "Send Invitation"
+    }
+  },
+  "modal": {
+    "title": "Volunteer Details",
+    "information": "Volunteer Information",
+    "fullName": "Full Name",
+    "emailAddress": "Email Address",
+    "phoneNumber": "Phone Number",
+    "pointsEarned": "Points Earned",
+    "points": "{{count}} Point(s)",
+    "descriptionNotes": "Description / Notes",
+    "assignedMissions": "Assigned Missions & Status",
+    "noMissions": "No missions assigned to this volunteer yet."
+  },
+  "validation": {
+    "nameRequired": "Group name is required",
+    "descriptionRequired": "Description is required",
+    "invalidContact": "Invalid contact number",
+    "addressRequired": "Address is required",
+    "cityRequired": "City is required",
+    "stateRequired": "State is required",
+    "countryRequired": "Country is required",
+    "inviteNameRequired": "Name is required",
+    "invalidEmail": "Invalid email",
+    "emailRequired": "Email is required"
+  },
+  "toast": {
+    "invited": "Volunteer invited successfully!",
+    "inviteFailed": "Invitation failed!",
+    "assignedToMission": "Volunteers assigned to mission successfully!",
+    "assignFailed": "Assignment failed!",
+    "assignedToOrganization": "Volunteers assigned to organization successfully!",
+    "statusUpdated": "Volunteer mission status updated successfully!",
+    "statusUpdateFailed": "Failed to update mission status!"
+  }
+}

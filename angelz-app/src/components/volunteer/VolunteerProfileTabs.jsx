@@ -1,27 +1,29 @@
 import { useState } from 'react'
+import useLocale from "../../hooks/useLocale";
 import { FaCheckCircle, FaClock, FaNewspaper } from 'react-icons/fa';
 import Feed from '../FeedCard';
 import MissionCard from '../mission/missionCard';
 import FeedCardComponent from '../FeedCardComponent';
 
 const VolunteerProfileTabs = ({ volunteer }) => {
+  const { t } = useLocale("volunteer");
   const [activeTab, setActiveTab] = useState("Feed");
 
   const tabs = [
-    { label: "Feed", icon: <FaNewspaper className="w-4 h-4" /> },
-    { label: "Completed Acts", icon: <FaCheckCircle className="w-4 h-4" /> },
-    { label: "All Acts", icon: <FaClock className="w-4 h-4" /> },
+    { key: "Feed", label: t("profile.tabs.feed"), icon: <FaNewspaper className="w-4 h-4" /> },
+    { key: "Completed Acts", label: t("profile.tabs.completedActs"), icon: <FaCheckCircle className="w-4 h-4" /> },
+    { key: "All Acts", label: t("profile.tabs.allActs"), icon: <FaClock className="w-4 h-4" /> },
   ];
 
   return (
     <div className="px-6 pt-4 pb-6">
-      <div className="flex gap-3 justify-center">
+      <div className="flex flex-wrap gap-3 justify-center">
         {tabs.map((tab) => (
           <button
-            key={tab.label}
-            onClick={() => setActiveTab(tab.label)}
-            className={`flex items-center justify-center gap-2 h-[47px] w-[340px] rounded-full text-sm font-medium transition-all duration-200
-              ${activeTab === tab.label
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`flex items-center justify-center gap-2 min-h-[47px] w-[340px] max-w-full px-3 rounded-full text-sm font-medium transition-all duration-200
+              ${activeTab === tab.key
                 ? "bg-blue-600 text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
@@ -38,7 +40,7 @@ const VolunteerProfileTabs = ({ volunteer }) => {
               <FeedCardComponent key={feed?.id} {...feed} />
             ))
               :
-              <p>No data found</p>
+              <p>{t("profile.noData")}</p>
             }
           </div>
         )}
@@ -48,7 +50,7 @@ const VolunteerProfileTabs = ({ volunteer }) => {
               <MissionCard key={mission?.id} {...mission} />
             ))
               :
-              <p>No data found</p>
+              <p>{t("profile.noData")}</p>
             }
           </div>
         </div>
@@ -59,7 +61,7 @@ const VolunteerProfileTabs = ({ volunteer }) => {
               <MissionCard key={mission?.id} {...mission} />
             ))
               :
-              <p>No data found</p>
+              <p>{t("profile.noData")}</p>
             }
           </div>
         </div>}

@@ -1,0 +1,180 @@
+{
+  "days": {
+    "monday": "יום שני",
+    "tuesday": "יום שלישי",
+    "wednesday": "יום רביעי",
+    "thursday": "יום חמישי",
+    "friday": "יום שישי",
+    "saturday": "יום שבת",
+    "sunday": "יום ראשון"
+  },
+  "ranks": {
+    "bronze": "מלאך ארד",
+    "silver": "מלאך כסף",
+    "gold": "מלאך זהב"
+  },
+  "card": {
+    "unknownVolunteer": "מתנדב לא ידוע",
+    "noDescription": "אין תיאור זמין.",
+    "notAvailable": "לא זמין",
+    "notProvided": "לא צוין",
+    "type": "מתנדב",
+    "viewVolunteer": "צפייה במתנדב"
+  },
+  "profile": {
+    "guestUser": "משתמש אורח",
+    "userAvatar": "תמונת משתמש",
+    "anonymous": "אנונימי",
+    "pointsEarned": "{{count}} נקודות שנצברו",
+    "title": "פרופיל",
+    "goBack": "חזרה",
+    "noData": "לא נמצאו נתונים",
+    "failedToLoad": "טעינת הפרופיל נכשלה: {{message}}",
+    "tabs": {
+      "feed": "פיד",
+      "completedActs": "מעשים שהושלמו",
+      "allActs": "כל המעשים"
+    }
+  },
+  "list": {
+    "volunteers": "מתנדבים",
+    "volunteerGroups": "קבוצות מתנדבים",
+    "totalIndividual": "סה\"כ מתנדבים יחידים: {{count}}",
+    "totalGroups": "סה\"כ קבוצות מתנדבים: {{count}}",
+    "failedVolunteers": "טעינת המתנדבים נכשלה: {{message}}",
+    "failedGroups": "טעינת קבוצות המתנדבים נכשלה: {{message}}",
+    "noMore": "אין עוד מתנדבים לטעינה.",
+    "noGroupsTitle": "לא נמצאו קבוצות מתנדבים",
+    "noGroupsText": "אין כרגע קבוצות מתנדבים רשומות בקהילה.",
+    "group": "קבוצה",
+    "noGroupDescription": "אין תיאור זמין לקבוצה זו.",
+    "locationNotSet": "מיקום לא הוגדר",
+    "members": "חברים",
+    "totalPoints": "סה\"כ נקודות",
+    "viewGroupDetail": "צפייה בפרטי הקבוצה"
+  },
+  "leaderboard": {
+    "userAlt": "משתמש",
+    "pointsLabel": "נקודות",
+    "columns": {
+      "rank": "דירוג",
+      "volunteer": "מתנדב",
+      "location": "מיקום",
+      "points": "נקודות"
+    },
+    "titles": {
+      "group": "לוח מובילים של מתנדבי הקבוצה",
+      "organization": "לוח מובילים של הארגון",
+      "global": "לוח מובילים עולמי"
+    },
+    "subtitles": {
+      "volunteersIn": "מתנדבים ב{{name}}",
+      "allGroups": "המתנדבים המובילים בכל הקבוצות",
+      "yourOrganization": "המתנדבים המובילים בארגון שלך",
+      "topIn": "המתנדבים המובילים ב{{name}}",
+      "worldwide": "המתנדבים המובילים בעולם"
+    },
+    "defaults": {
+      "group": "קבוצה",
+      "organization": "ארגון",
+      "unknown": "לא ידוע"
+    },
+    "embedButton": "הטמעת לוח המובילים",
+    "showFilters": "הצגת מסננים",
+    "hideFilters": "הסתרת מסננים",
+    "endTitle": "הגעת לסוף!",
+    "endText": "אין עוד נתונים לטעינה",
+    "noData": "לא נמצאו נתונים",
+    "adjustFilters": "נסו לשנות את המסננים",
+    "showing_one": "מוצג מתנדב {{count}}",
+    "showing_two": "מוצגים {{count}} מתנדבים",
+    "showing_other": "מוצגים {{count}} מתנדבים",
+    "filteredBy": " • מסונן לפי ",
+    "filteredGroup": "קבוצת מתנדבים \"{{name}}\"",
+    "and": " ו",
+    "filteredOrganization": "ארגון"
+  },
+  "filters": {
+    "title": "מסננים",
+    "subtitle": "התאמת לוח המובילים",
+    "modes": {
+      "global": "עולמי",
+      "organization": "ארגון",
+      "group": "קבוצה"
+    },
+    "active": "מסננים פעילים:",
+    "clear": "ניקוי",
+    "organization": "ארגון",
+    "selectOrganization": "בחירת ארגון",
+    "country": "מדינה",
+    "allCountries": "כל המדינות",
+    "state": "מחוז",
+    "allStates": "כל המחוזות",
+    "city": "עיר",
+    "allCities": "כל הערים",
+    "volunteerGroup": "קבוצת מתנדבים",
+    "allGroups": "כל הקבוצות",
+    "group": "קבוצה",
+    "hide": "הסתרת מסננים"
+  },
+  "form": {
+    "title": "פרופיל מתנדב",
+    "edit": "עריכה",
+    "labels": {
+      "firstName": "שם פרטי",
+      "lastName": "שם משפחה",
+      "phone": "מספר טלפון",
+      "location": "מיקום",
+      "city": "עיר",
+      "state": "מחוז",
+      "country": "מדינה",
+      "address": "כתובת",
+      "day": "יום",
+      "from": "מ-",
+      "to": "עד",
+      "availableTimings": "זמני זמינות"
+    },
+    "arrays": {
+      "preferences": "העדפות",
+      "expertise": "תחומי מומחיות",
+      "addPreference": "הוספת העדפה",
+      "addExpertise": "הוספת תחום מומחיות",
+      "preferencePlaceholder": "הוספת העדפה",
+      "expertisePlaceholder": "הוספת תחום מומחיות"
+    },
+    "timing": {
+      "slot": "משבצת זמן #{{number}}",
+      "selectDay": "בחירת יום",
+      "add": "הוספת משבצת זמן",
+      "none": "טרם נוספו משבצות זמן",
+      "hint": "לחצו על \"הוספת משבצת זמן\" למעלה כדי להוסיף."
+    },
+    "save": "שמירת שינויים"
+  },
+  "toast": {
+    "profileUpdated": "הפרופיל עודכן בהצלחה!",
+    "profileUpdateFailed": "עדכון הפרופיל נכשל!",
+    "invited": "ההזמנה נשלחה בהצלחה!",
+    "inviteFailed": "שליחת ההזמנה נכשלה!"
+  },
+  "validation": {
+    "firstNameRequired": "שם פרטי הוא שדה חובה",
+    "lastNameRequired": "שם משפחה הוא שדה חובה",
+    "contactRequired": "מספר טלפון הוא שדה חובה",
+    "contactInvalid": "מספר טלפון לא תקין",
+    "addressRequired": "כתובת היא שדה חובה",
+    "cityRequired": "עיר היא שדה חובה",
+    "stateRequired": "מחוז הוא שדה חובה",
+    "countryRequired": "מדינה היא שדה חובה",
+    "dayRequired": "יום הוא שדה חובה",
+    "dayInvalid": "יום לא תקין",
+    "startRequired": "שעת התחלה היא שדה חובה",
+    "endRequired": "שעת סיום היא שדה חובה",
+    "timeFormat": "פורמט שעה לא תקין (נדרש HH:MM או HH:MM:SS)",
+    "endAfterStart": "שעת הסיום חייבת להיות מאוחרת משעת ההתחלה",
+    "timingMin": "נדרש לפחות זמן זמינות אחד"
+  },
+  "embed": {
+    "title": "לוח מובילים עולמי"
+  }
+}

@@ -1,11 +1,13 @@
+import useLocale from "../../hooks/useLocale";
 import { getImageUrl } from "../../utils/getImageUrl";
 
 export default function VolunteerCardForOrg({ vol }) {
+    const { t } = useLocale("organization");
     return (
         <div className="glass-card transition-all duration-300 p-6 max-w-md w-full h-full flex flex-col justify-between">
             <div>
                 {/* Header */}
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
 
                     {/* Profile Info */}
                     <div className="flex items-center gap-4">
@@ -22,11 +24,11 @@ export default function VolunteerCardForOrg({ vol }) {
 
                         <div>
                             <h3 className="text-lg font-semibold text-gray-900">
-                                {vol.name || "Volunteer"}
+                                {vol.name || t("volunteerCard.volunteer")}
                             </h3>
 
                             <p className="text-sm text-gray-500">
-                                Volunteer Member
+                                {t("volunteerCard.volunteerMember")}
                             </p>
                         </div>
                     </div>
@@ -34,7 +36,7 @@ export default function VolunteerCardForOrg({ vol }) {
                     {/* Points Badge */}
                     <span className="px-3 py-1 text-xs font-semibold 
                                      bg-blue-50 text-blue-700 rounded-full">
-                        ⭐ {vol.points ?? 20} Points
+                        ⭐ {vol.points ?? 20} {t("volunteerCard.points")}
                     </span>
                 </div>
 
@@ -46,19 +48,19 @@ export default function VolunteerCardForOrg({ vol }) {
 
                     <div>
                         <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                            Email Address
+                            {t("volunteerCard.emailAddress")}
                         </p>
                         <p className="text-gray-800 text-sm truncate">
-                            {vol.email || "Not Provided"}
+                            {vol.email || t("volunteerCard.notProvided")}
                         </p>
                     </div>
 
                     {vol.contact_no && (
                         <div>
                             <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                                Contact Number
+                                {t("volunteerCard.contactNumber")}
                             </p>
-                            <p className="text-gray-800 text-sm">
+                            <p className="text-gray-800 text-sm" dir="ltr" style={{ textAlign: "start" }}>
                                 {vol.contact_no}
                             </p>
                         </div>

@@ -2,12 +2,12 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 
 const navItems = [
-  { name: "Feeds", path: "/volunteer_group/feed/all" },
-  { name: "Missions", path: "/volunteer_group/mission/all" },
-  { name: "Organizations", path: "/volunteer_group/organization-list" },
-  { name: "Invited Volunteers", path: "/volunteer_group/volunteers" },
-  { name: "Leaderboard", path: "/volunteer_group/list-with-leaderboard" },
-  { name: "Edit Profile", path: "/volunteer_group/edit" },
+  { labelKey: "common:nav.feeds", path: "/volunteer_group/feed/all" },
+  { labelKey: "common:nav.missions", path: "/volunteer_group/mission/all" },
+  { labelKey: "common:nav.organizations", path: "/volunteer_group/organization-list" },
+  { labelKey: "common:nav.invitedVolunteers", path: "/volunteer_group/volunteers" },
+  { labelKey: "common:nav.leaderboard", path: "/volunteer_group/list-with-leaderboard" },
+  { labelKey: "common:nav.editProfile", path: "/volunteer_group/edit" },
 ];
 
 const VolunteerGroupLayout = () => {

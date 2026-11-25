@@ -6,6 +6,8 @@ import { Toaster } from "react-hot-toast";
 import { useOnlineStatus } from "../hooks/useNetworkStatus";
 import { InternetStatus } from "../components/InternetStatus";
 import { useEffect, useRef } from "react";
+import useLocale from "../hooks/useLocale";
+import { isRTL } from "../i18n";
 
 export const queryClient = new QueryClient({
     defaultOptions: {
@@ -18,6 +20,7 @@ export const queryClient = new QueryClient({
 });
 
 export function AppProviders({ children }) {
+    const { i18n } = useLocale(); // re-render on language change
     const isOnline = useOnlineStatus();
     const wasOffline = useRef(false);
 
@@ -37,7 +40,8 @@ export function AppProviders({ children }) {
                     {!isOnline && <InternetStatus />}
                     {children}
                     <Toaster
-                        position="top-right"
+                        position={isRTL() ? "top-left" : "top-right"}
+                        containerStyle={{ direction: isRTL() ? "rtl" : "ltr" }}
                         toastOptions={{
                             success: { duration: 2500 },
                             error: { duration: 3000 },

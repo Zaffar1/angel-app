@@ -1,3 +1,4 @@
+import useLocale from "../../hooks/useLocale";
 import { getImageUrl } from "../../utils/getImageUrl";
 
 const BadgeSVG = ({ rank, className = "" }) => {
@@ -55,6 +56,7 @@ const BadgeSVG = ({ rank, className = "" }) => {
 };
 
 export const RankBadge = ({ userName, rank, userImage, className = "" }) => {
+    const { t } = useLocale("volunteer");
     const containerSize = "w-16 h-16";
     const imageSize = "w-12 h-12";
 
@@ -70,7 +72,7 @@ export const RankBadge = ({ userName, rank, userImage, className = "" }) => {
                     {hasValidImage ? (
                         <img
                             src={userImageWithFallback}
-                            alt="User"
+                            alt={t("leaderboard.userAlt")}
                             className="w-full h-full object-cover"
                             loading="lazy"
                         />
@@ -90,6 +92,7 @@ export const RankBadge = ({ userName, rank, userImage, className = "" }) => {
 };
 
 export const RankNumber = ({ userName, rank, userImage, className = "" }) => {
+    const { t } = useLocale("volunteer");
     const containerSize = "w-16 h-16";
     const imageSize = "w-12 h-12";
 
@@ -102,7 +105,7 @@ export const RankNumber = ({ userName, rank, userImage, className = "" }) => {
             <div className={`${imageSize} rounded-full overflow-hidden border-2 border-white shadow-lg bg-gray-200`}>
                 <img
                     src={userImageWithFallback}
-                    alt="User"
+                    alt={t("leaderboard.userAlt")}
                     className="w-full h-full object-cover"
                     loading="lazy"
                 />

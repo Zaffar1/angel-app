@@ -1,0 +1,144 @@
+{
+  "toast": {
+    "created": "המשימה נוצרה בהצלחה!",
+    "createFailed": "יצירת המשימה נכשלה!",
+    "updated": "המשימה עודכנה בהצלחה!",
+    "updateFailed": "עדכון המשימה נכשל!",
+    "deleted": "המשימה נמחקה בהצלחה!",
+    "deleteFailed": "מחיקת המשימה נכשלה!",
+    "posted": "המשימה פורסמה בהצלחה!",
+    "postFailed": "פרסום המשימה נכשל!",
+    "requestSent": "בקשת המשימה נשלחה בהצלחה!",
+    "requestFailed": "שליחת בקשת המשימה נכשלה!",
+    "completionSent": "בקשת ההשלמה נשלחה בהצלחה!",
+    "completionFailed": "שליחת בקשת ההשלמה נכשלה!",
+    "volunteerAccepted": "בקשת המתנדב אושרה בהצלחה!",
+    "volunteerAcceptFailed": "אישור בקשת המתנדב נכשל!",
+    "volunteerRejected": "בקשת המתנדב נדחתה בהצלחה!",
+    "volunteerRejectFailed": "דחיית בקשת המתנדב נכשלה!",
+    "started": "המשימה התחילה בהצלחה!",
+    "startFailed": "התחלת המשימה נכשלה!",
+    "markedComplete": "המשימה סומנה כהושלמה!",
+    "markCompleteFailed": "סימון המשימה כהושלמה נכשל!",
+    "completionRejected": "השלמת המשימה נדחתה!",
+    "completionRejectFailed": "דחיית השלמת המשימה נכשלה!",
+    "feedLiked": "הפוסט סומן באהבתי בהצלחה!",
+    "feedLikeFailed": "הסימון באהבתי נכשל!",
+    "commentDisabled": "התגובה הושבתה בהצלחה!",
+    "commentDisableFailed": "השבתת התגובה נכשלה!",
+    "commented": "התגובה נוספה בהצלחה!",
+    "commentFailed": "הוספת התגובה נכשלה!",
+    "commentUpdated": "התגובה עודכנה!",
+    "commentUpdateFailed": "העדכון נכשל!",
+    "joinedOrg": "הצטרפת לארגון בהצלחה!",
+    "joinOrgFailed": "ההצטרפות לארגון נכשלה!",
+    "commentDeleted": "התגובה נמחקה בהצלחה!",
+    "commentDeleteFailed": "מחיקת התגובה נכשלה!",
+    "orgRequestRejected": "דחית את בקשת הארגון!",
+    "orgRequestRejectFailed": "דחיית בקשת הארגון נכשלה!",
+    "missionIdMissing": "מזהה המשימה חסר!"
+  },
+  "common": {
+    "na": "לא זמין"
+  },
+  "actions": {
+    "goBack": "חזרה",
+    "viewVolunteers": "צפייה במתנדבים",
+    "postOnFeed": "פרסמו זאת בפיד שלכם",
+    "alreadyPosted": "כבר פורסם",
+    "postFeed": "פרסום בפיד",
+    "zappIt": "Zapp It",
+    "alreadyApplied": "כבר הגשתם בקשה",
+    "requestCompletion": "בקשת השלמה"
+  },
+  "header": {
+    "unknownOrganization": "ארגון לא ידוע",
+    "id": "מזהה: {{id}}",
+    "points": "נקודות"
+  },
+  "labels": {
+    "workType": "סוג עבודה",
+    "missionType": "סוג משימה",
+    "distance": "מרחק",
+    "volunteersRequired": "מתנדבים נדרשים",
+    "startTime": "שעת התחלה",
+    "endTime": "שעת סיום"
+  },
+  "sections": {
+    "description": "תיאור",
+    "preferredVolunteers": "מתנדבים מועדפים",
+    "location": "מיקום",
+    "interactionSettings": "הגדרות אינטראקציה"
+  },
+  "interaction": {
+    "comments": "תגובות",
+    "likes": "לייקים",
+    "share": "שיתוף"
+  },
+  "modal": {
+    "closeAria": "סגירת החלון"
+  },
+  "assign": {
+    "title": "שיבוץ מתנדבים",
+    "subtitle": "השלמת שיבוצים למשימה <strong>{{name}}</strong>.",
+    "capacityFulfilledTitle": "מכסת המשימה התמלאה",
+    "capacityFulfilledText": "כל {{count}} המקומות הנדרשים מולאו בהצלחה. אין צורך בשיבוץ מתנדבים נוספים.",
+    "selectionCompleteTitle": "הבחירה הושלמה",
+    "selectionCompleteText": "נבחרו בדיוק {{count}} מתנדבים. מוכן לסיום השיבוץ.",
+    "selectionRequiredTitle": "נדרשת בחירה",
+    "selectionRequiredText": "יש לבחור בדיוק <strong>{{remaining}}</strong> מתנדבים כדי לעמוד בדרישות. נבחרו: <strong>{{selected}} מתוך {{remaining}}</strong>.",
+    "noVolunteers": "לא נמצאו מתנדבים. יש להזמין מתנדבים תחילה.",
+    "assigned": "שובץ",
+    "limitReached": "הגעתם למכסה",
+    "submit": "שיבוץ הנבחרים ({{selected}}/{{remaining}})"
+  },
+  "details": {
+    "title": "פרטי שיבוץ למשימה",
+    "subtitleOverall": "התקדמות השיבוץ הכוללת למשימה <strong>{{name}}</strong>.",
+    "subtitleGroup": "התקדמות השיבוץ של הקבוצה למשימה <strong>{{name}}</strong>.",
+    "emptyAll": "לא שובצו מתנדבים למשימה זו.",
+    "emptyGroup": "לא שובצו מתנדבים מהקבוצה שלכם למשימה זו."
+  },
+  "assignStatus": {
+    "pending": "ממתין",
+    "started": "התחיל",
+    "completed": "הושלם",
+    "completion_requested": "התבקשה השלמה",
+    "scheduled": "מתוזמן",
+    "ended": "הסתיים"
+  },
+  "applicants": {
+    "profile": "פרופיל",
+    "name": "שם",
+    "email": "אימייל",
+    "points": "נקודות",
+    "empty": "אין מועמדים עדיין"
+  },
+  "nonEditable": {
+    "closed": "סגורה",
+    "message": {
+      "completed": "לא ניתן לעדכן משימה זו כי היא כבר הושלמה. ניתן לערוך רק משימות בסטטוס 'פתוחה'.",
+      "inprogress": "לא ניתן לעדכן משימה זו כי היא נמצאת כעת בתהליך. ניתן לערוך רק משימות בסטטוס 'פתוחה'.",
+      "completionRequested": "לא ניתן לעדכן משימה זו כי התבקשה בדיקת השלמה. ניתן לערוך רק משימות בסטטוס 'פתוחה'.",
+      "scheduled": "לא ניתן לעדכן משימה זו כי היא כבר מתוזמנת. ניתן לערוך רק משימות בסטטוס 'פתוחה'.",
+      "accepted": "לא ניתן לעדכן משימה זו כי שיבוצי המתנדבים כבר אושרו. ניתן לערוך רק משימות בסטטוס 'פתוחה'.",
+      "requested": "לא ניתן לעדכן משימה זו כל עוד בקשות מתנדבים ממתינות. ניתן לערוך רק משימות בסטטוס 'פתוחה'.",
+      "pending": "לא ניתן לעדכן משימה זו כל עוד היא ממתינה לבדיקה. ניתן לערוך רק משימות בסטטוס 'פתוחה'.",
+      "rejected": "לא ניתן לעדכן משימה זו כי היא נדחתה. ניתן לערוך רק משימות בסטטוס 'פתוחה'.",
+      "expired": "לא ניתן לעדכן משימה זו כי תוקפה פג. ניתן לערוך רק משימות בסטטוס 'פתוחה'.",
+      "default": "לא ניתן לעדכן משימה זו כי היא כעת במצב {{status}}. ניתן לערוך רק משימות בסטטוס 'פתוחה'."
+    },
+    "reason": {
+      "completed": "המשימה כבר הושלמה",
+      "inprogress": "המשימה נמצאת כעת בתהליך",
+      "completionRequested": "התבקשה בדיקת השלמה למשימה",
+      "scheduled": "המשימה תוזמנה",
+      "accepted": "שיבוצי המתנדבים אושרו",
+      "requested": "בקשות מתנדבים ממתינות",
+      "pending": "המשימה ממתינה לבדיקה",
+      "rejected": "המשימה נדחתה",
+      "expired": "תוקף המשימה פג",
+      "default": "המשימה במצב {{status}}"
+    }
+  }
+}

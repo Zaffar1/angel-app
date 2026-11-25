@@ -1,0 +1,49 @@
+{
+  "appName": "אנג'לז",
+  "language": {
+    "label": "שפה"
+  },
+  "actions": {
+    "save": "שמירה",
+    "cancel": "ביטול",
+    "delete": "מחיקה",
+    "edit": "עריכה",
+    "retry": "נסה שוב",
+    "goBack": "חזרה",
+    "close": "סגירה",
+    "confirm": "אישור",
+    "submit": "שליחה",
+    "search": "חיפוש..."
+  },
+  "nav": {
+    "feeds": "פיד",
+    "volunteers": "מתנדבים",
+    "missions": "משימות",
+    "create": "יצירה",
+    "createMission": "יצירת משימה",
+    "createPost": "יצירת פוסט",
+    "leaderboard": "טבלת מובילים",
+    "organizations": "ארגונים",
+    "invitedVolunteers": "מתנדבים מוזמנים",
+    "editProfile": "עריכת פרופיל",
+    "viewProfile": "צפייה בפרופיל",
+    "changePassword": "שינוי סיסמה",
+    "myMissions": "המשימות שלי",
+    "login": "התחברות",
+    "register": "הרשמה",
+    "logout": "התנתקות"
+  },
+  "toast": {
+    "loggedOut": "התנתקת בהצלחה!"
+  },
+  "network": {
+    "connectionLost": "החיבור אבד",
+    "waiting": "ממתין לחיבור לאינטרנט..."
+  },
+  "logoAlt": "לוגו",
+  "userType": {
+    "volunteer": "מתנדב/ת",
+    "organization": "ארגון",
+    "volunteer_group": "קבוצת מתנדבים"
+  }
+}

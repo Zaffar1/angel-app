@@ -5,9 +5,11 @@ import { useCallback, useRef, useState } from 'react';
 import { PAGE_LIMIT } from '../../constant/PAGE_LIMIT';
 import { useNavigate } from 'react-router-dom';
 import { FaUsers, FaTrophy, FaMapMarkerAlt, FaEnvelope, FaPhone } from 'react-icons/fa';
+import useLocale from "../../hooks/useLocale";
 import { getImageUrl } from '../../utils/getImageUrl';
 
 const VolunteerList = () => {
+    const { t } = useLocale('volunteer');
     const observer = useRef();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('volunteers');
@@ -58,12 +60,12 @@ const VolunteerList = () => {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
                     <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-                        {activeTab === 'volunteers' ? 'Volunteers' : 'Volunteer Groups'}
+                        {activeTab === 'volunteers' ? t('list.volunteers') : t('list.volunteerGroups')}
                     </h2>
                     <p className="text-gray-500 mt-1 font-medium">
                         {activeTab === 'volunteers'
-                            ? `Total Individual Volunteers: ${volunteerCount}`
-                            : `Total Volunteer Groups: ${groups?.length || 0}`}
+                            ? t('list.totalIndividual', { count: volunteerCount })
+                            : t('list.totalGroups', { count: groups?.length || 0 })}
                     </p>
                 </div>
 
@@ -75,7 +77,7 @@ const VolunteerList = () => {
                             : 'text-gray-600 hover:text-gray-900'
                             }`}
                     >
-                        Volunteers
+                        {t('list.volunteers')}
                     </button>
                     <button
                         onClick={() => setActiveTab('groups')}
@@ -84,7 +86,7 @@ const VolunteerList = () => {
                             : 'text-gray-600 hover:text-gray-900'
                             }`}
                     >
-                        Volunteer Groups
+                        {t('list.volunteerGroups')}
                     </button>
                 </div>
             </div>
@@ -93,7 +95,7 @@ const VolunteerList = () => {
                 <>
                     {isVolunteersError && (
                         <p className="text-center py-10 text-red-500 font-medium bg-red-50 rounded-2xl border border-red-200">
-                            Failed to load volunteers: {volunteersError?.response?.data?.message || volunteersError.message}
+                            {t('list.failedVolunteers', { message: volunteersError?.response?.data?.message || volunteersError.message })}
                         </p>
                     )}
 
@@ -118,7 +120,7 @@ const VolunteerList = () => {
 
                     {!hasNextPage && volunteers.length > 0 && (
                         <p className="text-center py-12 text-gray-400 font-medium">
-                            No more volunteers to load.
+                            {t('list.noMore')}
                         </p>
                     )}
                 </>
@@ -128,15 +130,15 @@ const VolunteerList = () => {
                 <>
                     {isGroupsError && (
                         <p className="text-center py-10 text-red-500 font-medium bg-red-50 rounded-2xl border border-red-200">
-                            Failed to load volunteer groups: {groupsError?.response?.data?.message || groupsError.message}
+                            {t('list.failedGroups', { message: groupsError?.response?.data?.message || groupsError.message })}
                         </p>
                     )}
 
                     {groups?.length === 0 ? (
                         <div className="text-center py-16 bg-gray-50/50 rounded-3xl border border-gray-150 border-dashed">
                             <FaUsers className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                            <h3 className="text-xl font-bold text-gray-700">No Volunteer Groups Found</h3>
-                            <p className="text-gray-500 mt-1 max-w-sm mx-auto">There are no registered volunteer groups in the community at the moment.</p>
+                            <h3 className="text-xl font-bold text-gray-700">{t('list.noGroupsTitle')}</h3>
+                            <p className="text-gray-500 mt-1 max-w-sm mx-auto">{t('list.noGroupsText')}</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -161,8 +163,8 @@ const VolunteerList = () => {
                                                         {getInitials(group.name)}
                                                     </div>
                                                 )}
-                                                <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-600 text-[10px] font-extrabold px-3 py-1 rounded-full shadow-sm uppercase tracking-wider">
-                                                    Group
+                                                <span className="absolute top-3 start-3 bg-white/90 backdrop-blur-md text-indigo-600 text-[10px] font-extrabold px-3 py-1 rounded-full shadow-sm uppercase tracking-wider">
+                                                    {t('list.group')}
                                                 </span>
                                             </div>
                                         </div>
@@ -174,7 +176,7 @@ const VolunteerList = () => {
                                                         {group.name}
                                                     </h3>
                                                     <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">
-                                                        {group.description || "No description available for this group."}
+                                                        {group.description || t("list.noGroupDescription")}
                                                     </p>
                                                 </div>
 
@@ -192,7 +194,7 @@ const VolunteerList = () => {
                                                     <div className="flex items-center gap-2.5">
                                                         <FaMapMarkerAlt className="text-blue-500 w-4 h-4 flex-shrink-0" />
                                                         <span className="truncate font-medium">
-                                                            {group.city ? `${group.city}, ${group.country}` : "Location not set"}
+                                                            {group.city ? `${group.city}, ${group.country}` : t("list.locationNotSet")}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -203,14 +205,14 @@ const VolunteerList = () => {
                                                     <div className="flex items-center gap-2">
                                                         <FaUsers className="text-indigo-500 w-5 h-5" />
                                                         <div>
-                                                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Members</p>
+                                                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">{t('list.members')}</p>
                                                             <p className="font-extrabold text-gray-800 text-sm">{group.members_count || 0}</p>
                                                         </div>
                                                     </div>
-                                                    <div className="flex items-center gap-2 text-right">
+                                                    <div className="flex items-center gap-2 text-end">
                                                         <FaTrophy className="text-yellow-500 w-5 h-5" />
                                                         <div>
-                                                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Total Points</p>
+                                                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">{t('list.totalPoints')}</p>
                                                             <p className="font-extrabold text-gray-800 text-sm">{group.points || 0}</p>
                                                         </div>
                                                     </div>
@@ -223,7 +225,7 @@ const VolunteerList = () => {
                                                         navigate(`/organization/volunteer-group/${group.id}`);
                                                     }}
                                                 >
-                                                    View Group Detail
+                                                    {t('list.viewGroupDetail')}
                                                 </button>
                                             </div>
                                         </div>
