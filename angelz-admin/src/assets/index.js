@@ -1,2 +1,2 @@
-export { default as Logo } from './image/logo.svg';
-export { default as fallback } from './image/fallback.png';
+export { default as Logo } from './Image/logo.svg';
+export { default as fallback } from './Image/fallback.png';
