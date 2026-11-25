@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "npm install --prefix angelz && npm install --prefix angelz-app && npm install --prefix angelz-admin && npm run build --prefix angelz-app && npm run build --prefix angelz-admin",
+    "build": "npm install --include=dev --prefix angelz-app && npm install --include=dev --prefix angelz-admin && npm install --omit=dev --prefix angelz && npm run build --prefix angelz-app && npm run build --prefix angelz-admin",
     "start": "node angelz/index.js"
   }
 }
